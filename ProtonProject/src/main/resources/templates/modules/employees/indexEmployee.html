@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+   <title>Employees</title>
+   <th:block th:include="addscripts"></th:block>
+</head>
+
+<body>
+   <!-- Include _menu.html -->
+   <th:block th:include="_menu"></th:block>
+
+
+   <h2>Employees Page</h2>
+   <h3>Welcome : <span th:utext="${#request.userPrincipal}"></span></h3>
+      <b>This is protected page!</b>  
+       
+      <br/><br/>
+
+      <!-- <p th:utext="${#request.userPrincipal.user}"></p> -->
+
+      <div sec:authorize="hasRole('ABSRQWE')">
+            This content is only shown to administrators.
+        </div>
+
+    <tr th:each="mapItem : ${pages}">
+                
+          <a th:href="${mapItem.url}" ><p th:utext="${#messages.msg('${mapItem.urlName}')}"></p> </a>
+        </tr>
+       
+      <div th:if="${userInfo != null}" th:utext="${userInfo}"></div>
+	   <script th:inline="javascript">
+         var employee = /*[[${employees}]]*/ null;
+      var helpBoxText = /*[[${helpBox}]]*/ null;
+      </script>
+   </body>
+    
+</html>
