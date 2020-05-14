@@ -29,7 +29,7 @@ import com.foxety0f.proton.utils.EncrytedPasswordUtils;
 import com.foxety0f.proton.utils.ImageUtils;
 
 public class AdminDAO extends AbstractDAO implements IAdminDAO {
-	
+
 	@Autowired
 	private IRoleService roleService;
 
@@ -38,8 +38,8 @@ public class AdminDAO extends AbstractDAO implements IAdminDAO {
 		System.err.println(getDatabase());
 		System.err.println(initialize());
 		roleStruct();
-		//ImageUtils iu = new ImageUtils();
-		//iu.loadFilesFromDataBase(getFiles());
+		// ImageUtils iu = new ImageUtils();
+		// iu.loadFilesFromDataBase(getFiles());
 	}
 
 	private ProtonModules thisModule = ProtonModules.ADMIN;
@@ -374,23 +374,68 @@ public class AdminDAO extends AbstractDAO implements IAdminDAO {
 				return "Create dictionaryes : proton_distr_status, proton_distr_time, proton_distr_auto \n"
 						+ "Create core table : proton_distribution";
 
-			}else if(module.getModule() == ProtonModules.ROLES) {
-				
-				Integer cnt = querySource.queryForObject("select count(*) from app_role where role_name = 'ROLE_MANAGER_ROLES'", EMPTY_PARAMS, Integer.class);
-				
-				if(cnt > 0) {
+			} else if (module.getModule() == ProtonModules.ROLES) {
+
+				Integer cnt = querySource.queryForObject(
+						"select count(*) from app_role where role_name = 'ROLE_MANAGER_ROLES'", EMPTY_PARAMS,
+						Integer.class);
+
+				if (cnt > 0) {
 					return "Role already created";
 				}
-				
+
 				Map<String, String> map = new HashedMap<String, String>();
 				roleService.createNewRole("ROLE_MANAGER_ROLES");
-				
+
 				map.put("add new role", "ROLE_MANAGER_ROLES");
-				
+
 				logger(thisModule, map, ProtonEssences.CREATE_STRUCT, null);
-				
+
 				return "Create new role for MANAGER_ROLES";
-				
+
+			} else if (module.getModule() == ProtonModules.HELP) {
+				Integer cnt = querySource.queryForObject(
+						"select count (*) from app_role where role_name = 'ROLE_HELP_EDITOR'", EMPTY_PARAMS,
+						Integer.class);
+				Map<String, String> map = new HashedMap<String, String>();
+
+				if (cnt > 0) {
+					roleService.createNewRole("ROLE_HELP_EDITOR");
+					map.put("add new role", "ROLE_HELP_EDITOR");
+				}
+
+				querySource.update("CREATE TABLE proton_help_types\r\n" + "(\r\n"
+						+ "    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 100 MINVALUE 100 MAXVALUE 9999999999999 CACHE 1 ),\r\n"
+						+ "    type_name character varying(120),\r\n"
+						+ "    type_description character varying(250) ,\r\n"
+						+ "    CONSTRAINT proton_help_types_pkey PRIMARY KEY (id)\r\n" + ")", EMPTY_PARAMS);
+				map.put("Create table proton_help_types", "OK");
+				map.put("Create PROTON_HELP_TYPES_PKEY primary key (id)", "OK");
+				Map<String, String> mapIns = new HashedMap<String, String>();
+				mapIns.put("typeName", "text-core-page");
+				mapIns.put("typeDescription", "This type for core page descriptions");
+				querySource.update("INSERT INTO public.proton_help_types(\r\n" + "	type_name, type_description)\r\n"
+						+ "	VALUES ( :typeName, :typeDescription);", mapIns);
+				map.put("Create row default type help", "OK");
+
+				querySource.update("CREATE TABLE proton_help_config\r\n" + "(\r\n"
+						+ "    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 101 MINVALUE 101 MAXVALUE 9999999999999 CACHE 1 ),\r\n"
+						+ "    help_name character varying(120) NOT NULL,\r\n"
+						+ "    help_description character varying(800) ,\r\n"
+						+ "    request_url character varying(500) ,\r\n" + "    ref_type_id bigint,\r\n"
+						+ "    help_text text ,\r\n" + "    CONSTRAINT proton_help_config_pkey PRIMARY KEY (id),\r\n"
+						+ "    CONSTRAINT \"HELP_TYPE_FK\" FOREIGN KEY (ref_type_id)\r\n"
+						+ "        REFERENCES proton_help_types (id) MATCH SIMPLE\r\n"
+						+ "        ON UPDATE NO ACTION\r\n" + "        ON DELETE NO ACTION\r\n"
+						+ "        NOT VALID\r\n" + ")", EMPTY_PARAMS);
+				map.put("Create table proton_help_config", "OK");
+				map.put("Create proton_help_config_pkey primary key (id)", "OK");
+				map.put("Create HELP_TYPE_FK foreign key (ref_type_id) -> references to proton_help_types(id)", "OK");
+
+				logger(thisModule, map, ProtonEssences.CREATE_STRUCT, null);
+
+				return "Module Help was created";
+
 			} else {
 				return "Sorry, but this module not applicable now!";
 			}
@@ -481,8 +526,8 @@ public class AdminDAO extends AbstractDAO implements IAdminDAO {
 			UserDetailsProton user) {
 		loggerWithUser(module, params, essence, user);
 	}
-	
-	public void uploadFiles(byte[] file,String fileName, Long userId, ProtonModules module) {
+
+	public void uploadFiles(byte[] file, String fileName, Long userId, ProtonModules module) {
 		Map<String, Object> map = new HashedMap<String, Object>();
 		map.put("file", file);
 		map.put("fileName", fileName);
@@ -491,21 +536,21 @@ public class AdminDAO extends AbstractDAO implements IAdminDAO {
 		querySource.update("insert into proton_data_files(name, data, module_id, user_id)"
 				+ " values (:fileName, :file, :module_id, :userId)", map);
 	}
-	
-	public List<LoadedFiles> getFiles(){
+
+	public List<LoadedFiles> getFiles() {
 		return querySource.query("select * from proton_data_files", new LoadedFilesRowMapper());
 	}
-	
+
 	private static class LoadedFilesRowMapper implements RowMapper<LoadedFiles> {
 
 		@Override
 		public LoadedFiles mapRow(ResultSet rs, int rowNum) throws SQLException {
 			LoadedFiles item = new LoadedFiles();
-			
+
 			item.setFileId(rs.getInt(1));
 			item.setFileName(rs.getString("name"));
 			item.setByteArray(rs.getBytes("data"));
-			
+
 			return item;
 		}
 
