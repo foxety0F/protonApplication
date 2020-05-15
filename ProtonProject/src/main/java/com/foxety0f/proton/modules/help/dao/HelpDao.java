@@ -38,7 +38,7 @@ public class HelpDao extends AbstractDAO implements IHelpDao {
 						+ " values(:helpName, :helpDescription, :url, :refTypeId, :helpText)",
 				map);
 
-		//loggerWithUser(thisModule, map, ProtonEssences.INSERT, user);
+		loggerWithUser(thisModule, map, ProtonEssences.INSERT, user);
 	}
 
 	public void updateHelp(Integer helpId, String helpName, String helpDescription, String url, Integer refTypeId,
@@ -62,6 +62,18 @@ public class HelpDao extends AbstractDAO implements IHelpDao {
 
 		querySource.update("update proton_help_config" + " set " + " help_text = :helpText" + " where id = :helpId",
 				map);
+		
+	}
+	
+	public void updateHelp(Integer helpId, String helpText, UserDetailsProton user) {
+		Map<String, Object> map = new HashedMap<String, Object>();
+		map.put("helpId", helpId);
+		map.put("helpText", helpText);
+
+		querySource.update("update proton_help_config" + " set " + " help_text = :helpText" + " where id = :helpId",
+				map);
+		
+		loggerWithUser(thisModule, map, ProtonEssences.UPDATE, user);
 	}
 
 	public HelpInformation getHelp(String requestUrl) {

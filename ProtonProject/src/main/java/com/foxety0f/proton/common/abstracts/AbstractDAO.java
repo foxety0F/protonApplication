@@ -139,7 +139,7 @@ public abstract class AbstractDAO {
 		map1.put("seq", seqNum);
 		map1.put("username", user.getUsername());
 		querySource.update("insert into z_logger_user (id, username) "
-				+ " values(:seq, :username)", map);
+				+ " values(:seq, :username)", map1);
 	}
 	
 	public Map<ProtonModules, String> loggerMapper(){
@@ -153,6 +153,7 @@ public abstract class AbstractDAO {
 		mapper.put(ProtonModules.RESFULL, "z_proton_restfull_logger");
 		mapper.put(ProtonModules.ROLES, "z_proton_roles_logger");
 		mapper.put(ProtonModules.TESTS, "z_proton_tests_logger");
+		mapper.put(ProtonModules.HELP, "z_proton_help_logger");
 		
 		return mapper;
 	}

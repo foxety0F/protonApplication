@@ -26,7 +26,7 @@ public class HelpController extends AbstractController {
 	private IHelpService helpService;
 
 	@RequestMapping("/help")
-	@PageAnnotation(value = "Help Page", module = ProtonModules.ADMIN)
+	@PageAnnotation(value = "Help Page", module = ProtonModules.HELP)
 	@Secured({ "ROLE_ADMIN", "ROLE_HELP_EDITOR" })
 	public String index(Model model, Principal principal) {
 		if (principal != null) {
@@ -76,35 +76,33 @@ public class HelpController extends AbstractController {
 
 		return new ResponseEntity<String>("No", HttpStatus.UNAUTHORIZED);
 	}
-	
+
 	@RequestMapping("/help/editHelp")
 	public ResponseEntity<String> editHelp(Principal principal,
 			@RequestParam(value = "helpName", required = true) String helpName,
 			@RequestParam(value = "helpDescription", required = false) String helpDescription,
 			@RequestParam(value = "helpText", required = true) String helpText,
 			@RequestParam(value = "helpUrl", required = false) String helpUrl,
-			@RequestParam(value = "helpId", required =  true) Integer helpId) {
+			@RequestParam(value = "helpId", required = true) Integer helpId) {
 		if (principal != null) {
 			UserDetailsProton user = (UserDetailsProton) SecurityContextHolder.getContext().getAuthentication()
 					.getPrincipal();
-			
+
 			if (user.hasRole("ROLE_HELP_EDITOR") | user.hasRole("ROLE_ADMIN")) {
-				
-				if(helpName == null) {
-					helpService.updateHelp(helpId, helpText);
-				}else {
+
+				if (helpName == null) {
+					helpService.updateHelp(helpId, helpText, user);
+				} else {
 					helpService.updateHelp(helpId, helpName, helpDescription, null, 100, helpText, user);
 				}
-				
+
 				return new ResponseEntity<String>("OK", HttpStatus.OK);
 			} else {
 				return new ResponseEntity<String>("Forbidden", HttpStatus.FORBIDDEN);
 			}
 		}
-		
+
 		return new ResponseEntity<String>("No", HttpStatus.UNAUTHORIZED);
 	}
-	
-	
 
 }

@@ -19,6 +19,8 @@ public class EmployeesInformation {
 	private Boolean isActualRow;
 	private Integer userId;
 	private Integer idRow;
+	private String firstName;
+	private String surname;
 
 	public Integer getIdEmployee() {
 		return idEmployee;
@@ -140,13 +142,29 @@ public class EmployeesInformation {
 		this.idRow = idRow;
 	}
 
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getSurname() {
+		return surname;
+	}
+
+	public void setSurname(String surname) {
+		this.surname = surname;
+	}
+
 	@Override
 	public String toString() {
 		return "EmployeesInformation [idEmployee=" + idEmployee + ", login=" + login + ", isActive=" + isActive
 				+ ", idGroup=" + idGroup + ", groupName=" + groupName + ", titelId=" + titelId + ", titelName="
 				+ titelName + ", startDate=" + startDate + ", endDate=" + endDate + ", pcNumber=" + pcNumber
 				+ ", placeNumber=" + placeNumber + ", ipAddress=" + ipAddress + ", isActualRow=" + isActualRow
-				+ ", userId=" + userId + ", idRow=" + idRow + "]";
+				+ ", userId=" + userId + ", idRow=" + idRow + ", firstName=" + firstName + ", surname=" + surname + "]";
 	}
 
 }

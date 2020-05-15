@@ -4,35 +4,84 @@
 <head>
    <title>Employees</title>
    <th:block th:include="addscripts"></th:block>
+   <th:block th:if="${isSupervisor == true}">
+      <script src="/App/js/common/employeeSupervisor.js"></script>
+   </th:block>
 </head>
 
 <body>
    <!-- Include _menu.html -->
    <th:block th:include="_menu"></th:block>
+   <th:block th:if="${isSupervisor == true}">
+      <button id="addNewUser" class="btn btn-info" onclick="EmployeeSupervisor.addNewUser()">Add new user</button>
+   </th:block>
 
+   <div id="tableDiv">
+      <table id="employeeTable">
+         <thead>
+            <tr>
+               <td>Actions</td>
+               <td>First Name</td>
+               <td>Surname</td>
+               <td>Login</td>
+               <td>Group Name</td>
+               <td>Title Name</td>
+               <td>Row actual date</td>
+               <td>PC Number</td>
+               <td>IP Number</td>
+               <td></td>
+            </tr>
+         </thead>
+         <tbody>
 
-   <h2>Employees Page</h2>
-   <h3>Welcome : <span th:utext="${#request.userPrincipal}"></span></h3>
-      <b>This is protected page!</b>  
-       
-      <br/><br/>
+         </tbody>
+      </table>
+   </div>
 
-      <!-- <p th:utext="${#request.userPrincipal.user}"></p> -->
-
-      <div sec:authorize="hasRole('ABSRQWE')">
-            This content is only shown to administrators.
-        </div>
-
-    <tr th:each="mapItem : ${pages}">
-                
-          <a th:href="${mapItem.url}" ><p th:utext="${#messages.msg('${mapItem.urlName}')}"></p> </a>
-        </tr>
-       
-      <div th:if="${userInfo != null}" th:utext="${userInfo}"></div>
-	   <script th:inline="javascript">
-         var employee = /*[[${employees}]]*/ null;
+   <script th:inline="javascript">
+      var employee = /*[[${employees}]]*/ null;
       var helpBoxText = /*[[${helpBox}]]*/ null;
-      </script>
-   </body>
-    
+      var employeesGroups = /*[[${employeeGroups}]]*/ null;
+      var employeeTitles = /*[[${employeeTitles}]]*/ null;
+      var isSupervisor = /*[[${isSupervisor}]]*/ null;
+      var alphaUsers = /*[[${alphaUsers}]]*/ null;
+
+      function initEmployeeTable() {
+         var tdbody = "";
+         for (var i in employee) {
+            if (employee[i].isActualRow == true) {
+
+               tdbody += `<tr>
+                        <td> <button id = "showAllRows" class = "btn btn-default" onclick="showAllRows(this)" data-userid = "` + employee[i].userId + `" alt = "Show All Rows">
+                                 <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
+                             </button>`
+               if (isSupervisor) {
+                  tbody += `<button id = "addNewRow" onclick="EmployeeSupervisor.addNewRow(this)" data-userid = "` + employee[i].userId + `" alt = "Add new Row"> 
+                              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                         </button>`;
+               }
+
+               tdbody += `</td>`;
+
+               tdbody += `<td> ` + employee[i].firstName + `</td>
+                       <td> ` + employee[i].surname + `</td>
+                       <td> ` + employee[i].login + `</td>
+                       <td> ` + employee[i].groupName + `</td>
+                       <td> ` + employee[i].titleName + `</td>
+                       <td> ` + employee[i].startDate + `</td>
+                       <td> ` + employee[i].pcNumber + `</td>
+                       <td> ` + employee[i].ipAddress + `</td>
+                       </tr> `
+
+            }
+         }
+
+         $('#employeeTable tbody').append(tdbody);
+         $('#employeeTable').dataTable();
+      }
+
+      initEmployeeTable();
+   </script>
+</body>
+
 </html>

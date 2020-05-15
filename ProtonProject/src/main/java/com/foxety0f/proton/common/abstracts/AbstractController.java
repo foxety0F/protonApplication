@@ -14,10 +14,10 @@ import com.foxety0f.proton.modules.admin.service.AdminService;
 import com.foxety0f.proton.utils.JsonUtils;
 
 public abstract class AbstractController {
-	
+
 	@Autowired
 	private UserDetailsServiceImpl userService;
-	
+
 	@Autowired
 	private AdminService adminService;
 
@@ -30,24 +30,28 @@ public abstract class AbstractController {
 	protected String toJson(Object data) {
 		return JsonUtils.toJson(data);
 	}
-	
-	public Boolean hasRole() {
-		return false;
+
+	public List<ProtonPageUrl> getAllPages() {
+		return userService.getAllPages();
 	}
-	
+
+	public AdminService getAdminService() {
+		return adminService;
+	}
+
 	public void udateMenuList(UserDetailsProton user) {
 		Integer cntForReload = user.getCountForReload();
-		System.err.println(user);
-		if(cntForReload <= 1) {
+		if (cntForReload <= 1) {
 			user.setCountForReload(10);
 			user.setPages(userService.pageForUser(user.getAuthorities()));
-		}else {
-			user.setCountForReload(cntForReload - 1); 
+		} else {
+			user.setCountForReload(cntForReload - 1);
 		}
 	}
 	
-	public List<ProtonPageUrl> getAllPages(){
-		return userService.getAllPages();
+	public void updateMenuListNow(UserDetailsProton user) {
+		user.setCountForReload(10);
+		user.setPages(userService.pageForUser(user.getAuthorities()));
 	}
 
 }
