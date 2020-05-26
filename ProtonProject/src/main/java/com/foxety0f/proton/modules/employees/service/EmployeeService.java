@@ -40,8 +40,8 @@ public class EmployeeService implements IEmployeeService {
 	}
 
 	public void setNewEmployee(Integer idUser, String login, Integer idGroup, Integer titleId, String pcNumber,
-			String placeNumber, String ipAddress, UserDetailsProton user) throws UserAlreadyExistException {
-		employeeDao.setNewEmployee(idUser, login, idGroup, titleId, pcNumber, placeNumber, ipAddress, user);
+			String placeNumber, String ipAddress, Date startDate, UserDetailsProton user) throws UserAlreadyExistException {
+		employeeDao.setNewEmployee(idUser, login, idGroup, titleId, pcNumber, placeNumber, ipAddress, user, startDate);
 	}
 
 	public void markEmployeeAsActive(Integer employeeId, UserDetailsProton user) {
@@ -63,8 +63,20 @@ public class EmployeeService implements IEmployeeService {
 				endDate, user);
 
 	}
-	
-	public List<AlphaUserInformation> getAlphaUsers(){
+
+	public List<AlphaUserInformation> getAlphaUsers() {
 		return employeeDao.getAlphaUsers();
+	}
+	
+	public void setNewGroup(String name, String description, UserDetailsProton user) {
+		employeeDao.setNewGroup(name, description, user);
+	}
+
+	public void setNewTitle(String name, String description, UserDetailsProton user) {
+		employeeDao.setNewTitle(name, description, user);
+	}
+	
+	public List<EmployeesInformation> getEmployeeInformation(Integer employeeId, Boolean lastRow){
+		return employeeDao.getEmployeeInformation(employeeId, lastRow);
 	}
 }

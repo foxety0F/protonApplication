@@ -12,12 +12,15 @@
 <body>
    <!-- Include _menu.html -->
    <th:block th:include="_menu"></th:block>
-   <th:block th:if="${isSupervisor == true}">
-      <button id="addNewUser" class="btn btn-info" onclick="EmployeeSupervisor.addNewUser()">Add new user</button>
-   </th:block>
-
-   <div id="tableDiv">
-      <table id="employeeTable">
+   <div id="buttonsDiv" style="margin-bottom: 10px;">
+      <th:block th:if="${isSupervisor == true}">
+         <button id="addNewUser" class="btn btn-info" onclick="EmployeeSupervisor.addNewUser()">Add new user</button>
+         <button id="addNewGroup" class="btn btn-info" onclick="EmployeeSupervisor.addNewGroup()">Add new group</button>
+         <button id="addNewTitle" class="btn btn-info" onclick="EmployeeSupervisor.addNewTitle()">Add new title</button>
+      </th:block>
+   </div>
+   <div id="tableDiv" style="border-top: 1px solid; padding-top: 10px;">
+      <table id="employeeTable" style = "width:100%">
          <thead>
             <tr>
                <td>Actions</td>
@@ -29,7 +32,28 @@
                <td>Row actual date</td>
                <td>PC Number</td>
                <td>IP Number</td>
-               <td></td>
+            </tr>
+         </thead>
+         <tbody>
+
+         </tbody>
+      </table>
+
+   </div>
+
+   <div id="detailsDiv" style="display: none;">
+      <table id="detailsTable">
+         <thead>
+            <tr>
+               <td>Actions</td>
+               <td>First Name</td>
+               <td>Surname</td>
+               <td>Login</td>
+               <td>Group Name</td>
+               <td>Title Name</td>
+               <td>Row actual date</td>
+               <td>PC Number</td>
+               <td>IP Number</td>
             </tr>
          </thead>
          <tbody>
@@ -52,11 +76,11 @@
             if (employee[i].isActualRow == true) {
 
                tdbody += `<tr>
-                        <td> <button id = "showAllRows" class = "btn btn-default" onclick="showAllRows(this)" data-userid = "` + employee[i].userId + `" alt = "Show All Rows">
+                        <td> <button id = "showAllRows" class = "btn btn-default" onclick="showAllRows(this)" data-userid = "` + employee[i].idEmployee + `" alt = "Show All Rows">
                                  <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
-                             </button>`
+                             </button>`;
                if (isSupervisor) {
-                  tbody += `<button id = "addNewRow" onclick="EmployeeSupervisor.addNewRow(this)" data-userid = "` + employee[i].userId + `" alt = "Add new Row"> 
+                  tdbody += `<button id = "addNewRow" class = "btn btn-default" onclick="EmployeeSupervisor.addNewRow(this)" data-userid = "` + employee[i].idEmployee + `" alt = "Add new Row"> 
                               <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                          </button>`;
                }
@@ -67,11 +91,11 @@
                        <td> ` + employee[i].surname + `</td>
                        <td> ` + employee[i].login + `</td>
                        <td> ` + employee[i].groupName + `</td>
-                       <td> ` + employee[i].titleName + `</td>
+                       <td> ` + employee[i].titelName + `</td>
                        <td> ` + employee[i].startDate + `</td>
                        <td> ` + employee[i].pcNumber + `</td>
                        <td> ` + employee[i].ipAddress + `</td>
-                       </tr> `
+                       </tr> `;
 
             }
          }
@@ -81,6 +105,60 @@
       }
 
       initEmployeeTable();
+
+      function showAllRows(that) {
+         console.log(that);
+         var userId = that.dataset.userid;
+
+         var tb = `<table id="detailsTable">
+                     <thead>
+                        <tr>
+                           <td>First Name</td>
+                           <td>Surname</td>
+                           <td>Login</td>
+                           <td>Group Name</td>
+                           <td>Title Name</td>
+                           <td>Beg date</td>
+                           <td>End date</td>
+                           <td>PC Number</td>
+                           <td>IP Number</td>
+                        </tr>
+                     </thead>
+                     <tbody>`;
+
+         for (var i in employee) {
+            if (employee[i].idEmployee == userId) {
+               tb += `
+                        <tr>
+                           <td>` + employee[i].firstName + `</td>
+                           <td>` + employee[i].surname + `</td>
+                           <td>` + employee[i].login + `</td>
+                           <td>` + employee[i].groupName + `</td>
+                           <td>` + employee[i].titelName + `</td>
+                           <td>` + employee[i].startDate + `</td>
+                           <td>` + employee[i].endDate + `</td>
+                           <td>` + employee[i].pcNumber + `</td>
+                           <td>` + employee[i].ipAddress + `</td>
+                        </tr>`;
+            }
+         }
+
+         tb += `</tbody>
+                  </table>`;
+
+         $('#tableDiv').hide();
+         $('#detailsDiv').empty();
+         $('#detailsDiv').append(tb);
+         $('#detailsDiv').show();
+         $('#detailsTable').dataTable();
+         $('#buttonsDiv').prepend(`<button id = "backBtn" onclick="backButton()" class = "btn btn-default"> Back </button> `);
+      }
+
+      function backButton() {
+         $('#backBtn').remove();
+         $('#detailsDiv').hide();
+         $('#tableDiv').show();
+      }
    </script>
 </body>
 

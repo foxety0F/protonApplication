@@ -3,6 +3,7 @@ package com.foxety0f.proton.modules.admin.controllers;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -53,6 +54,7 @@ public class IndexAdminController extends AbstractController {
 			model.addAttribute("moduleInformation", adminService.getModuleInformation());
 			model.addAttribute("modules", adminService.getAllModules());
 			model.addAttribute("logingUsers", adminService.getAuthUsers());
+			model.addAttribute("tempTestData", adminService.getTempTestData());
 			try {
 				if (adminService.isActiveModule(ProtonModules.HELP)) {
 					model.addAttribute("helpBox", helpService.getHelp("/admin"));

@@ -1,6 +1,5 @@
 package com.foxety0f.proton.modules.admin.dao;
 
-import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -13,7 +12,6 @@ import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.foxety0f.proton.common.abstracts.AbstractDAO;
 import com.foxety0f.proton.common.domain.LoadedFiles;
@@ -26,7 +24,6 @@ import com.foxety0f.proton.modules.admin.domain.AdminModuleInformation;
 import com.foxety0f.proton.modules.modules_config.Module;
 import com.foxety0f.proton.modules.roles.service.IRoleService;
 import com.foxety0f.proton.utils.EncrytedPasswordUtils;
-import com.foxety0f.proton.utils.ImageUtils;
 
 public class AdminDAO extends AbstractDAO implements IAdminDAO {
 
@@ -555,6 +552,10 @@ public class AdminDAO extends AbstractDAO implements IAdminDAO {
 			return item;
 		}
 
+	}
+	
+	public List<Map<String, Object>> getTempTestData(){
+		return querySource.queryForList("select * from temp_test_data", EMPTY_PARAMS);
 	}
 
 }

@@ -22,7 +22,6 @@ import com.foxety0f.proton.common.exceptions.UserAlreadyExistException;
 import com.foxety0f.proton.common.exceptions.UserNotFound;
 import com.foxety0f.proton.common.user.UserDetailsProton;
 import com.foxety0f.proton.modules.ProtonModules;
-import com.foxety0f.proton.modules.employees.domain.AlphaUserInformation;
 import com.foxety0f.proton.modules.employees.domain.EmployeeTitle;
 import com.foxety0f.proton.modules.employees.domain.EmployeesGroup;
 import com.foxety0f.proton.modules.employees.domain.EmployeesInformation;
@@ -52,7 +51,7 @@ public class EmployeesController extends AbstractController {
 			model.addAttribute("employeeGroups", employeeService.getEmployeeGroup());
 			model.addAttribute("employeeTitles", employeeService.getEmployeeTitles());
 			model.addAttribute("isSupervisor", (user.hasRole("ROLE_EMPLOYEE_SUPERVISOR") | user.hasRole("ROLE_ADMIN")));
-			if((user.hasRole("ROLE_EMPLOYEE_SUPERVISOR") | user.hasRole("ROLE_ADMIN"))) {
+			if ((user.hasRole("ROLE_EMPLOYEE_SUPERVISOR") | user.hasRole("ROLE_ADMIN"))) {
 				model.addAttribute("alphaUsers", employeeService.getAlphaUsers());
 			}
 			try {
@@ -76,13 +75,14 @@ public class EmployeesController extends AbstractController {
 	}
 
 	@RequestMapping("/employees/setNewEmployee")
-	public ResponseEntity<String> setNewEmployee(@RequestParam(required = true, value = "idUser") Integer idUser,
-			@RequestParam(required = true, value = "login") String login,
-			@RequestParam(required = true, value = "idGroup") Integer idGroup,
-			@RequestParam(required = true, value = "titleId") Integer titleId,
+	public ResponseEntity<String> setNewEmployee(@RequestParam(required = false, value = "idUser") Integer idUser,
+			@RequestParam(required = false, value = "login") String login,
+			@RequestParam(required = false, value = "idGroup") Integer idGroup,
+			@RequestParam(required = false, value = "titleId") Integer titleId,
 			@RequestParam(required = false, value = "pcNumber") String pcNumber,
 			@RequestParam(required = false, value = "placeNumber") String placeNumber,
-			@RequestParam(required = false, value = "ipAddress") String ipAddress, Principal principal) {
+			@RequestParam(required = false, value = "ipAddress") String ipAddress,
+			@RequestParam(required = false, value = "startDate") Date startDate, Principal principal) {
 
 		if (principal != null) {
 			UserDetailsProton user = (UserDetailsProton) SecurityContextHolder.getContext().getAuthentication()
@@ -90,8 +90,8 @@ public class EmployeesController extends AbstractController {
 			if (user.hasRole("ROLE_ADMIN") | user.hasRole("ROLE_EMPLOYEE_SUPERVISOR")) {
 				try {
 					employeeService.setNewEmployee(idUser, login, idGroup, titleId, pcNumber, placeNumber, ipAddress,
-							user);
-					return new ResponseEntity<String>("User created " + login, HttpStatus.OK);
+							startDate, user);
+					return new ResponseEntity<String>("User " + login + " was created", HttpStatus.OK);
 				} catch (UserAlreadyExistException e) {
 					return new ResponseEntity<String>("User already exist in database", HttpStatus.CONFLICT);
 				}
@@ -139,13 +139,12 @@ public class EmployeesController extends AbstractController {
 	public ResponseEntity<String> updateEmployeeInformation(
 			@RequestParam(required = true, value = "employeeId") Integer employeeId,
 			@RequestParam(required = true, value = "idGroup") Integer idGroup,
-			@RequestParam(required = true, value = "titleId") Integer idTitle,
 			@RequestParam(required = false, value = "pcNumber") String pcNumber,
 			@RequestParam(required = false, value = "placeNumber") String placeNumber,
 			@RequestParam(required = false, value = "ipNumber") String ipNumber,
 			@RequestParam(required = false, value = "titleId") Integer titleId,
 			@RequestParam(required = true, value = "startDate") Date startDate,
-			@RequestParam(required = true, value = "startDate") Date endDate, Principal principal) {
+			@RequestParam(required = false, value = "endDate") Date endDate, Principal principal) {
 
 		if (principal != null) {
 			UserDetailsProton user = (UserDetailsProton) SecurityContextHolder.getContext().getAuthentication()
@@ -184,7 +183,7 @@ public class EmployeesController extends AbstractController {
 	@RequestMapping("/employee/markAsActive")
 	public ResponseEntity<String> markEmployeeAsActive(
 			@RequestParam(required = true, value = "employeeId") Integer employeeId, Principal principal) {
-		
+
 		if (principal != null) {
 			UserDetailsProton user = (UserDetailsProton) SecurityContextHolder.getContext().getAuthentication()
 					.getPrincipal();
@@ -194,24 +193,62 @@ public class EmployeesController extends AbstractController {
 			}
 			return new ResponseEntity<String>("Forbidden", HttpStatus.FORBIDDEN);
 		}
-		
+
 		return new ResponseEntity<>(null, HttpStatus.OK);
 	}
-	
+
 	@RequestMapping("/employees/getAlphaUsers")
 	public ResponseEntity<String> getAlphaUsers(Principal principal) {
 		if (principal != null) {
 			UserDetailsProton user = (UserDetailsProton) SecurityContextHolder.getContext().getAuthentication()
 					.getPrincipal();
-			
+
 			if (user.hasRole("ROLE_EMPLOYEE_SUPERVISOR") | user.hasRole("ROLE_ADMIN")) {
-				
+
 				return new ResponseEntity<String>(toJson(employeeService.getAlphaUsers()), HttpStatus.OK);
 			} else {
 				return new ResponseEntity<String>("Forbidden", HttpStatus.FORBIDDEN);
 			}
 		}
-		
+
 		return new ResponseEntity<String>("UNAUTH", HttpStatus.UNAUTHORIZED);
+	}
+
+	@RequestMapping("/employees/setNewGroup")
+	public ResponseEntity<String> setNewGroup(Principal principal,
+			@RequestParam(required = true, value = "name") String name,
+			@RequestParam(required = true, value = "description") String description) {
+		if (principal != null) {
+			UserDetailsProton user = (UserDetailsProton) SecurityContextHolder.getContext().getAuthentication()
+					.getPrincipal();
+
+			if (user.hasRole("ROLE_EMPLOYEE_SUPERVISOR") | user.hasRole("ROLE_ADMIN")) {
+				employeeService.setNewGroup(name, description, user);
+				return new ResponseEntity<String>("OK", HttpStatus.OK);
+			} else {
+				return new ResponseEntity<String>("Forbidden", HttpStatus.FORBIDDEN);
+			}
+		}
+
+		return new ResponseEntity<String>("No", HttpStatus.UNAUTHORIZED);
+	}
+
+	@RequestMapping("/employees/setNewTitle")
+	public ResponseEntity<String> setNewTitle(Principal principal,
+			@RequestParam(required = true, value = "name") String name,
+			@RequestParam(required = true, value = "description") String description) {
+		if (principal != null) {
+			UserDetailsProton user = (UserDetailsProton) SecurityContextHolder.getContext().getAuthentication()
+					.getPrincipal();
+
+			if (user.hasRole("ROLE_EMPLOYEE_SUPERVISOR") | user.hasRole("ROLE_ADMIN")) {
+				employeeService.setNewTitle(name, description, user);
+				return new ResponseEntity<String>("OK", HttpStatus.OK);
+			} else {
+				return new ResponseEntity<String>("Forbidden", HttpStatus.FORBIDDEN);
+			}
+		}
+
+		return new ResponseEntity<String>("No", HttpStatus.UNAUTHORIZED);
 	}
 }

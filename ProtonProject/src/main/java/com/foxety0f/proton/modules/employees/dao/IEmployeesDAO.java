@@ -20,7 +20,7 @@ public interface IEmployeesDAO {
 	List<EmployeeTitle> getEmployeeTitles();
 
 	void setNewEmployee(Integer idUser, String login, Integer idGroup, Integer titleId, String pcNumber,
-			String placeNumber, String ipAddress, UserDetailsProton user) throws UserAlreadyExistException;
+			String placeNumber, String ipAddress, UserDetailsProton user, Date startDate) throws UserAlreadyExistException;
 
 	void markEmployeeAsActive(Integer employeeId, UserDetailsProton user);
 
@@ -33,4 +33,10 @@ public interface IEmployeesDAO {
 			throws UserNotFound;
 
 	List<AlphaUserInformation> getAlphaUsers();
+
+	void setNewGroup(String name, String description, UserDetailsProton user);
+
+	void setNewTitle(String name, String description, UserDetailsProton user);
+	
+	List<EmployeesInformation> getEmployeeInformation(Integer employeeId, Boolean lastRow);
 }

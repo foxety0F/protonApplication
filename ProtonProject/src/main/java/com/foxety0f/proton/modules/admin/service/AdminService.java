@@ -1,12 +1,10 @@
 package com.foxety0f.proton.modules.admin.service;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.foxety0f.proton.common.domain.LoadedFiles;
@@ -233,5 +231,9 @@ public class AdminService implements IAdminService {
 	public void uploadFiles(String val, ProtonModules module, UserDetailsProton user) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public List<Map<String, Object>> getTempTestData(){
+		return adminDao.getTempTestData();
 	}
 }

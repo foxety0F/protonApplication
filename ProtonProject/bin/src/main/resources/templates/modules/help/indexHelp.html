@@ -1,0 +1,174 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Help Page</title>
+	<th:block th:include="addscripts"></th:block>
+</head>
+
+<body>
+	<!-- Include _menu.html -->
+	<th:block th:include="_menu"></th:block>
+
+	<div id="submenu">
+
+	</div>
+	<div id="htmlRed">
+
+	</div>
+
+	<script th:inline="javascript">
+		var allPages = /*[[${allPages}]]*/ null;
+		var allHelpPages = /*[[${allHelpPages}]]*/ null;
+		var helpBoxText = /*[[${helpBox}]]*/ null;
+
+		var tb = `<table id = "coreTable">
+						<tbody>`;
+
+		for (var i in allPages) {
+			tb += `<tr data-url="` + allPages[i].url + `" ><td>` + allPages[i].urlName + `</td>
+					   <td>` + allPages[i].url + `</td>`;
+
+			var ex = false;
+			for (var k in allHelpPages) {
+
+				if (allPages[i].url == allHelpPages[k].url) {
+					ex = true;
+					tb += `<td>1</td></tr>`;
+				}
+			}
+
+			if (!ex) {
+				tb += `<td>0</td></tr>`;
+			}
+		}
+
+		tb += `</tbody></table>`;
+		$('#submenu').append(tb);
+		//$('#coreTable').dataTable();
+
+		var currUrl = "";
+		var helpName = "";
+		var isEdit = false;
+		var currId = 0;
+
+		$('#coreTable tbody tr').on('click', function () {
+			var that = this;
+			var thisUrl = that.dataset.url;
+			currUrl = thisUrl;
+			helpName = that.children[0].innerText;
+			$('#submenu').hide();
+			$('#htmlRed').show();
+			$('#htmlRed').empty();
+			var btnDiv = `
+					<div class = "container">
+						<div class = "col-md-4 col-sm-12">
+							<button id = "backToTable" class = "btn btn-danger" onclick="backToTable()">Back</button>
+						</div>
+						<div class = "col-md-4 col-sm-12">
+							<button id = "showPromo" class = "btn btn-info" onclick="showPromo()">Show Promo</button>
+						</div>
+						<div class = "col-md-4 col-sm-12">
+							<button id = "saveHelp" class = "btn btn-success" onclick="saveHelp()">Save help</button>
+						</div>
+					</div>
+					<div>
+						<table style = "border : 0px">
+						<tr> <td> Help Name : </td><td><input id = "helpName" value = "`+helpName+`" /></td> </tr>
+						</table>
+					</div>`;
+
+			$('#htmlRed').append(btnDiv);
+
+			$('#htmlRed').append(` <textarea id = "helpEditor"></textarea>`);
+
+			CKEDITOR.replace('helpEditor');
+			if (that.children[2].innerText == 1) {
+				var dataEditor = "";
+				for (var i in allHelpPages) {
+					if (allHelpPages[i].url == thisUrl) {
+						dataEditor = allHelpPages[i].helpText;
+						currId = allHelpPages[i].helpId;
+					}
+				}
+				CKEDITOR.instances.helpEditor.setData(dataEditor);
+				isEdit = true;
+			} else {
+				isEdit = false;
+			}
+		})
+
+		function backToTable() {
+			bootbox.confirm({
+				title: "Back to previous page?",
+				message: "Important! All data will not be saved",
+				size: 'large',
+
+				buttons: {
+					confirm: {
+						label: "Ok",
+						className: 'btn-success'
+					},
+					cancel: {
+						label: "Cancel",
+						className: 'btn-danger'
+					}
+				},
+
+				callback: function (result) {
+					if (result) {
+						$('#submenu').show();
+						$('#htmlRed').empty().hide();
+					}
+				}
+			})
+		}
+
+		function showPromo() {
+			helpBox.showDraft(helpName, CKEDITOR.instances.helpEditor.getData());
+		}
+
+		function saveHelp() {
+			var saveUrl = "/help/createNewHelp";
+			var msgCrEd = "Do you want add new help information?"
+			if (isEdit) {
+				saveUrl = "/help/editHelp";
+				msgCrEd = "Do you want update help information? <br/> All data will be change";
+			}
+
+			bootbox.confirm({
+				title: "Confirm update",
+				message: msgCrEd,
+				size: 'large',
+				buttons: {
+					confirm: {
+						label: "Yes",
+						className: "btn-success"
+					},
+					cancel: {
+						label: "No",
+						className: "btn-danger"
+					}
+				},
+
+				callback: function (result) {
+					if (result) {
+						$.ajax({
+							url: saveUrl,
+							data: {
+								helpName: $('#helpName').val(),
+								helpUrl: currUrl,
+								helpText: CKEDITOR.instances.helpEditor.getData(),
+								helpId: currId
+							}
+						}).done(function (data) {
+							$.growl({ title: 'Help saved', message: 'Saved help for ' + currUrl })
+						})
+					}
+				}
+			})
+		}
+	</script>
+</body>
+
+</html>

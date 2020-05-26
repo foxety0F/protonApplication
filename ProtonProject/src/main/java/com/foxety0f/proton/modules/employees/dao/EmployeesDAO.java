@@ -2,7 +2,6 @@ package com.foxety0f.proton.modules.employees.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +36,8 @@ public class EmployeesDAO extends AbstractDAO implements IEmployeesDAO {
 	private ProtonModules thisModule = ProtonModules.EMPLOYEES;
 
 	public void setNewEmployee(Integer idUser, String login, Integer idGroup, Integer titleId, String pcNumber,
-			String placeNumber, String ipAddress, UserDetailsProton user) throws UserAlreadyExistException {
+			String placeNumber, String ipAddress, UserDetailsProton user, Date startDate)
+			throws UserAlreadyExistException {
 		Map<String, Object> map = new HashedMap<String, Object>();
 		map.put("idUser", idUser);
 		map.put("login", login);
@@ -61,10 +61,11 @@ public class EmployeesDAO extends AbstractDAO implements IEmployeesDAO {
 				map, Integer.class);
 
 		map.put("employeeId", employeeId);
+		map.put("startDate", startDate == null ? "CURRENT_DATE" : startDate);
 
 		querySource.update(
 				"insert into proton_employees_attr(id_employee, beg_date, end_date, id_group, id_title, pc_number, ip_address, place, lastRow)"
-						+ "values (:employeeId, CURRENT_DATE, null, :idGroup, :titleId, :pcNumber, :ipAddress, :placeNumber, 1)",
+						+ "values (:employeeId, :startDate, null, :idGroup, :titleId, :pcNumber, :ipAddress, :placeNumber, 1)",
 				map);
 
 		loggerWithUser(thisModule, map, ProtonEssences.INSERT, user);
@@ -85,15 +86,14 @@ public class EmployeesDAO extends AbstractDAO implements IEmployeesDAO {
 	}
 
 	public List<EmployeesInformation> getEmployeeInformation() {
-		return querySource.query(
-				"select emp.id_employee" + " , emp.login" + " , emp.isActive" + " , emp.id_user" + " , attr.id_group"
-						+ " , attr.id_title" + " , attr.pc_number" + " , attr.ip_address" + " , attr.place"
-						+ " , attr.lastRow" + " , attr.id_row" + " , attr.beg_date" + " , attr.end_date"
-						+ " , tl.name_title" + " , gp.name_group" + ", au.first_name, au.surname from proton_employees emp "
-						+ " left join proton_employees_attr attr on emp.id_employee = attr.id_employee"
-						+ " left join proton_employee_titles tl on tl.id_title = attr.id_title"
-						+ " left join proton_employees_groups gp on gp.id_group = attr.id_group"
-						+ " left join app_user au on au.user_id = emp.id_employee",
+		return querySource.query("select emp.id_employee" + " , emp.login" + " , emp.isActive" + " , emp.id_user"
+				+ " , attr.id_group" + " , attr.id_title" + " , attr.pc_number" + " , attr.ip_address" + " , attr.place"
+				+ " , attr.lastRow" + " , attr.id_row" + " , attr.beg_date" + " , attr.end_date" + " , tl.name_title"
+				+ " , gp.name_group" + ", au.first_name, au.surname from proton_employees emp "
+				+ " left join proton_employees_attr attr on emp.id_employee = attr.id_employee"
+				+ " left join proton_employee_titles tl on tl.id_title = attr.id_title"
+				+ " left join proton_employees_groups gp on gp.id_group = attr.id_group"
+				+ " left join app_user au on au.user_id = emp.id_user" + " order by emp.login, attr.beg_date desc",
 				new EmployeesInformationRowMapper());
 	}
 
@@ -174,18 +174,59 @@ public class EmployeesDAO extends AbstractDAO implements IEmployeesDAO {
 		return querySource.query("select emp.id_employee" + " , emp.login" + " , emp.isActive" + " , emp.id_user"
 				+ " , attr.id_group" + " , attr.id_title" + " , attr.pc_number" + " , attr.ip_address" + " , attr.place"
 				+ " , attr.lastRow" + " , attr.id_row" + " , attr.beg_date" + " , attr.end_date" + " , tl.name_title"
-				+ " , gr.name_group" + " from proton_employees emp "
+				+ " , gp.name_group" + ", au.first_name, au.surname from proton_employees emp "
 				+ " left join proton_employees_attr attr on emp.id_employee = attr.id_employee"
-				+ " left join proton_employees_titles tl on tl.id_title = attr.id_title"
-				+ " left join proton_employees_groups gp on gp.id_group = attr.id_group" + " where login = :login "
-				+ whereLR, map, new EmployeesInformationRowMapper());
+				+ " left join proton_employee_titles tl on tl.id_title = attr.id_title"
+				+ " left join proton_employees_groups gp on gp.id_group = attr.id_group"
+				+ " left join app_user au on au.user_id = emp.id_user" + " where login = :login "
+				+ whereLR + " order by emp.login, attr.beg_date desc", map, new EmployeesInformationRowMapper());
+	}
+	
+	public List<EmployeesInformation> getEmployeeInformation(Integer employeeId, Boolean lastRow) {
+		Map<String, Integer> map = new HashedMap<String, Integer>();
+		map.put("employeeId", employeeId);
+
+		String whereLR = " and attr.lastRow = 1";
+
+		if (!lastRow) {
+			whereLR = "";
+		}
+
+		return querySource.query("		select emp.id_employee  \r\n" + 
+				"			 , emp.login \r\n" + 
+				"			 , emp.isActive  \r\n" + 
+				"			 , emp.id_user\r\n" + 
+				"			 , attr.id_group  \r\n" + 
+				"			 , attr.id_title  \r\n" + 
+				"			 , attr.pc_number  \r\n" + 
+				"			 , attr.ip_address  \r\n" + 
+				"			 , attr.place\r\n" + 
+				"			 , attr.lastRow  \r\n" + 
+				"			 , attr.id_row  \r\n" + 
+				"			 , attr.beg_date  \r\n" + 
+				"			 , attr.end_date  \r\n" + 
+				"			 , tl.name_title\r\n" + 
+				"			 , gp.name_group \r\n" + 
+				"			 , au.first_name\r\n" + 
+				"			 , au.surname \r\n" + 
+				"		  from proton_employees emp \r\n" + 
+				"	 left join proton_employees_attr attr on emp.id_employee = attr.id_employee\r\n" + 
+				"	 left join proton_employee_titles tl on tl.id_title = attr.id_title\r\n" + 
+				"	 left join proton_employees_groups gp on gp.id_group = attr.id_group\r\n" + 
+				"	 left join app_user au on au.user_id = emp.id_user  \r\n" + 
+				"		 where emp.id_employee = :employeeId\r\n" + 
+				whereLR + 
+				"	  order by emp.login, attr.beg_date desc", map, new EmployeesInformationRowMapper());
 	}
 
 	public void updateInformation(Integer employeeId, String login, Integer idGroup, Integer titleId, String pcNumber,
-			String placeNumber, String ipAddress, Date startDate, Date endDate, UserDetailsProton user) throws UserNotFound {
+			String placeNumber, String ipAddress, Date startDate, Date endDate, UserDetailsProton user)
+			throws UserNotFound {
 		Map<String, Object> map = new HashedMap<String, Object>();
 		map.put("id", employeeId);
-		List<EmployeesInformation> emp = getEmployeeInformation(login, true);
+		List<EmployeesInformation> emp = getEmployeeInformation(employeeId, true);
+		
+		
 
 		if (emp.size() == 0) {
 			logException(thisModule, ProtonEssences.EXCEPTION_UPDATE, "User Not Found", login);
@@ -194,43 +235,68 @@ public class EmployeesDAO extends AbstractDAO implements IEmployeesDAO {
 
 		map.put("idGroup", idGroup);
 		map.put("idTitle", titleId);
-		map.put("pcNumber", pcNumber == null ? emp.get(0).getPcNumber() : pcNumber);
-		map.put("placeNumber", placeNumber == null ? emp.get(0).getPlaceNumber() : placeNumber);
-		map.put("ipAddress", ipAddress == null ? emp.get(0).getIpAddress() : ipAddress);
-		map.put("startDate", startDate == null ? new SimpleDateFormat().format(new Date()) : startDate);
+		map.put("pcNumber", pcNumber);
+		map.put("placeNumber", placeNumber);
+		map.put("ipAddress", ipAddress);
+		map.put("startDate", startDate == null ? new Date() : startDate);
 		map.put("endDate", endDate == null ? startDate : endDate);
 		map.put("id_row", emp.get(0).getIdRow());
 
 		querySource.update(
-				"update employees_attr " + " set endDate = :endDate, lastRow = 0 " + " where id_row = :id_row", map);
+				"update proton_employees_attr " + " set end_Date = :endDate, lastRow = 0 " + " where id_row = :id_row", map);
 
-		loggerWithUser(thisModule, map, ProtonEssences.UPDATE, user);
+		loggerWithUser(thisModule, map, ProtonEssences.USER_UPDATE, user);
 
 		querySource.update(
 				"insert into proton_employees_attr(id_employee, beg_date, end_date, id_group, id_title, pc_number, ip_address, place, lastRow)"
-						+ "values (:employeeId, :startDate, null, :idGroup, :titleId, :pcNumber, :ipAddress, :placeNumber, 1)",
+						+ "values (:id, :startDate, null, :idGroup, :idTitle, :pcNumber, :ipAddress, :placeNumber, 1)",
 				map);
 
-		loggerWithUser(thisModule, map, ProtonEssences.INSERT, user);
+		loggerWithUser(thisModule, map, ProtonEssences.INSERT_USER_ATTR, user);
 	}
-	
-	public List<AlphaUserInformation> getAlphaUsers(){
-		return querySource.query("select * from app_user where user_id not in(select distinct id_user from proton_employees)", new AlphaUserInformationRowMapper());
+
+	public List<AlphaUserInformation> getAlphaUsers() {
+		return querySource.query(
+				"select * from app_user where user_id not in(select distinct id_user from proton_employees)",
+				new AlphaUserInformationRowMapper());
 	}
-	
+
 	private static class AlphaUserInformationRowMapper implements RowMapper<AlphaUserInformation> {
 
 		@Override
 		public AlphaUserInformation mapRow(ResultSet rs, int rowNum) throws SQLException {
 			AlphaUserInformation item = new AlphaUserInformation();
-			
-			item.setLogin(rs.getString("login"));
+
+			item.setLogin(rs.getString("user_name"));
 			item.setFirstName(rs.getString("first_name"));
 			item.setSurname(rs.getString("surname"));
 			item.setUserId(rs.getLong("user_id"));
-			
+
 			return item;
 		}
+
+	}
+
+	public void setNewGroup(String name, String description, UserDetailsProton user) {
+		Map<String, String> map = new HashedMap<String, String>();
+		map.put("name", name);
+		map.put("description", description);
+
+		querySource.update(
+				"insert into proton_employees_groups(name_group, description) " + " values(:name, :description)", map);
+
+		loggerWithUser(thisModule, map, ProtonEssences.INSERT, user);
+	}
+
+	public void setNewTitle(String name, String description, UserDetailsProton user) {
+		Map<String, String> map = new HashedMap<String, String>();
+		map.put("name", name);
+		map.put("description", description);
+
+		querySource.update(
+				"insert into proton_employee_titles(name_title, description) " + " values(:name, :description)", map);
+
+		loggerWithUser(thisModule, map, ProtonEssences.INSERT, user);
 
 	}
 

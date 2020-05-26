@@ -14,25 +14,17 @@
       <button id="createAlphaUser" class="btn btn-info">Create Alpha User</button>
    </div>
    <div id="adminContainer"></div>
+   <div id = "alphaUserInfo">
 
-   <form method="POST" enctype="multipart/form-data" action="/admin/uploadFiles">
-      File to upload :
-      <input type="file" name="files" multiple>
-      <input type="submit" value="Upload">
-   </form>
+   </div>
 
-   <form action="" method="POST">
-      <textarea id = "helpEditor">
-
-      </textarea>
-
-   </form>
 
    <script th:inline="javascript">
       var modules = /*[[${modules}]]*/ null;
       var modulesInformation = /*[[${moduleInformation}]]*/ null;
       var logingUsers = /*[[${logingUsers}]]*/ null;
       var helpBoxText = /*[[${helpBox}]]*/ null;
+      var tempTestData = /*[[${tempTestData}]]*/null; 
 
       modules.sort(function (a, b) {
          return a.id - b.id;
@@ -103,7 +95,32 @@
                         firstName: $('#firstNameNewAgent').val(),
                         surname: $('#surnameNewAgent').val()
                      }
-                  }).done(function (data) {
+                  }).done(function (data2) {
+                     var data = JSON.parse(data2)
+                     var inf = `
+                        <table>
+                           <tr> 
+                              <td> User Id </td>
+                              <td> ` + data.userId + `</td>
+                           </tr>
+                           <tr>
+                              <td> User Name </td>
+                              <td> ` + data.userName + ` </td>
+                           </tr>
+                           <tr>
+                              <td> Password </td>
+                              <td> ` + data.encryptedPassword + ` </td>
+                           </td>
+                           <tr>
+                              <td> First Name </td>
+                              <td> ` + data.firstName + ` </td>
+                           </tr>
+                           <tr>
+                              <td> Surname </td>
+                              <td> ` + data.surname + ` </td>
+                           </tr>
+                        </table>`;
+                     $('#alphaUserInfo').empty().append(inf);
                      console.log(data)
                   }).fail(function (data) {
                      console.log(data)
@@ -113,7 +130,7 @@
          })
       })
 
-      CKEDITOR.replace( 'helpEditor' );
+      CKEDITOR.replace('helpEditor');
    </script>
 </body>
 
