@@ -1,7 +1,7 @@
 package com.foxety0f.proton.modules.admin.dao;
 
-import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 import com.foxety0f.proton.common.domain.LoadedFiles;
 import com.foxety0f.proton.common.exceptions.UserAlreadyExistException;
@@ -29,4 +29,6 @@ public interface IAdminDAO {
 	void uploadFiles(byte[] base64Encoded, String fileName, Long userId, ProtonModules module);
 
 	List<LoadedFiles> getFiles();
+	
+	List<Map<String, Object>> getTempTestData();
 }

@@ -1,0 +1,242 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Admin Page</title>
+	<th:block th:include="addscripts"></th:block>
+</head>
+
+<body>
+	<!-- Include _menu.html -->
+	<th:block th:include="_menu"></th:block>
+
+	<div id="menuRole">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4 col-sm-12">
+					<button id="createNewRole" class="btn btn-info">Role information</button>
+				</div>
+				<div class="col-md-4 col-sm-12">
+					<button id="addRoleToUser" class="btn btn-info">User roles information</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="contentCreateNewRole" style="display:none">
+		<div>
+			<button id="createRole" class="btn btn-info">Create new Role</button>
+		</div>
+		<div id="currentRoles"></div>
+	</div>
+	<div id="contentAddRoleToUser" style="display: none;"></div>
+	<div id="contentViewAllUsersRole" style="display: none;"></div>
+
+	<script th:inline="javascript">
+		var roles = /*[[${roles}]]*/ null;
+		var usersAndRoles = /*[[${userAndRoles}]]*/ null;
+
+		$('#createNewRole').on('click', function () {
+			$('#contentAddRoleToUser').hide();
+			$('#contentViewAllUsersRole').hide();
+			$('#contentCreateNewRole').show();
+		});
+
+		$('#addRoleToUser').on('click', function () {
+			$('#contentViewAllUsersRole').hide();
+			$('#contentCreateNewRole').hide();
+			$('#contentAddRoleToUser').show();
+		})
+
+		$('#viewAllUsersRole').on('click', function () {
+			$('#contentCreateNewRole').hide();
+			$('#contentAddRoleToUser').hide();
+			$('#contentViewAllUsersRole').show();
+		})
+
+		function drawRolesTable(data) {
+			var rolesTable = `<table id = "rolesTable" style = "width : 100%"> 
+			 <thead>
+				<tr>
+					<th> Role Id </th>
+					<th> Role Name </th>
+					<th> Description </th>
+				</tr>
+			 </thead>
+			 <tbody>`;
+
+			for (var i in data) {
+				rolesTable += `<tr>
+				<td>` + data[i].id + `</td>
+				<td>` + data[i].roleName + `</td>
+				<td>` + data[i].description + `</td>
+				</tr>`;
+
+			}
+
+			rolesTable += `</tbody></table>`;
+
+			$('#currentRoles').empty().append(rolesTable);
+
+			
+		}
+
+		var userListDistinct = [];
+		var unique = {};
+		for (var i in usersAndRoles) {
+			if (usersAndRoles[i]["username"] != null) {
+				if (typeof (unique[usersAndRoles[i]["username"]]) == 'undefined') {
+					userListDistinct.push(usersAndRoles[i]["username"]);
+				}
+				unique[usersAndRoles[i]["username"]] = 0;
+			}
+		}
+
+		var userTable = `<table id = "userAndRolesTable" class = "cell-border"> 
+							<thead>
+								<tr>
+									<th>User Id</th>
+									<th>User Name</th>
+									<th>User Roles </th>
+								</tr>
+							</thead>
+							<tbody>`;
+
+		for (var i in userListDistinct) {
+			var currUserRoles = "";
+			var userId = 0;
+			var appendRowsPerRoles = "";
+			for (var k in usersAndRoles) {
+
+				if (userListDistinct[i] == usersAndRoles[k].username) {
+					userId = usersAndRoles[k].userId;
+					if (usersAndRoles[k].hasRole) {
+						if (currUserRoles == "") {
+							currUserRoles += usersAndRoles[k].roleName;
+						} else {
+							currUserRoles += "/" + usersAndRoles[k].roleName;
+						}
+						//currUserRoles == "" ? currUserRoles += usersAndRoles[k].roleName : currUserRoles += "/" + usersAndRoles[k].roleName;
+					}
+					appendRowsPerRoles += `<tr style = "display:none; background : lightgray" data-subuserid=` + userId + ` data-show="false"><td>` + userId + `</td>
+											<td>` + userListDistinct[i] + `</td>
+											<td><div>` + usersAndRoles[k].roleName + `
+											<input type = "checkbox" name = "toggle" data-roleId = "` + usersAndRoles[k].idRole + `" data-userId = "` + usersAndRoles[k].userId + `" id = "` + usersAndRoles[k].roleName + userId + `" class = "toggle-button"` + (usersAndRoles[k].hasRole == true ? 'checked' : '') + ` onclick="addRemoveRole(this)"></div></td>`
+						+ `</tr>`;
+				}
+			}
+			userTable += `<tr data-core="true" data-userid = ` + userId + ` data-show="false">
+							<td>` + userId + `</td>
+							<td>` + userListDistinct[i] + `</td>
+							<td>` + currUserRoles + `</td>
+						  </tr>`;
+			userTable += appendRowsPerRoles;
+		}
+
+		userTable += '</tbody></table>';
+
+		$('#contentAddRoleToUser').empty().append(userTable);
+
+		$('#userAndRolesTable').dataTable({
+			info : false,
+			paging : false
+		})
+
+		$('#userAndRolesTable tbody tr').on('click', function (node) {
+			if ($(node)[0].currentTarget.dataset.core == "true") {
+				if ($(node)[0].currentTarget.dataset.show == "false") {
+					$('[data-subuserid=' + $(node)[0].currentTarget.dataset.userid + ']').show();
+					$(node)[0].currentTarget.dataset.show = "true";
+					$(node)[0].currentTarget.style.background = "darkgray";
+				} else {
+					$('[data-subuserid=' + $(node)[0].currentTarget.dataset.userid + ']').hide();
+					$(node)[0].currentTarget.dataset.show = "false";
+					$(node)[0].currentTarget.style.background = "";
+				}
+			}
+		});
+
+		function addRemoveRole(node){
+			var isAdd = $(node).prop("checked");
+			var userId = $(node).data("userid");
+			var roleId = $(node).data("roleid");
+
+			if(isAdd){
+				$.ajax({
+					url : "/roles/addRoleToUser",
+					data : {
+						userId : userId,
+						roleId : roleId
+					}
+				}).done(function(data){
+					$.growl({title : "Add role to user", message : data})
+				}).fail(function(data){
+					$.growl({title : "Error add role to user", message : data})
+				})
+			}else{
+				$.ajax({
+					url : "/roles/removeRoleFromUser",
+					data : {
+						userId : userId,
+						roleId : roleId
+					}
+				}).done(function(data){
+					$.growl({title : "Remove role from user", message : data})
+				}).fail(function(data){
+					$.growl({title : "Error remove role from user", message : data})
+				})
+			}
+		}
+
+		drawRolesTable(roles);
+		$('#createRole').on('click', function () {
+			var message = `<table style = "border : 0px">
+							<tr>
+								<td>Role Name : </td>
+								<td><input id = "roleNameForCreate" val="" placeholder="Put Role Name"></td>
+							</tr>
+							<tr>
+								<td>Role Description : </td>
+								<td><input id = "roleDescriptionForCreate" val="" placeholder="Put Role Name"></td>
+							</tr>
+							</table>`;
+
+
+			bootbox.confirm({
+				title: 'Create new Role',
+				message: message,
+				size: 'large',
+
+				buttons: {
+					confirm: {
+						label: "Add new role",
+						className: "btn-success"
+					},
+					cancel: {
+						label: "Cancel",
+						className: "btn-danger"
+					}
+				},
+
+				callback: function (result) {
+					$.ajax({
+						url: "/roles/createNewRole",
+						data: {
+							roleName: $('#roleNameForCreate').val(),
+							roleDescription: $('#roleDescriptionForCreate').val()
+						}
+					}).done(function (data) {
+						$.ajax({
+							url: "/roles/getAllRoles"
+						}).done(function (data) {
+							drawRolesTable(data);
+						})
+					})
+				}
+			})
+		})
+
+	</script>
+</body>
+
+</html>

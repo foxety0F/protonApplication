@@ -1,7 +1,5 @@
 package com.foxety0f.proton.common.domain;
 
-import org.springframework.web.multipart.MultipartFile;
-
 public class LoadedFiles {
 
 	private Integer fileId;

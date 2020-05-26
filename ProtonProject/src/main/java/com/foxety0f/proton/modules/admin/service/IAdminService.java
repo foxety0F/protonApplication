@@ -2,6 +2,7 @@ package com.foxety0f.proton.modules.admin.service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -54,4 +55,6 @@ public interface IAdminService {
 	public void uploadFiles(String val, ProtonModules module, UserDetailsProton user);
 	
 	List<LoadedFiles> getFiles();
+	
+	List<Map<String, Object>> getTempTestData();
 }

@@ -1,0 +1,120 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+   <title>Admin Page</title>
+   <th:block th:include="addscripts"></th:block>
+</head>
+
+<body>
+   <!-- Include _menu.html -->
+   <th:block th:include="_menu"></th:block>
+
+   <div id="divAlphaUser">
+      <button id="createAlphaUser" class="btn btn-info">Create Alpha User</button>
+   </div>
+   <div id="adminContainer"></div>
+
+   <form method="POST" enctype="multipart/form-data" action="/admin/uploadFiles">
+      File to upload :
+      <input type="file" name="files" multiple>
+      <input type="submit" value="Upload">
+   </form>
+
+   <form action="" method="POST">
+      <textarea id = "helpEditor">
+
+      </textarea>
+
+   </form>
+
+   <script th:inline="javascript">
+      var modules = /*[[${modules}]]*/ null;
+      var modulesInformation = /*[[${moduleInformation}]]*/ null;
+      var logingUsers = /*[[${logingUsers}]]*/ null;
+      var helpBoxText = /*[[${helpBox}]]*/ null;
+
+      modules.sort(function (a, b) {
+         return a.id - b.id;
+      })
+
+      $('#adminContainer').empty();
+      var str = "<table style = 'width:100%'>";
+      for (i in modules) {
+
+         var checked = modules[i].isActive == true ? 'checked' : '';
+
+         str += "<tr>" + '<td>' + modules[i].module + '</td>'
+            + '<td>' + '<input type="checkbox" name="toggle" id="' + modules[i].id + '" class="toggle-button" ' + checked + ' onclick="changeModuleStatus(this)">' + '</td>' + '</tr>';
+      }
+      str += "</table>";
+      $('#adminContainer').append(str);
+
+      function changeModuleStatus(node) {
+         $.ajax({
+            url: '/admin/changeModuleStatus',
+            data: {
+               id: node.id
+            }
+         }).done(function (data) {
+            $.growl({ title: "Module status updated", message: data });
+         })
+      }
+
+      $('#createAlphaUser').on('click', function () {
+         var message = `<div> 
+									<table style = "border : 0px">
+										<tr>
+											<td>Login :</td>
+											<td><input value = "" placeholder = "Put user name" id = "usernameNewAgent"></td>
+										</tr>
+										<tr>
+											<td>First Name: </td>
+											<td><input value = "" placeholder = "Put first Name" id = "firstNameNewAgent"></td>
+										</tr>
+										<tr> 
+											<td>Surname : </td>
+											<td> <input value = "" placeholder = "Put surname" id = "surnameNewAgent"></td>
+										</tr>
+									</table>
+                        </div>`;
+
+
+         bootbox.confirm({
+            message: message,
+            title: "Add new Alpha-User",
+            size: 'large',
+            buttons: {
+               confirm: {
+                  label: "Add new user",
+                  className: "btn-success"
+               },
+               cancel: {
+                  label: 'Cancel',
+                  className: "btn-danger"
+               }
+            },
+            callback: function (result) {
+               if (result) {
+                  $.ajax({
+                     url: "/admin/createAlphaUser",
+                     data: {
+                        username: $('#usernameNewAgent').val(),
+                        firstName: $('#firstNameNewAgent').val(),
+                        surname: $('#surnameNewAgent').val()
+                     }
+                  }).done(function (data) {
+                     console.log(data)
+                  }).fail(function (data) {
+                     console.log(data)
+                  })
+               }
+            }
+         })
+      })
+
+      CKEDITOR.replace( 'helpEditor' );
+   </script>
+</body>
+
+</html>

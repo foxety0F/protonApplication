@@ -1,8 +1,5 @@
 package com.foxety0f.proton.modules.reports.service;
 
-import javax.sql.DataSource;
-
-import com.foxety0f.proton.common.abstracts.AbstractDAO;
 import com.foxety0f.proton.modules.ProtonModules;
 import com.foxety0f.proton.modules.reports.dao.IReportsDao;
 

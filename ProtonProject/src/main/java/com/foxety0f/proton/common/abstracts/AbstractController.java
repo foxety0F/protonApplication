@@ -5,7 +5,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.config.authentication.UserServiceBeanDefinitionParser;
 
 import com.foxety0f.proton.common.domain.ProtonPageUrl;
 import com.foxety0f.proton.common.user.UserDetailsProton;
