@@ -13,6 +13,8 @@ public interface IHelpDao {
 			String helpText, UserDetailsProton user);
 
 	void updateHelp(Integer helpId, String helpText);
+	
+	void updateHelp(Integer helpId, String helpText, UserDetailsProton user);
 
 	HelpInformation getHelp(String requestUrl);
 

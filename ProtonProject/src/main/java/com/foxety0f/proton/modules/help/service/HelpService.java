@@ -47,4 +47,9 @@ public class HelpService implements IHelpService {
 	public List<HelpInformation> getAllHelps() {
 		return helpDao.getAllHelps();
 	}
+
+	@Override
+	public void updateHelp(Integer helpId, String helpText, UserDetailsProton user) {
+		helpDao.updateHelp(helpId, helpText, user);
+	}
 }

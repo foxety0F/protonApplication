@@ -74,8 +74,7 @@
 					</div>
 					<div>
 						<table style = "border : 0px">
-						<tr> <td> Help Name : </td><td><input id = "helpName" /></td> </tr>
-						<tr> <td> Description : </td> <td> <input id = "helpDescription" /> </td> </tr>
+						<tr> <td> Help Name : </td><td><input id = "helpName" value = "`+helpName+`" /></td> </tr>
 						</table>
 					</div>`;
 
@@ -157,7 +156,7 @@
 						$.ajax({
 							url: saveUrl,
 							data: {
-								helpName: helpName,
+								helpName: $('#helpName').val(),
 								helpUrl: currUrl,
 								helpText: CKEDITOR.instances.helpEditor.getData(),
 								helpId: currId

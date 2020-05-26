@@ -17,8 +17,10 @@ import org.springframework.jdbc.core.RowMapper;
 import com.foxety0f.proton.common.abstracts.AbstractDAO;
 import com.foxety0f.proton.common.exceptions.UserAlreadyExistException;
 import com.foxety0f.proton.common.exceptions.UserNotFound;
+import com.foxety0f.proton.common.user.UserDetailsProton;
 import com.foxety0f.proton.modules.ProtonEssences;
 import com.foxety0f.proton.modules.ProtonModules;
+import com.foxety0f.proton.modules.employees.domain.AlphaUserInformation;
 import com.foxety0f.proton.modules.employees.domain.EmployeeTitle;
 import com.foxety0f.proton.modules.employees.domain.EmployeesGroup;
 import com.foxety0f.proton.modules.employees.domain.EmployeesInformation;
@@ -35,7 +37,7 @@ public class EmployeesDAO extends AbstractDAO implements IEmployeesDAO {
 	private ProtonModules thisModule = ProtonModules.EMPLOYEES;
 
 	public void setNewEmployee(Integer idUser, String login, Integer idGroup, Integer titleId, String pcNumber,
-			String placeNumber, String ipAddress) throws UserAlreadyExistException {
+			String placeNumber, String ipAddress, UserDetailsProton user) throws UserAlreadyExistException {
 		Map<String, Object> map = new HashedMap<String, Object>();
 		map.put("idUser", idUser);
 		map.put("login", login);
@@ -65,21 +67,21 @@ public class EmployeesDAO extends AbstractDAO implements IEmployeesDAO {
 						+ "values (:employeeId, CURRENT_DATE, null, :idGroup, :titleId, :pcNumber, :ipAddress, :placeNumber, 1)",
 				map);
 
-		logger(thisModule, map, ProtonEssences.INSERT, querySource);
+		loggerWithUser(thisModule, map, ProtonEssences.INSERT, user);
 	}
 
-	public void markEmployeeAsInactive(Integer employeeId) {
+	public void markEmployeeAsInactive(Integer employeeId, UserDetailsProton user) {
 		Map<String, Integer> map = new HashedMap<String, Integer>();
 		map.put("employeeId", employeeId);
 		querySource.update("update proton_employees" + "set isActive = 0 " + " where employee_id = :employeeId", map);
-		logger(thisModule, map, ProtonEssences.MARK_INACTIVE, querySource);
+		loggerWithUser(thisModule, map, ProtonEssences.MARK_INACTIVE, user);
 	}
 
-	public void markEmployeeAsActive(Integer employeeId) {
+	public void markEmployeeAsActive(Integer employeeId, UserDetailsProton user) {
 		Map<String, Object> map = new HashedMap<String, Object>();
 		map.put("employeeId", employeeId);
 		querySource.update("update proton_employees" + "set isActive = 1" + "where employee_id = :employeeId", map);
-		logger(thisModule, map, ProtonEssences.MARK_ACTIVE, querySource);
+		loggerWithUser(thisModule, map, ProtonEssences.MARK_ACTIVE, user);
 	}
 
 	public List<EmployeesInformation> getEmployeeInformation() {
@@ -87,10 +89,11 @@ public class EmployeesDAO extends AbstractDAO implements IEmployeesDAO {
 				"select emp.id_employee" + " , emp.login" + " , emp.isActive" + " , emp.id_user" + " , attr.id_group"
 						+ " , attr.id_title" + " , attr.pc_number" + " , attr.ip_address" + " , attr.place"
 						+ " , attr.lastRow" + " , attr.id_row" + " , attr.beg_date" + " , attr.end_date"
-						+ " , tl.name_title" + " , gp.name_group" + " from proton_employees emp "
+						+ " , tl.name_title" + " , gp.name_group" + ", au.first_name, au.surname from proton_employees emp "
 						+ " left join proton_employees_attr attr on emp.id_employee = attr.id_employee"
 						+ " left join proton_employee_titles tl on tl.id_title = attr.id_title"
-						+ " left join proton_employees_groups gp on gp.id_group = attr.id_group",
+						+ " left join proton_employees_groups gp on gp.id_group = attr.id_group"
+						+ " left join app_user au on au.user_id = emp.id_employee",
 				new EmployeesInformationRowMapper());
 	}
 
@@ -114,6 +117,8 @@ public class EmployeesDAO extends AbstractDAO implements IEmployeesDAO {
 			item.setTitelName(rs.getString("name_title"));
 			item.setGroupName(rs.getString("name_group"));
 			item.setIdRow(rs.getInt("id_row"));
+			item.setFirstName(rs.getString("first_name"));
+			item.setSurname(rs.getString("surname"));
 
 			return item;
 		}
@@ -139,7 +144,7 @@ public class EmployeesDAO extends AbstractDAO implements IEmployeesDAO {
 	}
 
 	public List<EmployeeTitle> getEmployeeTitles() {
-		return querySource.query("select * from proton_employees_titles", new EmployeeTitleRowMapper());
+		return querySource.query("select * from proton_employee_titles", new EmployeeTitleRowMapper());
 	}
 
 	private static class EmployeeTitleRowMapper implements RowMapper<EmployeeTitle> {
@@ -177,7 +182,7 @@ public class EmployeesDAO extends AbstractDAO implements IEmployeesDAO {
 	}
 
 	public void updateInformation(Integer employeeId, String login, Integer idGroup, Integer titleId, String pcNumber,
-			String placeNumber, String ipAddress, Date startDate, Date endDate) throws UserNotFound {
+			String placeNumber, String ipAddress, Date startDate, Date endDate, UserDetailsProton user) throws UserNotFound {
 		Map<String, Object> map = new HashedMap<String, Object>();
 		map.put("id", employeeId);
 		List<EmployeesInformation> emp = getEmployeeInformation(login, true);
@@ -199,14 +204,34 @@ public class EmployeesDAO extends AbstractDAO implements IEmployeesDAO {
 		querySource.update(
 				"update employees_attr " + " set endDate = :endDate, lastRow = 0 " + " where id_row = :id_row", map);
 
-		logger(thisModule, map, ProtonEssences.UPDATE, querySource);
+		loggerWithUser(thisModule, map, ProtonEssences.UPDATE, user);
 
 		querySource.update(
 				"insert into proton_employees_attr(id_employee, beg_date, end_date, id_group, id_title, pc_number, ip_address, place, lastRow)"
 						+ "values (:employeeId, :startDate, null, :idGroup, :titleId, :pcNumber, :ipAddress, :placeNumber, 1)",
 				map);
 
-		logger(thisModule, map, ProtonEssences.INSERT, querySource);
+		loggerWithUser(thisModule, map, ProtonEssences.INSERT, user);
+	}
+	
+	public List<AlphaUserInformation> getAlphaUsers(){
+		return querySource.query("select * from app_user where user_id not in(select distinct id_user from proton_employees)", new AlphaUserInformationRowMapper());
+	}
+	
+	private static class AlphaUserInformationRowMapper implements RowMapper<AlphaUserInformation> {
+
+		@Override
+		public AlphaUserInformation mapRow(ResultSet rs, int rowNum) throws SQLException {
+			AlphaUserInformation item = new AlphaUserInformation();
+			
+			item.setLogin(rs.getString("login"));
+			item.setFirstName(rs.getString("first_name"));
+			item.setSurname(rs.getString("surname"));
+			item.setUserId(rs.getLong("user_id"));
+			
+			return item;
+		}
+
 	}
 
 }

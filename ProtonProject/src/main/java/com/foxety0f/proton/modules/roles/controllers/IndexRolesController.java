@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.foxety0f.proton.common.abstracts.AbstractController;
 import com.foxety0f.proton.common.annotations.PageAnnotation;
+import com.foxety0f.proton.common.exceptions.ModuleNotUndefinedException;
 import com.foxety0f.proton.common.user.UserDetailsProton;
 import com.foxety0f.proton.modules.ProtonModules;
+import com.foxety0f.proton.modules.help.service.IHelpService;
 import com.foxety0f.proton.modules.roles.domain.ProtonRole;
 import com.foxety0f.proton.modules.roles.service.IRoleService;
 
@@ -25,6 +27,9 @@ public class IndexRolesController extends AbstractController {
 
 	@Autowired
 	private IRoleService roleService;
+	
+	@Autowired
+	private IHelpService helpService;
 
 	@RequestMapping("/roles")
 	@PageAnnotation(value = "Roles", module = ProtonModules.ROLES)
@@ -40,6 +45,14 @@ public class IndexRolesController extends AbstractController {
 			if (user.hasRole("ROLE_MANAGER_ROLES") | user.hasRole("ROLE_ADMIN")) {
 				model.addAttribute("roles", roleService.getProtonRoles());
 				model.addAttribute("userAndRoles", roleService.getProtonRoleUser());
+				try {
+					if (getAdminService().isActiveModule(ProtonModules.HELP)) {
+						model.addAttribute("helpBox", helpService.getHelp("/admin"));
+					}
+				} catch (ModuleNotUndefinedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
 				return "modules/roles/indexRole";
 
@@ -82,7 +95,8 @@ public class IndexRolesController extends AbstractController {
 	}
 
 	@RequestMapping("/roles/addRoleToUser")
-	public ResponseEntity<String> addRoleToUser(Principal princpal, @RequestParam(value = "userId", required = true) Integer userId,
+	public ResponseEntity<String> addRoleToUser(Principal princpal,
+			@RequestParam(value = "userId", required = true) Integer userId,
 			@RequestParam(value = "roleId", required = true) Integer roleId) {
 
 		if (princpal != null) {
@@ -100,9 +114,10 @@ public class IndexRolesController extends AbstractController {
 
 		return new ResponseEntity<String>("Forbidden. Not authorize", HttpStatus.UNAUTHORIZED);
 	}
-	
+
 	@RequestMapping("/roles/removeRoleFromUser")
-	public ResponseEntity<String> removeRoleFromUser(Principal princpal, @RequestParam(value = "userId", required = true) Integer userId,
+	public ResponseEntity<String> removeRoleFromUser(Principal princpal,
+			@RequestParam(value = "userId", required = true) Integer userId,
 			@RequestParam(value = "roleId", required = true) Integer roleId) {
 
 		if (princpal != null) {

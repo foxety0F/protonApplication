@@ -215,6 +215,7 @@ public class AdminDAO extends AbstractDAO implements IAdminDAO {
 		checkMap.put(ProtonModules.RESFULL, "proton_rest_config");
 		checkMap.put(ProtonModules.ROLES, "user_role");
 		checkMap.put(ProtonModules.TESTS, "proton_test_config");
+		checkMap.put(ProtonModules.HELP, "proton_help_config");
 
 		String checkTableName = checkMap.get(module.getModule());
 		System.err.println(checkTableName);
@@ -477,16 +478,16 @@ public class AdminDAO extends AbstractDAO implements IAdminDAO {
 					+ "    token varchar(64) not null,\r\n" + "    last_used timestamp not null,\r\n"
 					+ "    PRIMARY KEY (series)\r\n" + "     \r\n" + ");\r\n" + "  \r\n"
 					+ "--------------------------------------\r\n" + " \r\n"
-					+ "insert into App_User (USER_ID, USER_NAME, ENCRYTED_PASSWORD, ENABLED)\r\n"
-					+ "values (2, 'dbuser1', '$2a$10$PrI5Gk9L.tSZiW9FXhTS8O8Mz9E97k2FZbFvGFFaSsiTUIl.TCrFu', 1);\r\n"
-					+ " \r\n" + "insert into App_User (USER_ID, USER_NAME, ENCRYTED_PASSWORD, ENABLED)\r\n"
-					+ "values (1, 'dbadmin1', '$2a$10$PrI5Gk9L.tSZiW9FXhTS8O8Mz9E97k2FZbFvGFFaSsiTUIl.TCrFu', 1);\r\n"
+					+ "insert into App_User (USER_ID, USER_NAME, ENCRYTED_PASSWORD, ENABLED, first_name, surname, is_first_time)\r\n"
+					+ "values (2, 'dbuser1', '$2a$10$PrI5Gk9L.tSZiW9FXhTS8O8Mz9E97k2FZbFvGFFaSsiTUIl.TCrFu', 1, null, null, 0);\r\n"
+					+ " \r\n" + "insert into App_User (USER_ID, USER_NAME, ENCRYTED_PASSWORD, ENABLED, first_name, surname, is_first_time)\r\n"
+					+ "values (1, 'dbadmin1', '$2a$10$PrI5Gk9L.tSZiW9FXhTS8O8Mz9E97k2FZbFvGFFaSsiTUIl.TCrFu', 1, null, null, 0);\r\n"
 					+ " \r\n" + "---\r\n" + " \r\n" + "insert into app_role (ROLE_ID, ROLE_NAME)\r\n"
 					+ "values (1, 'ROLE_ADMIN');\r\n" + " \r\n" + "insert into app_role (ROLE_ID, ROLE_NAME)\r\n"
 					+ "values (2, 'ROLE_USER');\r\n" + " \r\n" + "---\r\n" + " \r\n"
-					+ "insert into user_role (ID, USER_ID, ROLE_ID)\r\n" + "values ( 1, 1);\r\n" + " \r\n"
-					+ "insert into user_role (ID, USER_ID, ROLE_ID)\r\n" + "values ( 1, 2);\r\n" + " \r\n"
-					+ "insert into user_role (ID, USER_ID, ROLE_ID)\r\n" + "values ( 2, 2);\r\n" + "---\r\n"
+					+ "insert into user_role ( USER_ID, ROLE_ID)\r\n" + "values ( 1, 1);\r\n" + " \r\n"
+					+ "insert into user_role ( USER_ID, ROLE_ID)\r\n" + "values ( 1, 2);\r\n" + " \r\n"
+					+ "insert into user_role ( USER_ID, ROLE_ID)\r\n" + "values ( 2, 2);\r\n" + "---\r\n"
 					+ "Commit;", EMPTY_PARAMS);
 		}
 

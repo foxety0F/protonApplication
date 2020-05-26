@@ -32,7 +32,7 @@ public class IndexAdminController extends AbstractController {
 
 	@Autowired
 	private IAdminService adminService;
-	
+
 	@Autowired
 	private IHelpService helpService;
 
@@ -53,8 +53,14 @@ public class IndexAdminController extends AbstractController {
 			model.addAttribute("moduleInformation", adminService.getModuleInformation());
 			model.addAttribute("modules", adminService.getAllModules());
 			model.addAttribute("logingUsers", adminService.getAuthUsers());
-			model.addAttribute("helpBox", helpService.getHelp("/admin"));
-			
+			try {
+				if (adminService.isActiveModule(ProtonModules.HELP)) {
+					model.addAttribute("helpBox", helpService.getHelp("/admin"));
+				}
+			} catch (ModuleNotUndefinedException e) {
+				e.printStackTrace();
+			}
+
 			return "modules/admin/indexAdmin";
 
 		} else {
@@ -79,7 +85,9 @@ public class IndexAdminController extends AbstractController {
 			}
 
 			try {
-				return new ResponseEntity<>(adminService.changeActiveStatus(id, user), HttpStatus.OK);
+				String result = adminService.changeActiveStatus(id, user);
+				updateMenuListNow(user);
+				return new ResponseEntity<>(result, HttpStatus.OK);
 			} catch (ModuleNotUndefinedException e) {
 				return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 			}

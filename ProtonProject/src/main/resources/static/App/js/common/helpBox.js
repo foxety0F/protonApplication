@@ -113,6 +113,8 @@ var helpBox = {
 				title : title,
 				size : 'large'
 			})
+		}else{
+			$.growl({title : "Hey!", message : "You did not write anything!"})
 		}
 	}
 }

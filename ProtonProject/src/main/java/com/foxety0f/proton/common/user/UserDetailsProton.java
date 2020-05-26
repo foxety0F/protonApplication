@@ -252,6 +252,8 @@ public class UserDetailsProton implements UserDetails, CredentialsContainer {
 		} else {
 			sb.append("Not granted any authorities");
 		}
+		
+		sb.append(";");
 
 		sb.append("Pages: ").append(pages.toString()).append(";");
 
