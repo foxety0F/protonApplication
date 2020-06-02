@@ -58,7 +58,7 @@ public class AdminDAO extends AbstractDAO implements IAdminDAO {
 				querySource.update("create table proton_modules(" + "id smallint," + "isActive smallint" + ")",
 						EMPTY_PARAMS);
 				querySource.update("insert into proton_modules(id, isActive)"
-						+ "values (100, 0), (101, 0), (102,0), (103,0), (104,0), (105,0), (106, 0), (107, 0), (108, 0), (999,1)",
+						+ "values (100, 0), (101, 0), (102,0), (103,0), (104,0), (105,0), (106, 0), (107, 0), (108, 0), (109,0), (999,1)",
 						EMPTY_PARAMS);
 				querySource.update(createPK("proton_modules", "id"), EMPTY_PARAMS);
 				map.put("create table proton_modules", "OK");
