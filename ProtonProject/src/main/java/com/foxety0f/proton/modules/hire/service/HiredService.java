@@ -47,5 +47,13 @@ public class HiredService implements IHiredService{
 	public Integer getUserId(Integer briefId) {
 		return hiredDao.getUserId(briefId);
 	}
+	
+	public List<EmployeeHiredExperience> getSelfEmployeeExperience(Integer userId){
+		return hiredDao.getSelfEmployeeExperience(userId);
+	}
+
+	public List<EmployeeHiredSkills> getSelfEmployeeSkills(Integer userId){
+		return hiredDao.getSelfEmployeeSkills(userId);
+	}
 
 }

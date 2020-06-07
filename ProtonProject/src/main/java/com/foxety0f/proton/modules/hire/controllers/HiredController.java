@@ -3,6 +3,7 @@ package com.foxety0f.proton.modules.hire.controllers;
 import java.security.Principal;
 import java.util.List;
 
+import org.apache.commons.math3.analysis.function.Exp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.foxety0f.proton.common.abstracts.AbstractController;
 import com.foxety0f.proton.common.annotations.PageAnnotation;
+import com.foxety0f.proton.common.exceptions.ModuleNotUndefinedException;
 import com.foxety0f.proton.common.user.UserDetailsProton;
 import com.foxety0f.proton.modules.ProtonModules;
 import com.foxety0f.proton.modules.hire.domain.EmployeeHiredAttributes;
@@ -29,10 +31,20 @@ public class HiredController extends AbstractController {
 	@Autowired
 	private IHiredService hiredService;
 
+	private static final ProtonModules thisModule = ProtonModules.HIRING;
+
 	@RequestMapping("/hiring")
 	@PageAnnotation(value = "Hiring", module = ProtonModules.HIRING)
-	@Secured("ROLE_SUPERVISOR_HIRE")
+	@Secured({ "ROLE_ADMIN", "ROLE_SUPERVISOR_HIRE" })
 	public String index(Model model, Principal principal) {
+
+		try {
+			if (!getAdminService().isActiveModule(thisModule)) {
+				return "redirect:/";
+			}
+		} catch (ModuleNotUndefinedException e) {
+			return "403Page";
+		}
 
 		if (principal != null) {
 			UserDetailsProton user = (UserDetailsProton) SecurityContextHolder.getContext().getAuthentication()
@@ -76,7 +88,7 @@ public class HiredController extends AbstractController {
 			@RequestParam(required = true, value = "briefId") Integer briefId) {
 
 		ResponseEntity<EmployeeHiredAttributes> result = null;
-		
+
 		if (principal != null) {
 			UserDetailsProton user = (UserDetailsProton) SecurityContextHolder.getContext().getAuthentication()
 					.getPrincipal();
@@ -86,11 +98,13 @@ public class HiredController extends AbstractController {
 				attr.setUserPhone(hiredService.getPhone(briefId));
 				attr.setExperience(hiredService.getEmployeeExperience(briefId));
 				attr.setSkills(hiredService.getEmployeeSkills(briefId));
-				attr.setIsCurrentUser(Integer.parseInt(user.getUserId().toString()) == hiredService.getUserId(briefId) ? true : false);
+				attr.setIsCurrentUser(
+						Integer.parseInt(user.getUserId().toString()) == hiredService.getUserId(briefId) ? true
+								: false);
 				result = new ResponseEntity<EmployeeHiredAttributes>(attr, HttpStatus.OK);
 				return result;
-			}else {
-				if(Integer.parseInt(user.getUserId().toString()) == hiredService.getUserId(briefId)) {
+			} else {
+				if (Integer.parseInt(user.getUserId().toString()) == hiredService.getUserId(briefId)) {
 					EmployeeHiredAttributes attr = new EmployeeHiredAttributes();
 					attr.setAbout(hiredService.getAbout(briefId));
 					attr.setUserPhone(hiredService.getPhone(briefId));
@@ -99,15 +113,48 @@ public class HiredController extends AbstractController {
 					attr.setIsCurrentUser(true);
 					result = new ResponseEntity<EmployeeHiredAttributes>(attr, HttpStatus.OK);
 					return result;
-				}else {
-					result = new ResponseEntity<EmployeeHiredAttributes>( HttpStatus.FORBIDDEN);
+				} else {
+					result = new ResponseEntity<EmployeeHiredAttributes>(HttpStatus.FORBIDDEN);
 					return result;
 				}
 			}
 		}
-		
-		result = new ResponseEntity<EmployeeHiredAttributes>( HttpStatus.FORBIDDEN);
-		
+
+		result = new ResponseEntity<EmployeeHiredAttributes>(HttpStatus.FORBIDDEN);
+
+		return result;
+
+	}
+
+	@RequestMapping("/hired/getUserBrief")
+	public ResponseEntity<EmployeeHiredAttributes> getUserBrief(Principal principal,
+			@RequestParam(required = true, value = "userId") Integer userId) {
+
+		ResponseEntity<EmployeeHiredAttributes> result = null;
+
+		if (principal != null) {
+			UserDetailsProton user = (UserDetailsProton) SecurityContextHolder.getContext().getAuthentication()
+					.getPrincipal();
+
+			EmployeeHiredAttributes attr = new EmployeeHiredAttributes();
+			List<EmployeeHiredExperience> exp = hiredService.getSelfEmployeeExperience(userId);
+			if (exp.size() != 0) {
+				attr.setExperience(exp);
+				attr.setIsCurrentUser(true);
+				attr.setSkills(hiredService.getSelfEmployeeSkills(userId));
+				attr.setAbout(hiredService.getAbout(exp.get(0).getBriefId()));
+				attr.setUserPhone(hiredService.getPhone(exp.get(0).getBriefId()));
+				result = new ResponseEntity<EmployeeHiredAttributes>(attr, HttpStatus.OK);
+				return result;
+			} else {
+				attr.setIsCurrentUser(true);
+				result = new ResponseEntity<EmployeeHiredAttributes>(attr, HttpStatus.OK);
+			}
+
+		}
+
+		result = new ResponseEntity<EmployeeHiredAttributes>(HttpStatus.FORBIDDEN);
+
 		return result;
 
 	}

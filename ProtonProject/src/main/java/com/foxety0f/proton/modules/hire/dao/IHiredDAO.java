@@ -25,4 +25,8 @@ public interface IHiredDAO {
 
 	Integer getUserId(Integer briefId);
 
+	List<EmployeeHiredExperience> getSelfEmployeeExperience(Integer userId);
+
+	List<EmployeeHiredSkills> getSelfEmployeeSkills(Integer userId);
+
 }

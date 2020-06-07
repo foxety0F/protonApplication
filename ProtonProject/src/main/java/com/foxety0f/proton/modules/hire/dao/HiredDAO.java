@@ -99,6 +99,20 @@ public class HiredDAO extends AbstractDAO implements IHiredDAO {
 				+ "	 left join proton_hired_experience he on hc.id = he.brief_id" + " where he.brief_id = :briefId",
 				new EmployeeHiredExperienceRowMapper());
 	}
+	
+	@Override
+	public List<EmployeeHiredExperience> getSelfEmployeeExperience(Integer userId) {
+		Map<String, Integer> map = new HashedMap<String, Integer>();
+		map.put("userId", userId);
+
+		return querySource.query("		select he.id experience_id\r\n" + "			 , he.title_name\r\n"
+				+ "			 , he.description\r\n" + "			 , he.start_date\r\n" + "			 , he.end_date\r\n"
+				+ "			 , he.skill_points\r\n" + "			 , he.brief_id\r\n" + "			 , he.order_num\r\n"
+				+ "			 , he.is_current\r\n" + "		  from proton_hired_config hc\r\n"
+				+ "	 left join proton_hired_experience he on hc.id = he.brief_id" + " where hс.id = (select max(id) from proton_hired_config where user_id = :userId)"
+						+ " order by he.id desc",
+				new EmployeeHiredExperienceRowMapper());
+	}
 
 	private class EmployeeHiredExperienceRowMapper implements RowMapper<EmployeeHiredExperience> {
 
@@ -134,6 +148,25 @@ public class HiredDAO extends AbstractDAO implements IHiredDAO {
 				"		  from proton_hired_user_skills hus\r\n" + 
 				" 	 left join proton_hired_skills hs on hus.skill_id = hs.id"
 				+ " where hus.brief_id = :briefId", new EmployeeHiredSkillsRowMapper());
+	}
+	
+	@Override
+	public List<EmployeeHiredSkills> getSelfEmployeeSkills(Integer userId){
+		Map<String, Integer> map = new HashedMap<String, Integer>();
+		map.put("userId", userId);
+		
+		return querySource.query("		select hus.skill_id\r\n" + 
+				"			 , hus.value\r\n" + 
+				"			 , hus.purpose\r\n" + 
+				"			 , hs.skill_name\r\n" + 
+				"			 , hs.skill_description\r\n" + 
+				"			 , hs.skill_min_scale\r\n" + 
+				"			 , hs.skill_max_scale\r\n" + 
+				"		  from proton_hired_user_skills hus\r\n" + 
+				" 	 left join proton_hired_skills hs on hus.skill_id = hs.id"
+				+ "	 left join proton_hired_config hc on hus.brief_id = hc.brief_id "
+				+ " where hс.id = (select max(id) from proton_hired_config where user_id = :userId)"
+				+ " order by hc.id desc", new EmployeeHiredSkillsRowMapper());
 	}
 	
 	private class EmployeeHiredSkillsRowMapper implements RowMapper<EmployeeHiredSkills>{

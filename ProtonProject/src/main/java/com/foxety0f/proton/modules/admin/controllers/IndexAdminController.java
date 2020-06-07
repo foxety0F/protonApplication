@@ -46,6 +46,7 @@ public class IndexAdminController extends AbstractController {
 			UserDetailsProton user = (UserDetailsProton) SecurityContextHolder.getContext().getAuthentication()
 					.getPrincipal();
 			model.addAttribute("menuList", user.getPages());
+			System.err.println(user.getPages());
 			udateMenuList(user);
 			if (!user.hasRole("ROLE_ADMIN")) {
 				return "403Page";
