@@ -31,7 +31,7 @@ public class HiredController extends AbstractController {
 
 	@RequestMapping("/hiring")
 	@PageAnnotation(value = "Hiring", module = ProtonModules.HIRING)
-	@Secured("ROLE_SUPERVISOR_HIRE")
+	@Secured({ "ROLE_SUPERVISOR_HIRE", "ROLE_ADMIN", "ROLE_USER" })
 	public String index(Model model, Principal principal) {
 
 		if (principal != null) {
@@ -76,7 +76,7 @@ public class HiredController extends AbstractController {
 			@RequestParam(required = true, value = "briefId") Integer briefId) {
 
 		ResponseEntity<EmployeeHiredAttributes> result = null;
-		
+
 		if (principal != null) {
 			UserDetailsProton user = (UserDetailsProton) SecurityContextHolder.getContext().getAuthentication()
 					.getPrincipal();
@@ -86,11 +86,13 @@ public class HiredController extends AbstractController {
 				attr.setUserPhone(hiredService.getPhone(briefId));
 				attr.setExperience(hiredService.getEmployeeExperience(briefId));
 				attr.setSkills(hiredService.getEmployeeSkills(briefId));
-				attr.setIsCurrentUser(Integer.parseInt(user.getUserId().toString()) == hiredService.getUserId(briefId) ? true : false);
+				attr.setIsCurrentUser(
+						Integer.parseInt(user.getUserId().toString()) == hiredService.getUserId(briefId) ? true
+								: false);
 				result = new ResponseEntity<EmployeeHiredAttributes>(attr, HttpStatus.OK);
 				return result;
-			}else {
-				if(Integer.parseInt(user.getUserId().toString()) == hiredService.getUserId(briefId)) {
+			} else {
+				if (Integer.parseInt(user.getUserId().toString()) == hiredService.getUserId(briefId)) {
 					EmployeeHiredAttributes attr = new EmployeeHiredAttributes();
 					attr.setAbout(hiredService.getAbout(briefId));
 					attr.setUserPhone(hiredService.getPhone(briefId));
@@ -99,15 +101,15 @@ public class HiredController extends AbstractController {
 					attr.setIsCurrentUser(true);
 					result = new ResponseEntity<EmployeeHiredAttributes>(attr, HttpStatus.OK);
 					return result;
-				}else {
-					result = new ResponseEntity<EmployeeHiredAttributes>( HttpStatus.FORBIDDEN);
+				} else {
+					result = new ResponseEntity<EmployeeHiredAttributes>(HttpStatus.FORBIDDEN);
 					return result;
 				}
 			}
 		}
-		
-		result = new ResponseEntity<EmployeeHiredAttributes>( HttpStatus.FORBIDDEN);
-		
+
+		result = new ResponseEntity<EmployeeHiredAttributes>(HttpStatus.FORBIDDEN);
+
 		return result;
 
 	}

@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+   <title>Hired Page</title>
+   <th:block th:include="addscripts"></th:block>
+</head>
+
+<body>
+   <!-- Include _menu.html -->
+   <th:block th:include="_menu"></th:block>
+
+
+   <script th:inline="javascript">
+	   var employeeList = /*[[${employeeList}]]*/ null;
+	   var skills = /*[[${skills}]]*/ null;
+   </script>
+</body>
+
+</html>

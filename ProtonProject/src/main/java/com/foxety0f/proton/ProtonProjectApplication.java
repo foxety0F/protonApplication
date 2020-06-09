@@ -30,6 +30,10 @@ import com.foxety0f.proton.modules.help.dao.HelpDao;
 import com.foxety0f.proton.modules.help.dao.IHelpDao;
 import com.foxety0f.proton.modules.help.service.HelpService;
 import com.foxety0f.proton.modules.help.service.IHelpService;
+import com.foxety0f.proton.modules.hire.dao.HiredDAO;
+import com.foxety0f.proton.modules.hire.dao.IHiredDAO;
+import com.foxety0f.proton.modules.hire.service.HiredService;
+import com.foxety0f.proton.modules.hire.service.IHiredService;
 import com.foxety0f.proton.modules.roles.dao.IRoleDAO;
 import com.foxety0f.proton.modules.roles.dao.RoleDAO;
 import com.foxety0f.proton.modules.roles.service.IRoleService;
@@ -45,8 +49,6 @@ public class ProtonProjectApplication {
 
 	@Bean
 	public static PropertySourcesPlaceholderConfigurer propertySources() {
-		File fl = new File("classpath:/static/App/css/bootstrap.css");
-		System.err.println(fl.getName());
 		return new PropertySourcesPlaceholderConfigurer();
 	}
 
@@ -114,5 +116,15 @@ public class ProtonProjectApplication {
 	@Bean
 	public IHelpService helpService() {
 		return new HelpService(helpDao());
+	}
+	
+	@Bean
+	public IHiredDAO hiredDao() {
+		return new HiredDAO(createDataSource());
+	}
+	
+	@Bean
+	public IHiredService hiredService() {
+		return new HiredService(hiredDao());
 	}
 }

@@ -47,10 +47,9 @@ public class IndexRolesController extends AbstractController {
 				model.addAttribute("userAndRoles", roleService.getProtonRoleUser());
 				try {
 					if (getAdminService().isActiveModule(ProtonModules.HELP)) {
-						model.addAttribute("helpBox", helpService.getHelp("/admin"));
+						model.addAttribute("helpBox", helpService.getHelp("/roles"));
 					}
 				} catch (ModuleNotUndefinedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
