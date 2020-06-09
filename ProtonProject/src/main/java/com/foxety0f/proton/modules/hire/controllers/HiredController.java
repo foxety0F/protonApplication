@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.foxety0f.proton.common.abstracts.AbstractController;
 import com.foxety0f.proton.common.annotations.PageAnnotation;
+import com.foxety0f.proton.common.exceptions.ModuleNotUndefinedException;
 import com.foxety0f.proton.common.user.UserDetailsProton;
 import com.foxety0f.proton.modules.ProtonModules;
+import com.foxety0f.proton.modules.help.service.IHelpService;
 import com.foxety0f.proton.modules.hire.domain.EmployeeHiredAttributes;
 import com.foxety0f.proton.modules.hire.domain.EmployeeHiredConfig;
 import com.foxety0f.proton.modules.hire.domain.EmployeeHiredExperience;
@@ -28,6 +30,9 @@ public class HiredController extends AbstractController {
 
 	@Autowired
 	private IHiredService hiredService;
+	
+	@Autowired
+	private IHelpService helpService;
 
 	@RequestMapping("/hiring")
 	@PageAnnotation(value = "Hiring", module = ProtonModules.HIRING)
@@ -39,6 +44,13 @@ public class HiredController extends AbstractController {
 					.getPrincipal();
 			model.addAttribute("menuList", user.getPages());
 			udateMenuList(user);
+			try {
+				if (getAdminService().isActiveModule(ProtonModules.HELP)) {
+					model.addAttribute("helpBox", helpService.getHelp("/hiring"));
+				}
+			} catch (ModuleNotUndefinedException e) {
+				e.printStackTrace();
+			}
 			if (user.hasRole("ROLE_SUPERVISOR_HIRE") | user.hasRole("ROLE_ADMIN")) {
 				model.addAttribute("employeeList", hiredService.getEmployeeHiredConfig());
 				model.addAttribute("skills", hiredService.getHiredSkills());

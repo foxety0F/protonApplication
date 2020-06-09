@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-   <title>Admin Page</title>
+   <title>Hiring Page</title>
    <th:block th:include="addscripts"></th:block>
 </head>
 
@@ -12,6 +12,12 @@
 
 
    <script th:inline="javascript">
+
+	   var about = /*[[${about}]]*/ null;
+	   var userPhone = /*[[${userPhone}]]*/ null;
+	   var experience = /*[[${experience}]]*/ null;
+	   var skills = /*[[${skills}]]*/ null;
+	   
    </script>
 </body>
 
