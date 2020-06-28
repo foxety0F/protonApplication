@@ -1,20 +1,43 @@
-<div xmlns:th="http://www.thymeleaf.org" style="border-bottom: 1px solid #ccc;padding:5px;margin-bottom:20px;">
-  <div id="menuCore">
-      <th:block th:if="${#request.userPrincipal != null}">
-       <th:block th:each="mapItem : ${menuList}">
-                
+<th:block th:if="${#request.userPrincipal != null}">
+  <div>
+    <div>
+      <div id="menuCore">
+        <th:block th:each="mapItem : ${menuList}">
           <a th:href="@{${mapItem.url}}" th:utext="${mapItem.urlName}"> </a>
-       </th:block>
-       <span id = "menuRightSide" class = "pull-right">
-         <button th:if="${helpBox != null}" class = "btn btn-default" onclick="helpBox.drawHelp(helpBoxText)">?</button>
-       <a th:if="${#request.userPrincipal != null}" th:href="@{/logout}">Logout</a>
-       </span>
-  </th:block>
-    <a th:href="@{/about}">About</a>
-  <th:block th:if="${#request.userPrincipal == null}">
-       <a th:href="@{/login}">Login</a>
-  </th:block>
-  
-</div>
-  
-</div>
+        </th:block>
+        <div id="logout">
+                <a href="/logout">Logout</a>
+        </div>
+      </div>
+
+
+
+    <div class = "mobile_menu">
+        <input type="checkbox" id = "ch" name="checkBurger" class="menuburger" value="Cl"/>
+        <label class = "checkBoxLabel" for="ch"> Click! </label>
+        <div class = "hiddenBurgerLinks">
+        <th:block th:each="mapItem : ${menuList}">
+          <li><a th:href="@{${mapItem.url}}" th:utext="${mapItem.urlName}"> </a> </li>  
+        </th:block>
+        <li>  <a href="/logout">Logout</a> </li>
+        </div>
+    </div>
+  </div>
+
+  </div>
+</th:block>
+
+<th:block th:if="${#request.userPrincipal == null}">
+      <div>
+        <div id="menuCore">
+          <div id="login">
+            <a href="/login">Login</a>
+          </div>
+        </div>
+        <div class = "mobile_menu">
+          <input type="checkbox" id = "ch" name="checkBurger" class="menuburger" value="Cl"/>
+          <label class = "checkBoxLabel" for="ch"> Click! </label>
+          <li>  <a href="/logout">Logout</a> </li>
+        </div>
+    </div>
+</th:block>

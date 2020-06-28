@@ -4,20 +4,84 @@
 <head>
    <title>Hiring Page</title>
    <th:block th:include="addscripts"></th:block>
+   <link rel = "stylesheet" href = "/App/css/modules/hiring/hiring-page.css">
+   <script src = "/App/js/common/modules/hiring-page.js"></script>
 </head>
 
 <body>
    <!-- Include _menu.html -->
+   
    <th:block th:include="_menu"></th:block>
+    <div>
+		<th:block th:if='${userProtonDetails.hasRole("ROLE_ADMIN") == true}'>
+			<button id="admin-edit" class = "btn btn-pimary">Edit config</button>
+			<script>
+			
+			</script>
+	    </th:block>
+        <th:block th:if='${userProtonDetails.hasRole("ROLE_SUPERVISOR") == true}'>
+			<button id = "supervisor-edit" class = "btn btn-primary">Edit skills </button>
+		</th:block>
+		<th:block th:if='${userProtonDetails.hasRole("ROLE_HUNTER") == true}'>
+			<button id = "hunter-show">Show employee list</button>
+		</th:block>
+    </div>
 
-
+	<div id = "content">
+		<!-- Add first name and surname -->
+		<h2 class = "user-name" th:utext = "${userProtonDetails.getFirstName()} + ' ' + ${userProtonDetails.getSurname()}"> </h2>
+		<div class = "row">
+			<div id = "about" class = "col-md-5 col-sm-12">
+				<div class = "about-header">
+					<h4 class = "about-title"> About me </h4>
+					<button class = "about-edit" type = "button" onclick = "hiredModule.editAbout()"> <i class = "fas fa-pencil-alt"></i> </button>
+				</div>
+				<div class = "about-content">
+					<textarea id = "about-text" disabled>
+					</textarea>
+				</div>
+				
+				<div class = "skill-points-content">
+					<div class = "skill-points-header">
+						<h4> Skills </h4>
+					</div>
+				</div>
+				
+				<div class = "contact">
+					<div class = "contact-header">
+						<h4> Contacts </h4>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
    <script th:inline="javascript">
 
 	   var about = /*[[${about}]]*/ null;
 	   var userPhone = /*[[${userPhone}]]*/ null;
 	   var experience = /*[[${experience}]]*/ null;
 	   var skills = /*[[${skills}]]*/ null;
-	   
+
+		var contactSocial = [{
+		        socialName : "Facebook",
+		        socialIcon : "fab fa-facebook-square",
+		        socialHref : "#"
+		      },{
+		        socialName : "Dribble",
+		        socialIcon : "fab fa-dribbble",
+		        socialHref : "#"
+		      },{
+		        socialName : "Github",
+		        socialIcon : "fab fa-github",
+		        socialHref : "#"
+		      },{
+		        socialName : "Linked In",
+		        socialIcon : "fab fa-linkedin",
+		        socialHref : "#"
+		      }];
+		
+		hiredModule.drawPage();	   
+
    </script>
 </body>
 

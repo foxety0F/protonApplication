@@ -60,7 +60,7 @@ public class IndexRolesController extends AbstractController {
 			return "403Page";
 
 		} else {
-			return "403Page";
+			return "redirect:/login";
 		}
 	}
 

@@ -4,16 +4,32 @@
 <head>
    <title>Hired Page</title>
    <th:block th:include="addscripts"></th:block>
+   <link rel="stylesheet" href = "/App/css/modules/hiring/hiring-page.css">
+   <script src = "/App/js/common/modules/hiring-page.js"></script>
 </head>
 
 <body>
    <!-- Include _menu.html -->
    <th:block th:include="_menu"></th:block>
 
+   <th:block th:if="${briefId == null}">
+      <button class = "btn btn-success" onclick="hiring.createBrief()">Create Brief</button>
+   </th:block>
+
+   <th:block th:if="${briefId != null}">
+      <h2 th:utext="${user_name}"></h2>
+      <h2 th:utext="${user_surname}"></h2>
+      <input type = "text" th:value="${userPhone}" disabled/>
+
+      <div class = "about" th:utext="${about}"></div>
+   </th:block>
 
    <script th:inline="javascript">
 	   var employeeList = /*[[${employeeList}]]*/ null;
-	   var skills = /*[[${skills}]]*/ null;
+      var skills = /*[[${skills}]]*/ null;
+      var about = /*[[${about}]]*/ null;
+      var _userName = /*[[${user_name}]]*/ null;
+      var _surname = /*[[${user_surname}]]*/ null;
    </script>
 </body>
 

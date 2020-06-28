@@ -1,0 +1,294 @@
+
+body .row {
+  margin: 0;
+  padding: 0;
+  margin-bottom: 10px;
+}
+
+.user-name{
+  padding-left: 15px;
+}
+
+.about-header{
+  width: 100%;
+  height: 100%;
+  border-bottom: 1px solid #333;
+  display: flow-root;
+  margin-bottom: 10px;
+}
+
+.about-title{
+  float: left;
+  vertical-align: middle;
+}
+
+.about-edit{
+  float: right;
+  vertical-align: middle;
+  background: transparent;
+  border: none;
+  outline: none;
+  transition: .3s;
+  border-radius: 4px;
+  font-size: 20px;
+  margin-top: 5px;
+}
+
+.about-edit:hover{
+  background: #6ab04c;
+  color : #fff;
+}
+
+.about-edit-textarea{
+    width: 100%;
+    min-height: 250px;
+    outline: none;
+    min-width : 200px;
+}
+
+#about-text{
+    min-width: 100%;
+    border : none;
+    outline: none;
+    background: transparent;
+}
+
+#about-text:focus{
+    border : 1px solid gray;
+}
+
+.contact-social-icon{
+  font-size: 18px;
+  background: #0fbcf9;
+  border: none;
+  border-radius: 4px;
+  color : white;
+  transition: .3s;
+  margin-right: 5px;
+}
+
+.contact-social-icon:focus{
+  color: white;
+}
+
+.contact-social-icon:hover{
+  background: white;
+  color : #0fbcf9;
+}
+
+.contact-header{
+  border-bottom: 1px solid black;
+}
+
+
+.skill-points-header{
+  border-bottom: 1px solid black;
+}
+
+.skill-container{
+  margin : 20px;
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.skill-point{
+  border : 2px solid black;
+  border-top-right-radius: 16px;
+  border-bottom-right-radius: 16px;
+}
+
+.skill-point span{
+  font-size : 10px;
+}
+
+.skill-container-content{
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  background-image: none;
+  box-sizing: border-box;
+  overflow: visible;
+  text-transform: none;
+  position: relative;
+  float: left;
+  text-decoration: none;
+  outline: none;
+  cursor: inherit;
+  user-select: all;
+}
+
+.skill-container>.skill-container-content:first-child{
+  margin-left: 0;
+}
+
+.skill-container>.skill-container-content:first-child:not(:last-child){
+  border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.skill-name{
+  background: white;
+  border-color: black;
+  color : #333;
+  font-weight: bold;
+  border-right: none;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+.skill-0{
+  background: red;
+  color: white;
+  font-weight: bold;
+}
+
+.skill-25{
+  background: #ff6800;
+  color: white;
+  font-weight: bold;
+}
+
+.skill-50{
+  background: #ffc700;
+  color: #333;
+  font-weight: bold;
+}
+
+.skill-75{
+  background: #9eff00;
+  color: #333;
+  font-weight: bold;
+}
+
+.skill-90{
+  background: #64ff00;
+  color: #333;
+  font-weight: bold;
+}
+
+.skill-100{
+  background: #00ff2a;
+  color: #333;
+  font-weight: bold;
+}
+
+.qualities-title{
+  border-bottom: 1px solid black;
+  margin-bottom: 10px;
+  display: flow-root;
+}
+
+.qualities-title h4{
+  float: left;
+}
+
+.qualities-item{
+  background: #0fbcf9;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 5px;
+  margin-bottom: 5px;
+  margin-right: 5px;
+}
+
+.qualities-name{
+  font-weight: 600;
+  color: white;
+  padding-right: 5px;
+}
+
+.qualities-item i{
+  color : white;
+  font-size : 16px;
+}
+
+.qualities-content{
+  margin-bottom: 20px;
+}
+
+.experience-content-date{
+  font-weight: bold;
+}
+
+.experience-content-time-work{
+  font-size: 0.8em;
+  color : gray;
+}
+
+.experience-datepicker{
+  outline: none;
+  font-weight: bold;
+  border : none;
+  background: none;
+  max-width: 115px;
+}
+
+.experience-content-about{
+  min-width: 100%;
+  height: 100%;
+  border: ridge 2px;
+  min-height: 5vh;
+  overflow: auto;
+  border: none;
+}
+
+.experience-content-about:focus{
+  border: 1px solid black;
+  outline: none;
+}
+
+.experience-description{
+  font-weight: bold;
+}
+
+.experience-header{
+  border-bottom: 1px solid black;
+  display: flow-root;
+  margin-bottom: 20px;
+}
+
+.experience-title{
+  float : left;
+}
+
+.experience-add{
+  float: right;
+  vertical-align: middle;
+  background: transparent;
+  border: none;
+  outline: none;
+  transition: .3s;
+  border-radius: 4px;
+  font-size: 20px;
+  margin-top: 5px;
+}
+
+.experience-add:hover{
+  background: #6ab04c;
+  color : #fff;
+}
+
+.experience-content-title-name{
+  font-size: 24px;
+  margin-bottom: 0;
+}
+
+.experience-content-workplace{
+  font-size : 0.9em;
+  color : gray;
+}
+
+.experience-text-input{
+  outline: none;
+  border : none;
+}
+
+.experience-text-input:focus{
+  outline: none;
+  border : 1px solid black;
+}

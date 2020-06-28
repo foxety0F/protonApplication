@@ -21,8 +21,22 @@ public class IndexController {
 	@Autowired
 	private IAdminService adminService;
 
-	@RequestMapping(value = { "/", "/welcome" }, method = RequestMethod.GET)
+	@RequestMapping(value = "/welcome", method = RequestMethod.GET)
 	public String welcomePage(Model model, Principal principal) {
+		model.addAttribute("title", "Welcome");
+		model.addAttribute("message", "This is welcome page!");
+
+		if (principal != null) {
+			UserDetailsProton user = (UserDetailsProton) SecurityContextHolder.getContext().getAuthentication()
+					.getPrincipal();
+			model.addAttribute("menuList", user.getPages());
+		}
+
+		return "welcomePage";
+	}
+	
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public String welcomePageIndex(Model model, Principal principal) {
 		model.addAttribute("title", "Welcome");
 		model.addAttribute("message", "This is welcome page!");
 

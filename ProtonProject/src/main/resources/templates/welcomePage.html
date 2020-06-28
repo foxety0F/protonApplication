@@ -4,6 +4,7 @@
 <head>
    <title th:utext="${title}"></title>
    <th:block th:include="addscripts"></th:block>
+   <link rel="stylesheet" href="/App/css/welcome-page.css">
 </head>
 
 <body>
@@ -11,7 +12,210 @@
    <!-- Include _menu.html -->
    <th:block th:include="_menu"></th:block>
 
-   <h2>Message : <span th:utext="${message}"></span></h2>
+   <section class="services-section">
+      <div class="inner-width">
+         <h1>Our <strong>Modules</strong></h1>
+         <div class="services owl-carousel">
+
+            <div class="service">
+               <div class="service-icon">
+                  <i class="fas fa-users-cog"></i>
+               </div>
+               <div class="service-name">Admin</div>
+               <div class="service-desc">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aperiam
+                  nesciunt similique!</div>
+               <button class="service-link"> <a href="#">See More </a></button>
+            </div>
+
+            <div class="service">
+               <div class="service-icon">
+                  <i class="fas fa-calendar-alt"></i>
+               </div>
+               <div class="service-name">Distribution</div>
+               <div class="service-desc">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aperiam
+                  nesciunt similique!</div>
+               <button class="service-link"> <a href="#">See More </a></button>
+            </div>
+
+            <div class="service">
+               <div class="service-icon">
+                  <i class="fas fa-question"></i>
+               </div>
+               <div class="service-name">Help</div>
+               <div class="service-desc">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aperiam
+                  nesciunt similique!</div>
+               <button class="service-link"> <a href="#">See More </a></button>
+            </div>
+
+            <div class="service">
+               <div class="service-icon">
+                  <i class="fas fa-chalkboard-teacher"></i>
+               </div>
+               <div class="service-name">Contrsuctor</div>
+               <div class="service-desc">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aperiam
+                  nesciunt similique!</div>
+               <button class="service-link"> <a href="#">See More </a></button>
+            </div>
+
+            <div class="service">
+               <div class="service-icon">
+                  <i class="fas fa-chart-bar"></i>
+               </div>
+               <div class="service-name">Reporting</div>
+               <div class="service-desc">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aperiam
+                  nesciunt similique!</div>
+               <button class="service-link"> <a href="#">See More </a></button>
+            </div>
+         </div>
+      </div>
+   </section>
+
+   <div class="front">
+      <img src="/App/images/adm.png" alt="">
+      <div class="front-text">
+         <span> It's free </span>
+         <p> Anyone can use this code </p>
+         <p> and get support in our channels </p>
+      </div>
+   </div>
+
+   <div class="joinus">
+      <h1>Join us in : </h1>
+      <div class="socialmedia-joinus">
+         <a href="https://discord.gg/tg3Q7gV" class="discord"><i class="fab fa-discord"></i></a>
+         <a href="https://t.me/protonApplication" class="tme"><i class="fab fa-telegram"></i></a>
+         <a href="https://github.com/foxety0F/protonApplication" class="gth"><i class="fab fa-github"></i></a>
+      </div>
+   </div>
+
+   <div class="pricing-table">
+    <div class="pricing-card">
+      <h3 class="pricing-card-header">Free pack</h3>
+      <div class="price"><sup></sup>Free<span></span></div>
+      <li>
+        <li>Support in <strong>Discord</strong></li>
+        <li>Access to <strong>releases</strong></li>
+        <li>Resolve <strong>bugs</strong> </li>
+        <li>Full <strong>documentation</strong></li>
+        <li>Help <strong>deploy config</strong></li>
+      </li>
+      <a href="#" class="order-btn">Order Now</a>
+    </div>
+
+    <div class="pricing-card">
+      <h3 class="pricing-card-header">Module pack</h3>
+      <div class="price"><span>min </span><sup>$</sup>30</div>
+      <li>
+        <li>Include <strong class="existPack">Free pack</strong></li>
+        <li>System and business <strong>anaytics</strong></li>
+        <li>Dive into the <strong>business process</strong></li>
+        <li>Adapting the <strong>design</strong></li>
+        <li>1-month support <strong>module</strong></li>
+      </li>
+      <a href="#" class="order-btn">Order Now</a>
+    </div>
+
+    <div class="pricing-card">
+      <h3 class="pricing-card-header">Private pack</h3>
+      <div class="price"><sup>$</sup>80<span>/MO</span></div>
+      <li>
+        <li>Include <strong class="existPack">Free pack</strong></li>
+        <li>18-hourse <strong>support</strong></li>
+        <li>Private github <strong>repository</strong></li>
+        <li>Adapting <strong>design and modules</strong></li>
+        <li><strong>Analisys</strong> of exist process</li>
+      </li>
+      <a href="#" class="order-btn">Order Now</a>
+    </div>
+
+    <div class="pricing-card">
+      <h3 class="pricing-card-header">Full developer pack</h3>
+      <div class="price"><sup>$</sup>350<span>/MO</span></div>
+      <li>
+        <li>Include <strong class="existPack">Private pack</strong></li>
+        <li>Priority <strong>development</strong></li>
+        <li>Create new <strong>modules</strong></li>
+        <li>Create new <strong>functional</strong></li>
+        <li><strong>Ensuring the integration of data</strong></li>
+      </li>
+      <a href="#" class="order-btn">Order Now</a>
+    </div>
+  </div>
+
+  
+
+   <div class="team-section">
+      <div class="person">
+         <img src="/App/images/photo_2020-06-12_14-58-23.jpg" alt="" class="person-pic">
+         <div class="person-info">
+            <h2>Foxety0f</h2>
+            <p>Back-End Developer</p>
+            <div class="socialmedia">
+               <a href="#"><i class="fab fa-discord"> </i></a>
+               <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+         </div>
+      </div>
+
+      <div class="person">
+         <img src="/App/images/photo_2020-06-12_14-58-40.jpg" alt="" class="person-pic">
+         <div class="person-info">
+            <h2>Foxety0f & Toss</h2>
+            <p>Front-End Developers</p>
+            <div class="socialmedia">
+               <a href="#"><i class="fab fa-discord"> </i></a>
+               <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+         </div>
+      </div>
+
+      <div class="person">
+         <img src="/App/images/photo_2020-06-12_14-58-38.jpg" alt="" class="person-pic">
+         <div class="person-info">
+            <h2>Foxety0f</h2>
+            <p>Designer</p>
+            <div class="socialmedia">
+               <a href="#"><i class="fab fa-discord"> </i></a>
+               <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+         </div>
+      </div>
+
+      <div class="person">
+         <img src="/App/images/photo_2020-06-12_14-58-36.jpg" alt="" class="person-pic">
+         <div class="person-info">
+            <h2>Foxety0f</h2>
+            <p>Architect</p>
+            <div class="socialmedia">
+               <a href="#"><i class="fab fa-discord"> </i></a>
+               <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+         </div>
+      </div>
+   </div>
+   <script>
+      $('#menuCore').css('color', 'white');
+      $('#logout a').css('color', 'white');
+      $('body').css('background', '#333')
+      $(".services").owlCarousel({
+         margin: 20,
+         loop: true,
+         autoplay: true,
+         autoplayTimeout: 2000,
+         autoplayHoverPause: true,
+         responsive: {
+            0: {
+               items: 1
+            },
+            600: {
+               items: 2
+            },
+            1000: {
+               items: 3
+            }
+         }
+      });
+   </script>
 
 </body>
 

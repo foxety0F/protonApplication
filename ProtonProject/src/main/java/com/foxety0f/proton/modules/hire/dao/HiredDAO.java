@@ -8,10 +8,13 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.apache.commons.collections4.map.HashedMap;
+import org.hibernate.validator.internal.util.privilegedactions.GetInstancesFromServiceLoader;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.foxety0f.proton.common.abstracts.AbstractDAO;
 import com.foxety0f.proton.modules.hire.domain.EmployeeHiredConfig;
+import com.foxety0f.proton.modules.hire.domain.EmployeeHiredContactConfig;
+import com.foxety0f.proton.modules.hire.domain.EmployeeHiredContacts;
 import com.foxety0f.proton.modules.hire.domain.EmployeeHiredExperience;
 import com.foxety0f.proton.modules.hire.domain.EmployeeHiredSkills;
 import com.foxety0f.proton.modules.hire.domain.HiredSkills;
@@ -49,7 +52,7 @@ public class HiredDAO extends AbstractDAO implements IHiredDAO {
 				+ "		  from proton_hired_config hc\r\n" + "	 left join app_user au on hc.user_id = au.user_id	"
 						+ " where hc.user_id = :userId";
 
-		result = querySource.query(sql, new EmployeeHiredConfigRowMapper());
+		result = querySource.query(sql, map, new EmployeeHiredConfigRowMapper());
 
 		return result;
 	}
@@ -97,7 +100,7 @@ public class HiredDAO extends AbstractDAO implements IHiredDAO {
 				+ "			 , he.skill_points\r\n" + "			 , he.brief_id\r\n" + "			 , he.order_num\r\n"
 				+ "			 , he.is_current\r\n" + "		  from proton_hired_config hc\r\n"
 				+ "	 left join proton_hired_experience he on hc.id = he.brief_id" + " where he.brief_id = :briefId",
-				new EmployeeHiredExperienceRowMapper());
+				map, new EmployeeHiredExperienceRowMapper());
 	}
 
 	private class EmployeeHiredExperienceRowMapper implements RowMapper<EmployeeHiredExperience> {
@@ -133,7 +136,7 @@ public class HiredDAO extends AbstractDAO implements IHiredDAO {
 				"			 , hs.skill_max_scale\r\n" + 
 				"		  from proton_hired_user_skills hus\r\n" + 
 				" 	 left join proton_hired_skills hs on hus.skill_id = hs.id"
-				+ " where hus.brief_id = :briefId", new EmployeeHiredSkillsRowMapper());
+				+ " where hus.brief_id = :briefId", map, new EmployeeHiredSkillsRowMapper());
 	}
 	
 	private class EmployeeHiredSkillsRowMapper implements RowMapper<EmployeeHiredSkills>{
@@ -181,6 +184,66 @@ public class HiredDAO extends AbstractDAO implements IHiredDAO {
 		return querySource.queryForObject("select user_id from proton_hired_config where id = :briefId", map,
 				Integer.class);
 	}
+	
+	public void createNewBrief(Long userId, String userPhone, String about) {
+		Map<String, Object> map = new HashedMap<String, Object>();
+		map.put("userId", userId);
+		map.put("userPhone", userPhone);
+		map.put("about", about);
+		
+		Integer nextVal = querySource.queryForObject("select nextval('public.\"PROTON_HIRED_CONFIG_SEQ\"')", EMPTY_PARAMS, Integer.class);
+		
+		map.put("nextVal", nextVal);
+		
+		querySource.update("insert into proton_hired_config"
+				+ " values (:nextVal, :userId, :userPhone, :about)", map);
+	}
+	
+	public List<EmployeeHiredContacts> getUserContacts(Integer briefId){
+		Map<String, Integer> map = new HashedMap<String, Integer>();
+		map.put("briefId", briefId);
+		
+		return querySource.query("	select uc.id\r\n" + 
+				"	     , con.id id_social\r\n" + 
+				"		 , uc.href\r\n" + 
+				"		 , con.icon\r\n" + 
+				"		 , con.name\r\n" + 
+				"	  from proton_hired_user_contacts uc\r\n" + 
+				"	  join proton_hired_contact con on uc.id_social = con.id "
+				+ "   where uc.id_brief = :briefId", map, new EmployeeHiredContactsRowMapper());
+	}
 
+	private static class EmployeeHiredContactsRowMapper implements RowMapper<EmployeeHiredContacts> {
+
+		@Override
+		public EmployeeHiredContacts mapRow(ResultSet rs, int rowNum) throws SQLException {
+			EmployeeHiredContacts item = new EmployeeHiredContacts();
+			item.setId(rs.getInt(1));
+			item.setContactId(rs.getInt(2));
+			item.setSocialHref(rs.getString(3));
+			item.setSocialIcon(rs.getString(4));
+			item.setSocialName(rs.getString(5));
+			return item;
+		}
+		
+	}
+	
+	public List<EmployeeHiredContactConfig> getContactConfig(){
+		return querySource.query("select * from proton_hired_contact", new EmployeeHiredContactConfigRowMapper());
+	}
+	
+	private static class EmployeeHiredContactConfigRowMapper implements RowMapper<EmployeeHiredContactConfig> {
+
+		@Override
+		public EmployeeHiredContactConfig mapRow(ResultSet rs, int rowNum) throws SQLException {
+			EmployeeHiredContactConfig item = new EmployeeHiredContactConfig();
+			item.setId(rs.getInt(1));
+			item.setName(rs.getString(2));
+			item.setIcon(rs.getString(3));
+			item.setDescription(rs.getString(4));
+			return item;
+		}
+		
+	}
 
 }

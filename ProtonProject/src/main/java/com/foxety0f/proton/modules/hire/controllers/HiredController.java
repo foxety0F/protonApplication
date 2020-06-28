@@ -42,23 +42,13 @@ public class HiredController extends AbstractController {
 		if (principal != null) {
 			UserDetailsProton user = (UserDetailsProton) SecurityContextHolder.getContext().getAuthentication()
 					.getPrincipal();
+			//Get all menu links
 			model.addAttribute("menuList", user.getPages());
+			//Update menu list for current user
 			udateMenuList(user);
-			try {
-				if (getAdminService().isActiveModule(ProtonModules.HELP)) {
-					model.addAttribute("helpBox", helpService.getHelp("/hiring"));
-				}
-			} catch (ModuleNotUndefinedException e) {
-				e.printStackTrace();
-			}
-			if (user.hasRole("ROLE_SUPERVISOR_HIRE") | user.hasRole("ROLE_ADMIN")) {
-				model.addAttribute("employeeList", hiredService.getEmployeeHiredConfig());
-				model.addAttribute("skills", hiredService.getHiredSkills());
-
-				return "modules/hired/hiredSuperuserIndex";
-			} else if (user.hasRole("ROLE_EMPLOYEE_SUPERVISOR") | user.hasRole("ROLE_ADMIN")) {
-
-			}
+			//Add attribute user to html-page
+			model.addAttribute("userProtonDetails", user);
+			model.addAttribute("contactConfig", hiredService.getContactConfig());
 
 			List<EmployeeHiredConfig> employeeHired = hiredService
 					.getEmployeeHiredConfig(Integer.parseInt(user.getUserId().toString()));
@@ -72,14 +62,22 @@ public class HiredController extends AbstractController {
 				model.addAttribute("userPhone", userPhone);
 				model.addAttribute("experience", experience);
 				model.addAttribute("skills", skills);
+				model.addAttribute("user_name", user.getFirstName());
+				model.addAttribute("user_surname", user.getSurname());
+				model.addAttribute("briefId", emp.getRowId());
+				model.addAttribute("contactsSocial", hiredService.getUserContacts(emp.getRowId()));
+			}else {
+				hiredService.createNewBrief(user.getUserId(), null, null);
+				employeeHired = hiredService
+						.getEmployeeHiredConfig(Integer.parseInt(user.getUserId().toString()));
 
-				return "modules/hired/hiredUserIndex";
+				model.addAttribute("briefId", employeeHired.get(0).getRowId());
 			}
 
 			return "modules/hired/hiredUserIndex";
 
 		} else {
-			return "403Page";
+			return "redirect:/login";
 		}
 	}
 
@@ -124,6 +122,29 @@ public class HiredController extends AbstractController {
 
 		return result;
 
+	}
+	
+	@RequestMapping("/hired/addNewBrief")
+	public ResponseEntity<String> addNewBrief(Principal principal,
+			@RequestParam(required = true, value = "userPhone" ) String userPhone,
+			@RequestParam(required = true, value = "about") String about){
+		if(principal != null) {
+			UserDetailsProton user = (UserDetailsProton) SecurityContextHolder.getContext().getAuthentication()
+					.getPrincipal();
+			System.err.println(user.getUserId());
+			List<EmployeeHiredConfig> employeeHired = hiredService
+					.getEmployeeHiredConfig(Integer.parseInt(user.getUserId().toString()));
+			
+			if(employeeHired.size() == 0) {
+				hiredService.createNewBrief(user.getUserId(), userPhone, about);
+				return new ResponseEntity<String>("OK", HttpStatus.OK);
+			}
+			
+			return new ResponseEntity<String>("User brief already exist", HttpStatus.CONFLICT);
+			
+		}
+		
+		return new ResponseEntity<String>("Forbidden", HttpStatus.UNAUTHORIZED);
 	}
 
 }

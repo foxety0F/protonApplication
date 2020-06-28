@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.foxety0f.proton.modules.hire.dao.IHiredDAO;
 import com.foxety0f.proton.modules.hire.domain.EmployeeHiredConfig;
+import com.foxety0f.proton.modules.hire.domain.EmployeeHiredContactConfig;
+import com.foxety0f.proton.modules.hire.domain.EmployeeHiredContacts;
 import com.foxety0f.proton.modules.hire.domain.EmployeeHiredExperience;
 import com.foxety0f.proton.modules.hire.domain.EmployeeHiredSkills;
 import com.foxety0f.proton.modules.hire.domain.HiredSkills;
@@ -46,6 +48,18 @@ public class HiredService implements IHiredService{
 	
 	public Integer getUserId(Integer briefId) {
 		return hiredDao.getUserId(briefId);
+	}
+	
+	public void createNewBrief(Long userId, String userPhone, String about) {
+		hiredDao.createNewBrief(userId, userPhone, about);
+	}
+	
+	public List<EmployeeHiredContactConfig> getContactConfig(){
+		return hiredDao.getContactConfig();
+	}
+	
+	public List<EmployeeHiredContacts> getUserContacts(Integer briefId){
+		return hiredDao.getUserContacts(briefId);
 	}
 
 }
