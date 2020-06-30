@@ -93,4 +93,9 @@ public class IndexController {
 		return "403Page";
 	}
 
+	
+	@RequestMapping(value="/artfood", method = RequestMethod.GET)
+	public String artfood(Model model) {
+		return "artfood";
+	}
 }
