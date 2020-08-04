@@ -6,10 +6,13 @@ import javax.servlet.MultipartConfigElement;
 import javax.sql.DataSource;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartResolver;
@@ -39,9 +42,11 @@ import com.foxety0f.proton.modules.roles.dao.RoleDAO;
 import com.foxety0f.proton.modules.roles.service.IRoleService;
 import com.foxety0f.proton.modules.roles.service.RoleService;
 
-@SpringBootApplication
-@ComponentScan
-public class ProtonProjectApplication {
+@SpringBootApplication(scanBasePackages = "com.foxety0f.proton")
+@ComponentScan(basePackages = "com.foxety0f.proton")
+@Configuration
+@EnableAutoConfiguration
+public class ProtonProjectApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ProtonProjectApplication.class, args);
@@ -127,4 +132,6 @@ public class ProtonProjectApplication {
 	public IHiredService hiredService() {
 		return new HiredService(hiredDao());
 	}
+	
+	
 }

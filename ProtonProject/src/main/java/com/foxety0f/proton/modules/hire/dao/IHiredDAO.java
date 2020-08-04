@@ -1,5 +1,6 @@
 package com.foxety0f.proton.modules.hire.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import com.foxety0f.proton.modules.hire.domain.EmployeeHiredConfig;
@@ -32,5 +33,17 @@ public interface IHiredDAO {
 	List<EmployeeHiredContactConfig> getContactConfig();
 	
 	List<EmployeeHiredContacts> getUserContacts(Integer briefId);
+
+	void updateAbout(Integer briefId, String about);
+
+	void updateExperienceDescription(Integer briefId, Integer expId, String description);
+
+	void updateExperienceTitleName(Integer briefId, Integer expId, String titleName);
+
+	void updateExperienceCompanyName(Integer briefId, Integer expId, String companyName);
+
+	void updateExperienceDateTo(Integer briefId, Integer expId, Date dateTo);
+
+	void updateExperienceDateFrom(Integer briefId, Integer expId, Date dateFrom);
 
 }

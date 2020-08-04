@@ -412,3 +412,98 @@
 .price strong.existPack{
 	background: red;
 }
+
+p{
+  font-size: 40px;
+}
+
+ul{
+  margin: 0;
+  padding: 0;
+}
+
+ul li {
+  font-family: 'Pathway Gothic One', sans-serif;
+  list-style: none;
+  text-align: right;
+}
+
+ul li.core-info-menu-module{
+  padding-bottom: 5px;
+  padding-top: 5px;
+}
+
+#core-info-menu{
+  width: 20%;
+  padding-right: 5px;
+}
+
+#core-info-modules{
+  display: inline-flex;
+  width: 100%;
+  margin-bottom: 25px;
+}
+
+ul li span{
+  font-size: 33px;
+  color: rgb(204, 0, 0);
+  border-bottom: 2px solid rgb(204, 0, 0);
+}
+
+ul li button{
+  font-size: 20px;
+  background: none;
+  border: none;
+  color: rgb(230, 20, 20);
+}
+
+ul li button:focus{
+  outline: none;
+}
+
+ul li button:hover{
+  cursor: pointer;
+}
+
+#core-info-description{
+  width: 75%;
+  padding-left: 10px;
+}
+
+.core-info-description-title{
+  font-size: 33px;
+  color: rgb(204, 0, 0);
+  border-bottom: 2px solid rgb(204, 0, 0);
+  font-family: 'Pathway Gothic One', sans-serif;
+}
+
+.active-module{
+  font-size: 25px;
+  border-right: 3px solid rgb(225, 36, 10);
+}
+
+.core-info-description-text{
+  padding-top: 10px;
+  font-family: 'Pathway Gothic One', sans-serif;
+  font-size: 23px;
+  color : #fff;
+  max-height: 480px;
+  overflow: auto;
+}
+
+.our-modules{
+	color : #fff;
+	text-align: center;
+}
+
+.our-modules strong{
+	color : #b8e994;
+}
+
+::-webkit-scrollbar { width: 3px; height: 3px;}
+::-webkit-scrollbar-button {  background-color: #666; }
+::-webkit-scrollbar-track {  background-color: #999;}
+::-webkit-scrollbar-track-piece { background-color: #ffffff;}
+::-webkit-scrollbar-thumb { height: 50px; background-color: rgb(225, 36, 10); border-radius: 3px;}
+::-webkit-scrollbar-corner { background-color: #999;}
+::-webkit-resizer { background-color: #666;}

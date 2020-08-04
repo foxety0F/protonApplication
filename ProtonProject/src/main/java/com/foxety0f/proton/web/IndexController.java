@@ -8,15 +8,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.foxety0f.proton.common.abstracts.AbstractController;
 import com.foxety0f.proton.common.user.UserDetailsProton;
 import com.foxety0f.proton.modules.admin.service.IAdminService;
 import com.foxety0f.proton.utils.WebUtils;
 
 @Controller
-public class IndexController {
+public class IndexController extends AbstractController{
 
 	@Autowired
 	private IAdminService adminService;
@@ -50,8 +52,12 @@ public class IndexController {
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public String loginPage(Model model) {
+	public String loginPage(Model model, Principal principal) {
 
+		if(principal != null) {
+			return "redirect:/";
+		}
+		
 		return "loginPage";
 	}
 
@@ -79,9 +85,9 @@ public class IndexController {
 
 		return "403Page";
 	}
-
-	@RequestMapping(value = "/error", method = RequestMethod.GET)
-	public String error(Model model, Principal principal) {
+	
+	@GetMapping("/error")
+	public String err(Model model, Principal principal) {
 		if (principal != null) {
 			
 			String message = "Hi " 

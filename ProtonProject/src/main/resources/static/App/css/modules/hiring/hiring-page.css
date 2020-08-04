@@ -1,3 +1,7 @@
+h4{
+  font-family: 'Pathway Gothic One', sans-serif;
+  font-size: 28px;
+}
 
 body .row {
   margin: 0;
@@ -235,6 +239,7 @@ body .row {
   min-height: 5vh;
   overflow: auto;
   border: none;
+  background: inherit;
 }
 
 .experience-content-about:focus{
@@ -286,9 +291,14 @@ body .row {
 .experience-text-input{
   outline: none;
   border : none;
+  background: inherit;
 }
 
 .experience-text-input:focus{
   outline: none;
   border : 1px solid black;
+}
+
+.contact-social{
+  margin-top: 10px;
 }

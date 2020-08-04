@@ -2,6 +2,7 @@ package com.foxety0f.proton.modules.hire.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -73,8 +74,108 @@ public class HiredDAO extends AbstractDAO implements IHiredDAO {
 		}
 
 	}
+	
+	
+	public void updateAbout(Integer briefId, String about) {
+		Map<String, Object> map = new HashedMap<String, Object>();
+		map.put("briefId", briefId);
+		map.put("about", about);
+		
+		querySource.update("update proton_hired_config "
+				+ " set about = :about "
+				+ " where id = :briefId", map);
+	}
+	
+	
+	public void updateExperienceDateFrom(Integer briefId, Integer expId, Date dateFrom) {
+		Map<String, Object> map = new HashedMap<String, Object>();
+		map.put("briefId", briefId);
+		map.put("expId", expId);
+		map.put("dateFrom", dateFrom);
+		
+		querySource.update("update proton_hired_experience "
+				+ " set start_date = :dateFrom "
+				+ " where id = :expId and brief_id = :briefId", map);
+	}
+	
+	
+	public void updateExperienceDateTo(Integer briefId, Integer expId, Date dateTo) {
+		Map<String, Object> map = new HashedMap<String, Object>();
+		map.put("briefId", briefId);
+		map.put("expId", expId);
+		map.put("dateTo", dateTo);
+		
+		querySource.update("update proton_hired_experience "
+				+ " set end_date = :dateTo "
+				+ " where id = :expId and brief_id = :briefId", map);
+	}
+	
+	
+	public void updateExperienceCompanyName(Integer briefId, Integer expId, String companyName){
+		Map<String, Object> map = new HashedMap<String, Object>();
+		map.put("briefId", briefId);
+		map.put("expId", expId);
+		map.put("companyName", companyName);
+		
+		querySource.update("update proton_hired_experience "
+				+ " set company_name = :companyName "
+				+ " where id = :expId and brief_id = :briefId", map);
+	}
+	
+	
+	public void updateExperienceTitleName(Integer briefId, Integer expId, String titleName){
+		Map<String, Object> map = new HashedMap<String, Object>();
+		map.put("briefId", briefId);
+		map.put("expId", expId);
+		map.put("titleName", titleName);
+		
+		querySource.update("update proton_hired_experience "
+				+ " set title_name = :titleName "
+				+ " where id = :expId and brief_id = :briefId", map);
+	}
+	
+	
+	public void updateExperienceDescription(Integer briefId, Integer expId, String description){
+		Map<String, Object> map = new HashedMap<String, Object>();
+		map.put("briefId", briefId);
+		map.put("expId", expId);
+		map.put("description", description);
+		
+		querySource.update("update proton_hired_experience "
+				+ " set description = :description "
+				+ " where id = :expId and brief_id = :briefId", map);
+	}
+	
+	public void createExperience(Integer briefId
+							   , String companyName
+							   , String titleName
+							   , String description
+							   , Date dateFrom
+							   , Date dateTo
+							   , Boolean isCurrent) {
+		Map<String, Object> map = new HashedMap<String, Object>();
+		map.put("briefId", briefId);
+		map.put("companyName", companyName);
+		map.put("titleName", titleName);
+		map.put("description", description);
+		map.put("dateFrom", dateFrom);
+		map.put("dateTo", dateTo);
+		map.put("isCurrent", (isCurrent == true ? 1 : 0));
+		
+		if(isCurrent) {
+			querySource.update("update proton_hired_experience "
+					+ " set isCurrent = 0 "
+					+ " where briefId = :briefId", map);
+		}
+		
+		String sql = "insert into proton_hired_experience(briefId, title_name, description, start_date, end_date, is_current, company_name)"
+				+ " values(:briefId, :titleName, :description, :dateFrom, :dateTo, :isCurrent, :companyName)";
+		
+		querySource.update(sql, map);
+		
+	}
 
-	@Override
+	
 	public String getAbout(Integer briefId) {
 		Map<String, Integer> map = new HashedMap<String, Integer>();
 		map.put("briefId", briefId);
@@ -82,7 +183,7 @@ public class HiredDAO extends AbstractDAO implements IHiredDAO {
 				String.class);
 	}
 
-	@Override
+	
 	public String getPhone(Integer briefId) {
 		Map<String, Integer> map = new HashedMap<String, Integer>();
 		map.put("briefId", briefId);
@@ -90,7 +191,7 @@ public class HiredDAO extends AbstractDAO implements IHiredDAO {
 				String.class);
 	}
 
-	@Override
+	
 	public List<EmployeeHiredExperience> getEmployeeExperience(Integer briefId) {
 		Map<String, Integer> map = new HashedMap<String, Integer>();
 		map.put("briefId", briefId);
@@ -117,12 +218,13 @@ public class HiredDAO extends AbstractDAO implements IHiredDAO {
 			item.setSkillPoints(rs.getString("skill_points"));
 			item.setOrderId(rs.getInt("order_num"));
 			item.setCurrent(rs.getInt("is_current") == 0 ? false : true);
+			item.setCompanyName(rs.getString("company_name"));
 			return item;
 		}
 
 	}
 	
-	@Override
+	
 	public List<EmployeeHiredSkills> getEmployeeSkills(Integer briefId){
 		Map<String, Integer> map = new HashedMap<String, Integer>();
 		map.put("briefId", briefId);

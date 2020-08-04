@@ -13,6 +13,7 @@ public class EmployeeHiredExperience {
 	private Integer briefId;
 	private Integer orderId;
 	private boolean isCurrent;
+	private String companyName;
 
 	public Integer getExperienceId() {
 		return experienceId;
@@ -86,11 +87,20 @@ public class EmployeeHiredExperience {
 		this.isCurrent = isCurrent;
 	}
 
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((briefId == null) ? 0 : briefId.hashCode());
+		result = prime * result + ((companyName == null) ? 0 : companyName.hashCode());
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((endDate == null) ? 0 : endDate.hashCode());
 		result = prime * result + ((experienceId == null) ? 0 : experienceId.hashCode());
@@ -115,6 +125,11 @@ public class EmployeeHiredExperience {
 			if (other.briefId != null)
 				return false;
 		} else if (!briefId.equals(other.briefId))
+			return false;
+		if (companyName == null) {
+			if (other.companyName != null)
+				return false;
+		} else if (!companyName.equals(other.companyName))
 			return false;
 		if (description == null) {
 			if (other.description != null)
@@ -160,7 +175,8 @@ public class EmployeeHiredExperience {
 	public String toString() {
 		return "EmployeeHiredExperience [experienceId=" + experienceId + ", titleName=" + titleName + ", description="
 				+ description + ", startDate=" + startDate + ", endDate=" + endDate + ", skillPoints=" + skillPoints
-				+ ", briefId=" + briefId + ", orderId=" + orderId + ", isCurrent=" + isCurrent + "]";
+				+ ", briefId=" + briefId + ", orderId=" + orderId + ", isCurrent=" + isCurrent + ", companyName="
+				+ companyName + "]";
 	}
 
 }

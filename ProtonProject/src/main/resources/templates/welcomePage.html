@@ -5,70 +5,41 @@
    <title th:utext="${title}"></title>
    <th:block th:include="addscripts"></th:block>
    <link rel="stylesheet" href="/App/css/welcome-page.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pathway+Gothic+One&family=Rancho&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
    <!-- Include _menu.html -->
    <th:block th:include="_menu"></th:block>
-
-   <section class="services-section">
-      <div class="inner-width">
-         <h1>Our <strong>Modules</strong></h1>
-         <div class="services owl-carousel">
-
-            <div class="service">
-               <div class="service-icon">
-                  <i class="fas fa-users-cog"></i>
+         <h1 class = "our-modules">Our <strong>Modules</strong></h1>
+        <div id = "core-info-modules">
+            <div id = "core-info-menu">
+               <ul>
+                  <li class = "core-info-menu-title"><span>Core</span></li>
+                  <li class = "core-info-menu-module" data-val = "admin" onclick="changeDescription(this)"><button>Core > Admin</button></li>
+                  <li class = "core-info-menu-module" data-val = "roles" onclick="changeDescription(this)"><button>Core > Roles</button></li>
+                  <li class = "core-info-menu-module" data-val = "help" onclick="changeDescription(this)"><button>Core > Help</button></li>
+                  <li class = "core-info-menu-title"><span>Reporting</span></li>
+                  <li class = "core-info-menu-module" data-val = "reports" onclick="changeDescription(this)"><button>Reporting > Reports</button></li>
+                  <li class = "core-info-menu-module" data-val = "constructor" onclick="changeDescription(this)"><button>Reporting > Contructor</button></li>
+                  <li class = "core-info-menu-title"><span>Employees</span></li>
+                  <li class = "core-info-menu-module" data-val = "dictionary" onclick="changeDescription(this)"><button>Employees > Dictionary</button></li>
+                  <li class = "core-info-menu-module" data-val = "distribution" onclick="changeDescription(this)"><button>Employees > Distribution</button></li>
+                  <li class = "core-info-menu-module" data-val = "testing" onclick="changeDescription(this)"><button>Employees > Testing</button></li>
+                  <li class = "core-info-menu-module" data-val = "hiring" onclick="changeDescription(this)"><button>Employees > Hiring</button></li>
+               </ul>
                </div>
-               <div class="service-name">Admin</div>
-               <div class="service-desc">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aperiam
-                  nesciunt similique!</div>
-               <button class="service-link"> <a href="#">See More </a></button>
-            </div>
-
-            <div class="service">
-               <div class="service-icon">
-                  <i class="fas fa-calendar-alt"></i>
+               <div id = "core-info-description">
+               <span class = "core-info-description-title"></span>
+               <div class = "core-info-description-text">
+                  <span>
+                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sit amet augue urna. Nunc at magna quis urna tempus condimentum. Aenean in velit vitae lectus pellentesque molestie ac vitae sapien. Nunc pulvinar risus a urna elementum congue sed at risus. Duis vehicula malesuada venenatis. Integer vulputate mi quis felis convallis rhoncus. Morbi scelerisque massa sed ex dignissim ornare. Cras in iaculis lectus.
+                     <br><br>Nulla diam erat, ultricies et mauris eu, dapibus pharetra nulla. Sed hendrerit leo pharetra placerat consectetur. Pellentesque quis laoreet ex. Ut eget ligula eu justo gravida aliquet. Nam vitae ipsum pulvinar, pellentesque nulla a, mollis massa. Nullam a leo ac mauris congue sagittis a porttitor augue. Pellentesque dignissim, ipsum eu congue tristique, nunc lacus efficitur ante, nec facilisis.
+                  </span>
                </div>
-               <div class="service-name">Distribution</div>
-               <div class="service-desc">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aperiam
-                  nesciunt similique!</div>
-               <button class="service-link"> <a href="#">See More </a></button>
-            </div>
-
-            <div class="service">
-               <div class="service-icon">
-                  <i class="fas fa-question"></i>
-               </div>
-               <div class="service-name">Help</div>
-               <div class="service-desc">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aperiam
-                  nesciunt similique!</div>
-               <button class="service-link"> <a href="#">See More </a></button>
-            </div>
-
-            <div class="service">
-               <div class="service-icon">
-                  <i class="fas fa-chalkboard-teacher"></i>
-               </div>
-               <div class="service-name">Contrsuctor</div>
-               <div class="service-desc">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aperiam
-                  nesciunt similique!</div>
-               <button class="service-link"> <a href="#">See More </a></button>
-            </div>
-
-            <div class="service">
-               <div class="service-icon">
-                  <i class="fas fa-chart-bar"></i>
-               </div>
-               <div class="service-name">Reporting</div>
-               <div class="service-desc">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aperiam
-                  nesciunt similique!</div>
-               <button class="service-link"> <a href="#">See More </a></button>
             </div>
          </div>
-      </div>
-   </section>
 
    <div class="front">
       <img src="/App/images/adm.png" alt="">
@@ -197,24 +168,56 @@
       $('#menuCore').css('color', 'white');
       $('#logout a').css('color', 'white');
       $('body').css('background', '#333')
-      $(".services").owlCarousel({
-         margin: 20,
-         loop: true,
-         autoplay: true,
-         autoplayTimeout: 2000,
-         autoplayHoverPause: true,
-         responsive: {
-            0: {
-               items: 1
-            },
-            600: {
-               items: 2
-            },
-            1000: {
-               items: 3
-            }
-         }
-      });
+      var modulesData = [];
+      modulesData['admin'] = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque venenatis euismod ex, vitae consequat justo tempor suscipit. Mauris elementum mollis eros, vitae tincidunt massa tempor et. Nunc vulputate arcu sed mauris blandit hendrerit. Nullam tincidunt scelerisque rhoncus. Phasellus est erat, eleifend a pellentesque a, malesuada non velit. Maecenas tincidunt viverra sem, ac congue est ultricies sit amet. Aliquam convallis tortor ut nisl vehicula, ut ornare nunc tempus. Duis eu ultrices odio. Nullam sed libero in enim porta lobortis a vel leo. Proin blandit, dui eu bibendum molestie, ipsum nibh laoreet est, ut tempor ante ipsum in libero. Sed lobortis magna vitae orci dignissim faucibus. Donec dictum orci ac tellus posuere, ac dapibus sapien blandit. Proin dignissim mauris ac suscipit semper. Duis a sapien dolor. Etiam convallis, nunc a rhoncus posuere, ex nunc pulvinar nibh, vel vehicula massa metus id orci. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.<br><br>
+      Nulla ac luctus sapien. Mauris sollicitudin dui vitae lectus condimentum, suscipit volutpat turpis pellentesque. Aliquam augue velit, ultricies nec nibh sit amet, aliquet venenatis tortor. Vestibulum eu pellentesque mauris, et cursus urna. Cras condimentum lectus eu vehicula facilisis. Curabitur et consequat diam. Nulla non porttitor ex. Sed vel eleifend nibh, vel cursus dolor. In sed molestie metus, vitae consectetur sapien. Sed nec ligula eget mauris molestie rhoncus. Fusce vitae nisl lacus. Sed viverra, enim sed ullamcorper accumsan, lorem leo pellentesque odio, non facilisis tortor ligula et nulla. Curabitur vitae commodo nunc. Fusce nulla felis, auctor scelerisque quam quis, vulputate bibendum sem. Ut rutrum, sem in convallis varius, lorem dolor faucibus nisl, ut mollis sapien nisl id arcu.<br><br>
+      Nulla rhoncus viverra ante quis convallis. Integer et elementum nisl. Donec ultricies leo sit amet ante ultrices laoreet. Quisque non facilisis elit, sed pulvinar lacus. Morbi tincidunt dictum erat, sagittis hendrerit sapien tempor a. In ac eros sit amet lacus pretium placerat. Vivamus in eros sit amet turpis dictum convallis. Donec commodo euismod placerat. Aliquam consectetur venenatis mi. Sed pharetra at mi et tristique. Nulla facilisi. Integer posuere pretium dolor, id sagittis lacus vestibulum euismod.`;
+
+      modulesData['roles'] = `Sed ac iaculis ipsum. Duis laoreet nulla non metus gravida, vitae placerat tortor tincidunt. Ut auctor tincidunt fringilla. Vivamus sit amet blandit ligula. Mauris sagittis diam massa, sollicitudin vestibulum ex dictum non. Nunc tortor arcu, rutrum sed euismod sed, tincidunt ac neque. Nunc nec nisl id sapien congue facilisis. Praesent rhoncus iaculis turpis, nec efficitur elit feugiat nec.<br><br>
+      Praesent dolor diam, dapibus vitae fermentum ac, pharetra ac est. Proin at scelerisque urna. Sed non elit varius augue dignissim sollicitudin quis sed lectus. Fusce porta iaculis tortor, id suscipit leo mollis sed. Nunc convallis nibh et lacus commodo feugiat. Aliquam erat volutpat. Donec aliquet faucibus dignissim.<br><br>
+      Fusce vestibulum auctor tristique. Donec augue ante, mollis in condimentum ac, condimentum eget leo. Quisque ultrices a nulla nec tempus. Proin facilisis diam et quam vestibulum, sed facilisis nibh volutpat. Suspendisse potenti. Morbi cursus placerat mi ut sollicitudin. Vivamus dictum nulla sed enim tempus, a malesuada magna congue. Phasellus sagittis iaculis tristique. Nulla lorem eros, pretium vel pulvinar ac, auctor sed risus. Sed eget mauris nec dui convallis finibus sed at nibh. Sed ac hendrerit felis. Suspendisse porttitor quis mauris mollis viverra. Aliquam mattis mi luctus tellus tempus, sed pulvinar metus consectetur. Maecenas sodales, est quis feugiat fringilla, eros felis feugiat metus, id eleifend enim velit id nibh. In vel blandit quam.<br><br>
+      Aenean sed enim ut augue porta sollicitudin ullamcorper sit amet nibh. Proin ex orci, ornare eu dictum aliquam, ullamcorper eget ante. Sed ex lorem, facilisis ut ex ut, luctus commodo metus. Proin at tincidunt nunc, ut vestibulum tellus. Aenean pretium semper placerat. Vivamus dignissim feugiat sem, et volutpat nunc dapibus vitae. Maecenas rhoncus nisi in tortor elementum, non dapibus ex vestibulum. Quisque viverra malesuada porta. Ut venenatis bibendum sagittis. Praesent commodo ipsum quis mauris ornare, sed volutpat est aliquet.`;
+
+      modulesData['help'] = `Quisque pharetra condimentum congue. Aliquam eu massa fermentum, rutrum mauris a, mollis ante. Vivamus id quam a est porta fermentum id et orci. Sed vestibulum facilisis magna, in egestas nibh dignissim bibendum. Nunc at nunc ac mi porttitor viverra. Curabitur mollis leo ac feugiat dictum. Pellentesque eu sem dictum, accumsan purus a, ullamcorper sapien. Nulla felis felis, scelerisque mollis semper a, iaculis quis dolor. Curabitur vel turpis a orci laoreet tincidunt eu vitae felis. Sed mattis porta elit, condimentum ornare turpis tempus ac. Integer et viverra ligula, in ullamcorper arcu. Phasellus orci nisi, varius id purus quis, tincidunt hendrerit quam. Nam in sapien a dui dictum pulvinar.<br><br>
+      Pellentesque dictum dictum varius. Cras faucibus, lectus nec dapibus ornare, elit justo pulvinar dolor, at commodo nisl lacus ac leo. Sed eu ex id nisi varius finibus. Donec quam nunc, bibendum et erat at, malesuada molestie dolor. In facilisis nunc eu odio facilisis, at convallis mi mollis. Cras posuere, nibh sit amet iaculis venenatis, leo ipsum fringilla mauris, non mollis felis est vehicula arcu. Maecenas interdum condimentum nisl vitae placerat. Pellentesque sodales nulla a nisi    ullamcorper, in vehicula nibh ultrices. Aliquam feugiat est risus, sed placerat mauris bibendum ut. Praesent sed luctus ipsum. Donec eu arcu tellus.`;
+
+      modulesData['reports'] = `Aliquam erat volutpat. Nullam vestibulum ullamcorper tellus in rhoncus. Suspendisse elit quam, tristique nec nisl et, tempor sollicitudin mi. Aenean interdum quam odio, et tempus mauris luctus vitae. Praesent molestie, ipsum et volutpat mollis, nisi dui commodo mauris, ornare tempus purus est ac orci. Ut condimentum commodo justo, quis venenatis eros convallis sit amet. Nunc in nisi condimentum, fringilla dolor et, porttitor mauris. Praesent non viverra orci. Pellentesque nec volutpat libero. Curabitur euismod sed tortor id accumsan. Nullam orci felis, interdum eget vehicula lacinia, ornare nec tortor. Donec scelerisque eu turpis non ullamcorper. Quisque mi lorem, feugiat ut felis vitae, molestie consequat ligula.<br><br>
+      Aenean eu est dignissim, facilisis odio nec, suscipit est. Proin dignissim est libero, sed tempor nisi suscipit nec. Curabitur luctus libero ut est elementum, in tincidunt purus rhoncus. Suspendisse potenti. Donec tincidunt congue gravida. Sed dictum a ligula quis sagittis. In imperdiet ante at ipsum aliquet, ut accumsan erat iaculis.<br><br>
+      In elit lectus, hendrerit non rutrum quis, ultricies nec ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nam non efficitur odio. Vestibulum iaculis magna neque. Maecenas et odio eu enim laoreet pretium. Nunc elementum libero at ipsum tempus aliquam. Nunc at lorem sit amet tortor lobortis interdum sit amet viverra nisl. Fusce mattis semper eros id efficitur. Mauris fermentum, quam eget finibus interdum, odio justo dictum dui, varius mattis diam lacus sed diam. Nullam ac quam in ipsum dapibus pulvinar a eget neque. In sit amet imperdiet mi. Suspendisse sed urna nec ipsum ornare dictum. Donec imperdiet eleifend mauris ac suscipit. Phasellus iaculis mollis ornare. Sed congue vestibulum elit et egestas.<br><br>
+      Suspendisse tincidunt augue vel dui feugiat eleifend. Nam lobortis lacinia turpis ut pellentesque. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Cras dapibus lorem ac velit facilisis, vitae gravida lectus lobortis. Morbi nec turpis massa. Sed varius placerat ex nec molestie. Donec nec ipsum a dolor feugiat consectetur et id velit. Sed a pharetra urna, id facilisis augue. Nam varius quam lacinia justo laoreet, vitae rutrum odio tincidunt.<br><br>
+      Duis erat quam, eleifend a fermentum sit amet, hendrerit at lacus. In pellentesque laoreet lacus in lacinia. Sed a ullamcorper purus, vel efficitur tortor. Morbi eu blandit turpis, ac tincidunt tellus. Praesent interdum nunc at tortor tincidunt, nec posuere sem sagittis. Duis sodales nulla porttitor ultrices aliquet. Nulla facilisi. Maecenas suscipit scelerisque eros, euismod pellentesque quam porttitor a. Aliquam sit amet feugiat justo.`;
+
+      modulesData['constructor'] = `ed ut mi faucibus, pretium quam sed, aliquet lacus. Duis pellentesque varius eros. Nullam vehicula viverra maximus. Praesent purus nunc, ultricies vitae ullamcorper ut, suscipit sit amet enim. Mauris bibendum velit massa, in sagittis arcu tristique et. Pellentesque vehicula quam nec magna volutpat consectetur. Morbi a sollicitudin nibh, id iaculis elit. Fusce non fermentum tellus. Sed tellus mauris, ultrices non nunc sed, luctus finibus purus.<br><br>
+      Suspendisse vehicula dolor et velit eleifend imperdiet. Pellentesque vel lorem ut ante molestie posuere. Nam non sollicitudin arcu, nec consectetur est. Donec nec odio laoreet, finibus erat vel, tincidunt sapien. Phasellus non sodales erat, sed faucibus lectus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla eleifend semper pellentesque.<br><br>
+      Suspendisse sagittis porta nisi, in varius massa ultrices pretium. Pellentesque in sapien ex. Phasellus nisi quam, suscipit ut aliquam ac, sollicitudin quis arcu. Pellentesque blandit gravida est, non ultricies odio efficitur at. Praesent hendrerit blandit risus a convallis. In hac habitasse platea dictumst. Donec vestibulum id augue ut vulputate. Aliquam tristique sit amet mauris vel convallis.<br><br>
+      Nunc accumsan a erat suscipit gravida. Cras ut posuere lorem. Donec et purus ultrices, vestibulum ante vitae, aliquam neque. In mattis porta lectus, in sollicitudin eros dapibus sed. Vestibulum semper nunc vel velit sagittis vulputate. In vitae dolor finibus, mollis tortor et, elementum lacus. Nunc sed bibendum leo. Nullam in tellus non sapien consectetur aliquam. Donec tincidunt eu ligula sit amet semper. In vitae dictum sem, vel feugiat dui.`;
+
+      modulesData['dictionary'] = `Aenean quis elit a urna tempor dignissim. Curabitur ut metus congue, euismod mauris at, tempus justo. Nulla consectetur id arcu eu finibus. Sed at nisl vulputate, convallis erat sit amet, lobortis nisl. Morbi fringilla, eros sed tincidunt volutpat, risus eros semper justo, eleifend efficitur arcu velit vel arcu. Praesent nisi leo, rutrum id magna in, vestibulum vulputate nunc. Fusce dignissim venenatis pharetra. Vestibulum aliquet ligula felis, in rutrum elit mollis quis. Donec cursus, ligula quis faucibus hendrerit, diam ex pharetra tellus, vitae fringilla ante nisi in orci. Curabitur mauris velit, vehicula eu faucibus vitae, auctor quis sapien. In gravida eros ac consectetur vehicula. Nullam sit amet nisi dictum, ornare orci id, vulputate ligula. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id dapibus elit.<br><br>
+      Sed at lorem sagittis elit aliquam malesuada vel in enim. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; In congue euismod nulla sit amet auctor. Etiam ut faucibus ipsum, vel condimentum nibh. Nunc sit amet dapibus urna. Maecenas hendrerit ligula at vestibulum accumsan. Suspendisse nec volutpat eros, vel gravida enim. Duis mollis neque non neque varius mattis eu in urna. In eget est nec nunc finibus vulputate placerat in risus. Phasellus sit amet tincidunt dolor.`;
+
+      modulesData['distribution'] = `Curabitur sit amet eros ut nibh consequat eleifend et eget lacus. Curabitur tristique consequat libero, at vulputate erat venenatis non. Fusce tincidunt ante odio, vitae convallis tellus auctor quis. Nam sit amet orci non arcu auctor ultrices nec in libero. In dignissim in arcu vel lacinia. Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec lacus justo, tempor vitae magna nec, interdum aliquet augue. Sed pulvinar libero eu odio mollis faucibus vitae ut nisi. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nullam suscipit mi quis odio elementum porta. Etiam finibus mattis leo, id rhoncus libero dignissim id. Aliquam ut sollicitudin metus. Suspendisse potenti. Morbi hendrerit sem vitae nisl gravida, ut convallis nunc dictum.<br><br>
+      Donec faucibus vel est non dignissim. Nulla ut arcu nisl. Ut ut ultrices magna. Quisque faucibus, lacus non tristique pretium, magna odio efficitur lectus, lacinia sagittis mauris neque eu purus. Nullam eu urna ut justo hendrerit suscipit. Morbi non dui porttitor, accumsan dolor sed, consectetur tortor. Phasellus hendrerit nibh augue, nec eleifend mi sagittis vitae. Interdum et malesuada fames ac ante ipsum primis in faucibus.<br><br>
+      Nulla sit amet nisl ullamcorper, congue arcu sit amet, condimentum sem. Mauris mollis euismod nisl a ullamcorper. Nam placerat nisi ut sem convallis dapibus. Phasellus finibus dui justo, nec accumsan erat dignissim a. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Maecenas purus lorem, semper mollis aliquam eget, tempor id mi. Pellentesque suscipit turpis magna, eget fermentum sem vestibulum sed. Donec blandit neque at augue viverra volutpat. Pellentesque lorem sem, imperdiet sit amet congue quis, rhoncus vel mi. Aliquam gravida, augue ut mollis venenatis, arcu dui consequat odio, convallis vulputate lorem ligula at lorem.<br><br>
+      Proin tincidunt enim eget dapibus tristique. Nam suscipit velit est, ut interdum lectus dignissim nec. In non ullamcorper erat. In malesuada, justo ut lobortis gravida, leo arcu blandit felis, non dignissim libero neque vitae urna. Integer rhoncus luctus mi, at lobortis justo elementum vel. Nullam blandit ante at est rutrum, ut posuere arcu eleifend. Etiam tortor nibh, placerat et laoreet fringilla, porta molestie lectus. Donec vel diam tristique, suscipit lacus id, suscipit arcu. Duis id nunc felis. Interdum et malesuada fames ac ante ipsum primis in faucibus. Morbi vitae justo nec turpis facilisis rutrum. In ultricies hendrerit iaculis. Pellentesque convallis id dui nec malesuada. Duis a venenatis arcu. Vivamus fermentum porta est et sollicitudin.`;
+
+      modulesData['testing'] = `Maecenas iaculis gravida bibendum. In a suscipit nisl. Pellentesque scelerisque neque magna, in mollis mauris fringilla aliquam. Donec ut ipsum quis massa vestibulum eleifend non id est. Vivamus malesuada facilisis lectus. Praesent rutrum dapibus arcu eget cursus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Etiam ac congue ipsum. Aliquam id dolor purus. Aenean ac justo sed nisi iaculis rutrum quis eu eros. Cras suscipit semper ipsum, ut cursus lorem fermentum vel. Donec vestibulum leo sapien, id vulputate neque laoreet ac. Maecenas vitae quam ac sem tincidunt egestas. Aenean placerat diam velit, non venenatis justo congue vel. Quisque convallis dui sem, quis congue lacus bibendum eu.<br><br>
+      Quisque accumsan turpis non porttitor ultricies. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Suspendisse in auctor nibh, vel sollicitudin tortor. Sed ut nisi enim. Fusce arcu lectus, vulputate rhoncus quam vitae, gravida lobortis magna. Etiam accumsan arcu eu mi volutpat pretium. Quisque convallis malesuada urna ut hendrerit. Duis vestibulum fringilla turpis vitae mattis. Curabitur mi orci, congue id finibus nec, hendrerit ac lectus. Aliquam sapien lorem, malesuada sit amet lacus id, dictum dapibus ante. Morbi lobortis metus in venenatis rutrum. In hac habitasse platea dictumst.<br><br>
+      In erat dui, ultricies sed pellentesque et, pretium quis nibh. Ut iaculis leo eget orci hendrerit, vitae dignissim ligula tincidunt. Integer id purus scelerisque, auctor mi eget, accumsan velit. Fusce sed ante neque. Nunc maximus ut mi eget vestibulum. Nulla nunc augue, egestas vitae placerat et, pretium id lacus. Proin quis lobortis nisl. In cursus ante nulla, sit amet feugiat tellus maximus id. Phasellus lacus sem, scelerisque in augue vel, gravida semper felis.<br><br>
+      Aliquam volutpat at risus at blandit. In quis bibendum diam. In hac habitasse platea dictumst. Donec tincidunt sed magna sit amet luctus. Duis ac lectus ex. Donec placerat, urna eu venenatis tristique, neque justo aliquet velit, vitae aliquet mauris nisi at turpis. Integer eu sapien elit. Donec elementum nec purus sit amet dignissim. Curabitur dui massa, suscipit eget ligula at, pretium condimentum enim. Nullam gravida, elit a tincidunt scelerisque, diam risus blandit sem, a tristique orci mauris quis lectus. Phasellus gravida vulputate neque vel fringilla. Suspendisse at felis elit. Aliquam porta bibendum lobortis. Pellentesque vitae ex nec ligula facilisis pulvinar nec nec neque.`;
+
+      modulesData['hiring'] = `Nullam volutpat facilisis vestibulum. Sed vel lectus sit amet odio interdum mollis. Vivamus eleifend sagittis arcu, sed pharetra mauris vehicula vitae. Vestibulum dapibus nibh eget enim mattis porta. Donec sollicitudin urna dictum purus congue rutrum vitae ac lectus. Sed auctor interdum malesuada. Proin viverra commodo volutpat. In sit amet luctus mauris. Nunc mollis sem eget lectus mattis, id hendrerit lacus dictum. In hac habitasse platea dictumst. Vestibulum vel nulla ex. Suspendisse auctor sed justo malesuada luctus. Cras venenatis eros ut blandit commodo. Cras efficitur nulla sed dictum volutpat. Curabitur et vestibulum sem.<br><br>
+      Sed ac tortor placerat, commodo odio varius, sollicitudin eros. Integer sit amet massa sit amet velit luctus tempus. Integer mauris diam, luctus vel tincidunt eu, viverra eget tellus. In molestie magna non magna malesuada elementum. Quisque ligula tellus, pulvinar ac lacus vel, accumsan fringilla diam. In eu augue vulputate sem varius eleifend. Pellentesque pharetra eget mauris ac pulvinar. Ut tincidunt magna sapien, at venenatis eros suscipit efficitur. Suspendisse potenti. Nam pharetra est magna, sed congue nunc laoreet fringilla. Aliquam sed convallis urna, quis mattis arcu. Vestibulum vestibulum at nibh et posuere. Suspendisse rutrum, tellus sit amet euismod porta, purus leo aliquam ipsum, id malesuada metus nibh sit amet erat. Nam egestas viverra varius. Praesent diam arcu, suscipit quis accumsan et, feugiat pharetra sem.`;
+
+      function changeDescription(node){
+        $('.core-info-description-title').empty().append($(node).children()[0].innerText);
+        for(var i = 0; i < $('#core-info-menu ul li button').length; i++){
+          $($('#core-info-menu ul li button')[i]).removeClass('active-module');
+        }
+        $($(node).children()[0]).addClass('active-module');
+        $('.core-info-description-text').empty().append('<span>' + modulesData[node.dataset.val] + '</span>')
+      }
+
+
    </script>
 
 </body>

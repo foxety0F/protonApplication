@@ -1,6 +1,7 @@
 package com.foxety0f.proton.modules.hire.controllers;
 
 import java.security.Principal;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.foxety0f.proton.common.abstracts.AbstractController;
@@ -38,6 +40,14 @@ public class HiredController extends AbstractController {
 	@PageAnnotation(value = "Hiring", module = ProtonModules.HIRING)
 	@Secured({ "ROLE_SUPERVISOR_HIRE", "ROLE_ADMIN", "ROLE_USER" })
 	public String index(Model model, Principal principal) {
+		
+		try {
+			if(!getAdminService().isActiveModule(ProtonModules.HIRING)) {
+				return "403Page.html";
+			}
+		} catch (ModuleNotUndefinedException e) {
+			e.printStackTrace();
+		}
 
 		if (principal != null) {
 			UserDetailsProton user = (UserDetailsProton) SecurityContextHolder.getContext().getAuthentication()
@@ -80,71 +90,24 @@ public class HiredController extends AbstractController {
 			return "redirect:/login";
 		}
 	}
-
-	@RequestMapping("/hired/getUserInfo")
-	public ResponseEntity<EmployeeHiredAttributes> getUserInfo(Principal principal,
-			@RequestParam(required = true, value = "briefId") Integer briefId) {
-
-		ResponseEntity<EmployeeHiredAttributes> result = null;
-
-		if (principal != null) {
-			UserDetailsProton user = (UserDetailsProton) SecurityContextHolder.getContext().getAuthentication()
-					.getPrincipal();
-			if (user.hasRole("ROLE_SUPERVISOR_HIRE") | user.hasRole("ROLE_ADMIN")) {
-				EmployeeHiredAttributes attr = new EmployeeHiredAttributes();
-				attr.setAbout(hiredService.getAbout(briefId));
-				attr.setUserPhone(hiredService.getPhone(briefId));
-				attr.setExperience(hiredService.getEmployeeExperience(briefId));
-				attr.setSkills(hiredService.getEmployeeSkills(briefId));
-				attr.setIsCurrentUser(
-						Integer.parseInt(user.getUserId().toString()) == hiredService.getUserId(briefId) ? true
-								: false);
-				result = new ResponseEntity<EmployeeHiredAttributes>(attr, HttpStatus.OK);
-				return result;
-			} else {
-				if (Integer.parseInt(user.getUserId().toString()) == hiredService.getUserId(briefId)) {
-					EmployeeHiredAttributes attr = new EmployeeHiredAttributes();
-					attr.setAbout(hiredService.getAbout(briefId));
-					attr.setUserPhone(hiredService.getPhone(briefId));
-					attr.setExperience(hiredService.getEmployeeExperience(briefId));
-					attr.setSkills(hiredService.getEmployeeSkills(briefId));
-					attr.setIsCurrentUser(true);
-					result = new ResponseEntity<EmployeeHiredAttributes>(attr, HttpStatus.OK);
-					return result;
-				} else {
-					result = new ResponseEntity<EmployeeHiredAttributes>(HttpStatus.FORBIDDEN);
-					return result;
-				}
-			}
-		}
-
-		result = new ResponseEntity<EmployeeHiredAttributes>(HttpStatus.FORBIDDEN);
-
-		return result;
-
-	}
 	
-	@RequestMapping("/hired/addNewBrief")
-	public ResponseEntity<String> addNewBrief(Principal principal,
-			@RequestParam(required = true, value = "userPhone" ) String userPhone,
-			@RequestParam(required = true, value = "about") String about){
+	@RequestMapping(value = "/hiring/brief", method = RequestMethod.POST)
+	public ResponseEntity<String> postNewBrief(Principal principal, 
+			@RequestParam(value = "briefId", required = true) Integer briefId,
+			@RequestParam(value = "companyName", required = false) String companyName,
+			@RequestParam(value = "titleName", required = false) String titleName,
+			@RequestParam(value = "description", required = false) String description,
+			@RequestParam(value = "dateFrom", required = false) Date dateFrom,
+			@RequestParam(value = "dateTo", required = false) Date dateTo,
+			@RequestParam(value = "isCurrent", required = false) Boolean isCurrent){
+		
 		if(principal != null) {
 			UserDetailsProton user = (UserDetailsProton) SecurityContextHolder.getContext().getAuthentication()
 					.getPrincipal();
-			System.err.println(user.getUserId());
-			List<EmployeeHiredConfig> employeeHired = hiredService
-					.getEmployeeHiredConfig(Integer.parseInt(user.getUserId().toString()));
-			
-			if(employeeHired.size() == 0) {
-				hiredService.createNewBrief(user.getUserId(), userPhone, about);
-				return new ResponseEntity<String>("OK", HttpStatus.OK);
-			}
-			
-			return new ResponseEntity<String>("User brief already exist", HttpStatus.CONFLICT);
 			
 		}
 		
-		return new ResponseEntity<String>("Forbidden", HttpStatus.UNAUTHORIZED);
+		return new ResponseEntity<String>("Auth failed", HttpStatus.FORBIDDEN);
 	}
 
 }
