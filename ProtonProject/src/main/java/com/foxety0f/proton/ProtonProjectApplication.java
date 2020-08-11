@@ -1,7 +1,5 @@
 package com.foxety0f.proton;
 
-import java.io.File;
-
 import javax.servlet.MultipartConfigElement;
 import javax.sql.DataSource;
 
@@ -37,11 +35,19 @@ import com.foxety0f.proton.modules.hire.dao.HiredDAO;
 import com.foxety0f.proton.modules.hire.dao.IHiredDAO;
 import com.foxety0f.proton.modules.hire.service.HiredService;
 import com.foxety0f.proton.modules.hire.service.IHiredService;
+import com.foxety0f.proton.modules.reports.dao.IReportsDao;
+import com.foxety0f.proton.modules.reports.dao.ReportsDao;
+import com.foxety0f.proton.modules.reports.service.IReportsService;
+import com.foxety0f.proton.modules.reports.service.ReportsService;
 import com.foxety0f.proton.modules.roles.dao.IRoleDAO;
 import com.foxety0f.proton.modules.roles.dao.RoleDAO;
 import com.foxety0f.proton.modules.roles.service.IRoleService;
 import com.foxety0f.proton.modules.roles.service.RoleService;
 
+
+/**
+ * Core main-class of Proton Application. There generate all beans whos using into Application.
+ * */
 @SpringBootApplication(scanBasePackages = "com.foxety0f.proton")
 @ComponentScan(basePackages = "com.foxety0f.proton")
 @Configuration
@@ -133,5 +139,13 @@ public class ProtonProjectApplication extends SpringBootServletInitializer {
 		return new HiredService(hiredDao());
 	}
 	
+	@Bean
+	public IReportsDao reportsDao() {
+		return new ReportsDao(createDataSource());
+	}
 	
+	@Bean
+	public IReportsService reportsService() {
+		return new ReportsService(reportsDao());
+	}
 }

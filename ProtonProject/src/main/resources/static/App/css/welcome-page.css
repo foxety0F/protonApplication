@@ -44,6 +44,7 @@
 	width: 100%;
 	opacity: 0;
 	transition: .2s;
+	font-family: 'Pathway Gothic One', sans-serif;
 }
 
 .person:hover .person-info {
@@ -53,7 +54,7 @@
 }
 
 .person-info h2 {
-	font-size: 20px;
+	font-size: 35px;
 	color: #fff;
 }
 
@@ -62,6 +63,7 @@
 	font-style: italic;
 	margin-top: 8px;
 	margin-bottom: 20px;
+	font-family: 'Pathway Gothic One', sans-serif;
 }
 
 .socialmedia a {

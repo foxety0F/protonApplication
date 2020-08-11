@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.foxety0f.proton.common.abstracts.AbstractController;
 import com.foxety0f.proton.common.user.UserDetailsProton;
 import com.foxety0f.proton.modules.admin.service.IAdminService;
+import com.foxety0f.proton.modules.reports.dao.IReportsDao;
 import com.foxety0f.proton.utils.WebUtils;
 
 @Controller
@@ -22,9 +23,13 @@ public class IndexController extends AbstractController{
 
 	@Autowired
 	private IAdminService adminService;
+	
+	@Autowired
+	private IReportsDao rep;
 
 	@RequestMapping(value = "/welcome", method = RequestMethod.GET)
 	public String welcomePage(Model model, Principal principal) {
+		//rep.updateTableList(100, null, false);
 		model.addAttribute("title", "Welcome");
 		model.addAttribute("message", "This is welcome page!");
 

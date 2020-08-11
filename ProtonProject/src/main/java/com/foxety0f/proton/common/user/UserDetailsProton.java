@@ -261,8 +261,11 @@ public class UserDetailsProton implements UserDetails, CredentialsContainer {
 	}
 
 	public Boolean hasRole(String roleName) {
-
+		
 		for (GrantedAuthority auth : authorities) {
+			if(auth.getAuthority().equals("ROLE_ADMIN"))
+				return true;
+			
 			if (auth.getAuthority().equals(roleName)) {
 				return true;
 			}
