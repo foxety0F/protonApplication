@@ -78,14 +78,14 @@
 							var tablesText = "";
 							for(var i in tables){
 								tablesText += `<tr data-tableid = "` + tables[i].id + `">
-												<td> ` + tables[i].id + `</td>
-												<td> ` + tables[i].schemaName + `</td>
-												<td> ` + tables[i].tableName + `</td>
-												<td> ` + tables[i].cDate + `</td>
-												<td> ` + tables[i].uDate + `</td>
-												<td> ` + tables[i].isActive + `</td>
-												<td> ` + tables[i].altName+ `</td>
-												<td> ` + tables[i].description + `</td>
+												<td data-editable = "false" data-columnname = "id" data-iddatabase="` + tables[i].idDatabase + `" data-edit = "false" data-type = "number" onclick = "changeTableColumn(this)" data-idcol = "`+ ("id" +i) + `tab"> ` + tables[i].id + `</td>
+												<td data-columnname = "schema_ame" data-edit = "false" data-type = "string" onclick = "changeTableColumn(this)" data-idcol = "`+ ("schemaName" +i) + `tab"> ` + tables[i].schemaName + `</td>
+												<td data-columnname = "table_name" data-edit = "false" data-type = "string" onclick = "changeTableColumn(this)" data-idcol = "`+ ("tableName" +i) + `tab"> ` + tables[i].tableName + `</td>
+												<td data-columnname = "c_date" data-edit = "false" data-type = "date" onclick = "changeTableColumn(this)" data-idcol = "`+ ("cDate" +i) + `tab"> ` + tables[i].cDate + `</td>
+												<td data-columnname = "u_date" data-edit = "false" data-type = "date" onclick = "changeTableColumn(this)" data-idcol = "`+ ("uDate" +i) + `tab"> ` + tables[i].uDate + `</td>
+												<td data-columnname = "isActive" data-edit = "false" data-type = "boolean" onclick = "changeTableColumn(this)" data-idcol = "`+ ("isActive" +i) + `tab"> ` + tables[i].isActive + `</td>
+												<td data-columnname = "alt_name" data-edit = "false" data-type = "string" onclick = "changeTableColumn(this)" data-idcol = "`+ ("altName" +i) + `tab"> ` + tables[i].altName+ `</td>
+												<td data-columnname = "description" data-edit = "false" data-type = "string" onclick = "changeTableColumn(this)" data-idcol = "`+ ("description" +i) + `tab"> ` + tables[i].description + `</td>
 												<td> <button data-viewed="false" onclick = "getColumns(this)">Columns </button> </td>
 											</tr>`;
 							}
@@ -110,7 +110,7 @@
 								return a.id - b.id;
 							})
 
-							var tableStr = `<table class = "table table-bordered" data-tableid = '` + tableid + `'>
+							var tableStr = `<table id = "columnTable" class = "table table-bordered" data-tableid = '` + tableid + `'>
 												<thead>
 													<tr>
 														<th> Id </th>
@@ -129,14 +129,14 @@
 							for(var i in data){
 								tableStr += `<tr>
 												<td data-editable = "false" data-columnname = "id" data-edit = "false" data-type = "number" onclick = "changeColumnValue(this)" data-idcol = "`+ ("id" +i) + `"> ` + data[i].id + `</td>
-												<td data-edit = "false" data-columnname = "columnName" data-type = "string" onclick = "changeColumnValue(this)" data-idcol = "`+ ("columnName" +i) + `"> ` + data[i].columnName + `</td>
+												<td data-edit = "false" data-columnname = "column_name" data-type = "string" onclick = "changeColumnValue(this)" data-idcol = "`+ ("columnName" +i) + `"> ` + data[i].columnName + `</td>
 												<td data-edit = "false" data-columnname = "description" data-type = "string" onclick = "changeColumnValue(this)" data-idcol = "`+ ("description" + i) + `"> ` + data[i].description + `</td>
-												<td data-edit = "false" data-columnname = "altName" data-type = "string" onclick = "changeColumnValue(this)" data-idcol = "`+ ("altName" +i) + `"> ` + data[i].altName + `</td>
+												<td data-edit = "false" data-columnname = "alt_name" data-type = "string" onclick = "changeColumnValue(this)" data-idcol = "`+ ("altName" +i) + `"> ` + data[i].altName + `</td>
 												<td data-edit = "false" data-columnname = "isDictVal" data-type = "boolean" onclick = "changeColumnValue(this)" data-idcol = "`+ ("isDictVal" + i) + `"> ` + data[i].isDictVal + `</td>
 												<td data-edit = "false" data-columnname = "isActive" data-type = "boolean" onclick = "changeColumnValue(this)" data-idcol = "`+ ("isActive" + i) + `"> ` + data[i].isActive + `</td>
-												<td data-edit = "false" data-columnname = "cDate" data-type = "date" onclick = "changeColumnValue(this)" data-idcol = "`+("cDate" + i) + `"> ` + data[i].cDate + `</td>
-												<td data-edit = "false" data-columnname = "uDate" data-type = "date" onclick = "changeColumnValue(this)" data-idcol = "`+("uDate" + i) + `"> ` + data[i].uDate + `</td>
-												<td data-edit = "false" data-columnname = "isNeedEncrypt" data-type = "boolean" onclick = "changeColumnValue(this)" data-idcol = "`+("isNeedEncrypt" + i) + `"> ` + data[i].isNeedEncrypt + `</td>
+												<td data-edit = "false" data-columnname = "c_date" data-type = "date" onclick = "changeColumnValue(this)" data-idcol = "`+("cDate" + i) + `"> ` + data[i].cDate + `</td>
+												<td data-edit = "false" data-columnname = "u_date" data-type = "date" onclick = "changeColumnValue(this)" data-idcol = "`+("uDate" + i) + `"> ` + data[i].uDate + `</td>
+												<td data-edit = "false" data-columnname = "is_need_encrypt" data-type = "boolean" onclick = "changeColumnValue(this)" data-idcol = "`+("isNeedEncrypt" + i) + `"> ` + data[i].isNeedEncrypt + `</td>
 											</tr>`;
 
 							}
@@ -159,39 +159,114 @@
 						existEditColumn = true;
 						if(node.dataset.edit == "false"){
 							node.dataset.edit = "true";
+							var str = "";
 							if(type == "boolean"){
-							var str = "<select class = 'selectpicker'>"
-									+ "<option value = '1' " + (node.innerText == "true" ? 'selected' : '') + ">true</option>"
-									+ "<option value = '0' " + (node.innerText == "false" ? 'selected' : '') + ">false</option>"
-									+ "</select>";
-							
-							str += "<p><button class = 'reports-save' onclick='saveColumnToDb(this, \"selector\")'><i class='far fa-check-circle'></i></button>"
-								+ "<button class = 'reports-cancel' data-val = '" + node.innerText + "' onclick = 'cancelSave(this)'><i class='fas fa-ban'></i></button></p>";
-							
-							$("[data-idcol='" + node.dataset.idcol + "']").empty().append(str);
+								str = "<select class = 'selectpicker'>"
+										+ "<option value = '1' " + (node.innerText == "true" ? 'selected' : '') + ">true</option>"
+										+ "<option value = '0' " + (node.innerText == "false" ? 'selected' : '') + ">false</option>"
+										+ "</select>";
 								
+							}else if(type == "string"){
+								str = '<textarea>' + node.innerText + '</textarea>';
+								
+							}else if(type == "number"){
+								str = '<input type = "number" value = ' + parseInt(node.innerText) + '>'
+							}else if(type == "date"){
+								str = '<input type = "date" value = "' + node.innerText + '">'
 							}
+
+							str += "<p><button class = 'reports-save' onclick='saveColumnToDb(this, \"selector\")'><i class='far fa-check-circle'></i></button>"
+									+ "<button class = 'reports-cancel' data-val = '" + node.innerText + "' onclick = 'cancelSave(this)'><i class='fas fa-ban'></i></button></p>";
+								$("[data-idcol='" + node.dataset.idcol + "']").empty().append(str);
 						}
 					}
 				}
 
-				function saveColumnToDb(node, type){
-					console.log(node);
-					if(node.parentElement.parentElement.dataset.type == "boolean"){
-						$.ajax({
-							url : "/reports/control/updateColumn",
-							data : {
-								tableId : parseInt(node.offsetParent.offsetParent.dataset.tableid),
-								columnId : parseInt(node.offsetParent.parentElement.children[0].innerText),
-								param : node.offsetParent.dataset.columnname,
-								columnValue : parseInt(node.offsetParent.children[0].value)
+				function changeTableColumn(node){
+					var type = node.dataset.type;
+					if(!existEditColumn){
+						existEditColumn = true;
+						if(node.dataset.edit == "false"){
+							node.dataset.edit = "true";
+							var str = "";
+							if(type == "boolean"){
+								str = "<select class = 'selectpicker'>"
+										+ "<option value = '1' " + (node.innerText == "true" ? 'selected' : '') + ">true</option>"
+										+ "<option value = '0' " + (node.innerText == "false" ? 'selected' : '') + ">false</option>"
+										+ "</select>";
+								
+							}else if(type == "string"){
+								str = '<textarea>' + node.innerText + '</textarea>';
+								
+							}else if(type == "number"){
+								str = '<input type = "number" value = ' + parseInt(node.innerText) + '>'
+							}else if(type == "date"){
+								str = '<input type = "date" value = "' + node.innerText + '">'
 							}
-						}).done(function(data){
-							console.log(data);
-						}).fail(function(e){
-							console.log(e);
-						})
+
+							str += "<p><button class = 'reports-save' onclick='saveTableToDb(this, \"selector\")'><i class='far fa-check-circle'></i></button>"
+									+ "<button class = 'reports-cancel' data-val = '" + node.innerText + "' onclick = 'cancelSave(this)'><i class='fas fa-ban'></i></button></p>";
+								$("[data-idcol='" + node.dataset.idcol + "']").empty().append(str);
+						}
 					}
+				}
+
+				function saveTableToDb(node, type){
+					$.ajax({
+						url : "/reports/control/updateTable",
+						data : {
+							tableId : parseInt(node.offsetParent.parentElement.children[0].innerText),
+							databaseId : node.offsetParent.parentElement.children[0].dataset.iddatabase,
+							field : node.offsetParent.dataset.columnname,
+							value : convertVal(node.offsetParent.children[0].value, node.offsetParent.dataset.type)
+						}
+					}).done(function(data){
+						$.growl.notice({
+							title : 'Update succesful!',
+							message : data
+						})
+					}).fail(function(e){
+						$.growl.error({
+							title : 'Error',
+							message : e.responseText
+						})
+					});
+				}
+
+				function saveColumnToDb(node, type){
+					$.ajax({
+						url : "/reports/control/updateColumn",
+						data : {
+							tableId : parseInt(node.offsetParent.offsetParent.dataset.tableid),
+							columnId : parseInt(node.offsetParent.parentElement.children[0].innerText),
+							param : node.offsetParent.dataset.columnname,
+							columnValue : convertVal(node.offsetParent.children[0].value, node.offsetParent.dataset.type)
+						}
+					}).done(function(data){
+						$.growl.notice({
+							title : 'Update succesful!',
+							message : data
+						})
+					}).fail(function(e){
+						$.growl.error({
+							title : 'Error',
+							message : e.responseText
+						})
+					})
+				};
+
+				function convertVal(value, type){
+					var rvalue = "";
+					if(type == "boolean"){
+						rvalue = parseInt(value);
+					}else if(type == "string"){
+						rvalue = value;
+					}else if(type == "number"){
+						rvalue = parseInt(value);
+					}else if(node.offsetParent.dataset.type == 'date'){
+						rvalue = new Date(value);
+					}
+					return rvalue;
 				}
 			</script>
 	    </th:block>

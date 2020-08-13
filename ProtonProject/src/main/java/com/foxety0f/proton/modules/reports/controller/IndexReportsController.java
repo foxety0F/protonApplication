@@ -23,6 +23,8 @@ import com.foxety0f.proton.modules.reports.domain.MetaDatabases;
 import com.foxety0f.proton.modules.reports.domain.MetaTables;
 import com.foxety0f.proton.modules.reports.exceptions.ColumnIdUpdateException;
 import com.foxety0f.proton.modules.reports.exceptions.ColumnMissingException;
+import com.foxety0f.proton.modules.reports.exceptions.DatabaseIdUpdateException;
+import com.foxety0f.proton.modules.reports.exceptions.DatabaseNotFoundException;
 import com.foxety0f.proton.modules.reports.exceptions.SchemaAndTableMissingException;
 import com.foxety0f.proton.modules.reports.exceptions.TableIdUpdateException;
 import com.foxety0f.proton.modules.reports.service.IReportsService;
@@ -134,6 +136,31 @@ public class IndexReportsController extends AbstractController {
 				}
 				
 				return new ResponseEntity<String>("Column " + param + " is updated!", HttpStatus.OK);
+			}
+		}
+		
+		return new ResponseEntity<String>("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
+	}
+	
+	@RequestMapping("/reports/control/updateTable")
+	public ResponseEntity<String> updateTable(@RequestParam(value = "tableId", required = true) Integer id,
+			@RequestParam(value = "databaseId", required = true) Integer idDatabase,
+			@RequestParam(value = "field", required = true) String field,
+			@RequestParam(value = "value", required = true) Object value,
+			Principal principal){
+		
+		if(principal != null) {
+			UserDetailsProton user = (UserDetailsProton) SecurityContextHolder.getContext().getAuthentication()
+					.getPrincipal();
+			
+			if(user.hasRole("ROLE_ADMIN") | user.hasRole("ROLE_REPORTS_ADMIN")) {
+				try {
+					reportService.updateTableInfo(id, idDatabase, field, value, user);
+				} catch (DatabaseNotFoundException | TableIdUpdateException | DatabaseIdUpdateException e) {
+					return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+				}
+				
+				return new ResponseEntity<String>("Column " + value + " is updated!", HttpStatus.OK);
 			}
 		}
 		

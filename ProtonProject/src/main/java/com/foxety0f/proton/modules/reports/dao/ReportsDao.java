@@ -789,11 +789,19 @@ public class ReportsDao extends AbstractDAO implements IReportsDao {
 	
 			loggerWithUser(thisModule, map, ProtonEssences.META_UPDATE_COLUMN, user);
 		}catch(Exception e) {
-			map.put("intVal", Integer.parseInt(columnValue.toString()));
-			querySource.update("update proton_meta_columns " + " set \"" + param + "\" = :intVal, "
-					+ " 	u_date = CURRENT_DATE" + " where id = :colParam and table_id = :param ", map);
-	
-			loggerWithUser(thisModule, map, ProtonEssences.META_UPDATE_COLUMN, user);
+			try {
+				map.put("intVal", Integer.parseInt(columnValue.toString()));
+				querySource.update("update proton_meta_columns " + " set \"" + param + "\" = :intVal, "
+						+ " 	u_date = CURRENT_DATE" + " where id = :colParam and table_id = :param ", map);
+		
+				loggerWithUser(thisModule, map, ProtonEssences.META_UPDATE_COLUMN, user);
+			}catch(Exception e1) {
+				map.put("dateVal", new Date(columnValue.toString()));
+				querySource.update("update proton_meta_columns " + " set \"" + param + "\" = :dateVal, "
+						+ " 	u_date = CURRENT_DATE" + " where id = :colParam and table_id = :param ", map);
+		
+				loggerWithUser(thisModule, map, ProtonEssences.META_UPDATE_COLUMN, user);
+			}
 		}
 
 		
@@ -817,7 +825,7 @@ public class ReportsDao extends AbstractDAO implements IReportsDao {
 			throw new DatabaseNotFoundException(idDatabase);
 		}
 
-		if (querySource.queryForObject("select count(*) from proton_meta_tables where id = :id", map,
+		if (querySource.queryForObject("select count(*) from proton_meta_tables where id = :tableId", map,
 				Integer.class) == 0) {
 			logException(thisModule, essence, "TableNotFoundException", id.toString(), user);
 		}
@@ -833,7 +841,7 @@ public class ReportsDao extends AbstractDAO implements IReportsDao {
 		}
 
 		querySource.update("update proton_meta_tables" + " set \"" + field + "\" = :value, " + " u_date = CURRENT_DATE "
-				+ " where id = :id and id_database = :idDatabase", map);
+				+ " where id = :tableId and id_database = :databaseId", map);
 	}
 
 }
