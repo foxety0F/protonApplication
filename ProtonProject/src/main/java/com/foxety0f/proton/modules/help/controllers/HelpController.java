@@ -19,12 +19,20 @@ import com.foxety0f.proton.modules.ProtonModules;
 import com.foxety0f.proton.modules.help.domain.HelpInformation;
 import com.foxety0f.proton.modules.help.service.IHelpService;
 
+/**
+ * Controller to access edit help bootboxes
+ * extends core AbstractController
+ */
 @Controller
 public class HelpController extends AbstractController {
 
 	@Autowired
 	private IHelpService helpService;
 
+	/**
+	 * Using for draw core help-page
+	 * @return template from "modules/help/indexHelp" path with model
+	 */
 	@RequestMapping("/help")
 	@PageAnnotation(value = "Help Page", module = ProtonModules.HELP)
 	@Secured({ "ROLE_ADMIN", "ROLE_HELP_EDITOR" })
@@ -46,6 +54,11 @@ public class HelpController extends AbstractController {
 		return "modules/help/indexHelp";
 	}
 
+	/**
+	 * REST-url for getting help from selected url (from table with all helps)
+	 * @param String requestUrl -  string-value url
+	 * @param Principal principal - using for check auth
+	 */
 	@RequestMapping("/help/getHelp")
 	public HelpInformation getHelp(@RequestParam(value = "requestUr", required = true) String url,
 			Principal principal) {
@@ -55,6 +68,13 @@ public class HelpController extends AbstractController {
 		return null;
 	}
 
+	/**
+	 * REST-url for create new help
+	 * @param String helpName - using for specify help name and viewed on bootbox title
+	 * @param String helpDescription - using for specify help description and it is informative in nature
+	 * @param String helpText - specify help content and save asis with html-tags
+	 * @param String helpUrl - specify target url for shows help
+	 */
 	@RequestMapping("/help/createNewHelp")
 	public ResponseEntity<String> createNewHelp(Principal principal,
 			@RequestParam(value = "helpName", required = true) String helpName,
@@ -77,6 +97,14 @@ public class HelpController extends AbstractController {
 		return new ResponseEntity<String>("No", HttpStatus.UNAUTHORIZED);
 	}
 
+	/**
+	 * REST-url for change help
+	 * @param String helpName - using for specify help name and viewed on bootbox title
+	 * @param String helpDescription - using for specify help description and it is informative in nature
+	 * @param String helpText - specify help content and save asis with html-tags
+	 * @param String helpUrl - specify target url for shows help
+	 * @param Integer helpId - unique help id from database, using for specify modified help
+	 */
 	@RequestMapping("/help/editHelp")
 	public ResponseEntity<String> editHelp(Principal principal,
 			@RequestParam(value = "helpName", required = true) String helpName,

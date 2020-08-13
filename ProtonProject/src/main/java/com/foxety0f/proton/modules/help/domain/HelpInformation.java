@@ -1,5 +1,13 @@
 package com.foxety0f.proton.modules.help.domain;
 
+/**
+ * This class using for present information on page
+ * <br> helpId - unique identificator for help
+ * <br> helpName - name of help, shows on bootbox title
+ * <br> helpDescription - description of help, internal information
+ * <br> url - value of request url which call help
+ * <br> helpText - help content, saved as is with html-tags
+ */
 public class HelpInformation {
 
 	private Integer helpId;
