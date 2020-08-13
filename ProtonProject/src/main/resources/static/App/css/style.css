@@ -327,3 +327,98 @@ a.article:hover {
 .toggle-button:checked {
 	background-color: #3c763d;
 }
+
+/*
+	SKILL POINTS CONTAINER
+*/
+.skill-container{
+  margin : 20px;
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.skill-point{
+  border : 2px solid black;
+  border-top-right-radius: 16px;
+  border-bottom-right-radius: 16px;
+}
+
+.skill-point span{
+  font-size : 10px;
+}
+
+.skill-container-content{
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  background-image: none;
+  box-sizing: border-box;
+  overflow: visible;
+  text-transform: none;
+  position: relative;
+  float: left;
+  text-decoration: none;
+  outline: none;
+  cursor: inherit;
+  user-select: all;
+}
+
+.skill-container>.skill-container-content:first-child{
+  margin-left: 0;
+}
+
+.skill-container>.skill-container-content:first-child:not(:last-child){
+  border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.skill-name{
+  background: white;
+  border-color: black;
+  color : #333;
+  font-weight: bold;
+  border-right: none;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+.skill-0{
+  background: red;
+  color: white;
+  font-weight: bold;
+}
+
+.skill-25{
+  background: #ff6800;
+  color: white;
+  font-weight: bold;
+}
+
+.skill-50{
+  background: #ffc700;
+  color: #333;
+  font-weight: bold;
+}
+
+.skill-75{
+  background: #9eff00;
+  color: #333;
+  font-weight: bold;
+}
+
+.skill-90{
+  background: #64ff00;
+  color: #333;
+  font-weight: bold;
+}
+
+.skill-100{
+  background: #00ff2a;
+  color: #333;
+  font-weight: bold;
+}

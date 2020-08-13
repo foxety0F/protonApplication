@@ -60,11 +60,7 @@
 			<version>1.6</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.apache.tomcat</groupId>
-			<artifactId>tomcat-juli</artifactId>
-			<version>${tomcat.version}</version>
-		</dependency>
+		
 		<!-- http://mvnrepository.com/artifact/org.springframework.security/spring-security-config -->
 
 
@@ -119,10 +115,7 @@
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-		</dependency>
+		
 
 
 		<dependency>
@@ -169,10 +162,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<!-- SQL Server JTDS Driver -->
 		<dependency>

@@ -4,6 +4,7 @@
 <head>
    <title>Admin Page</title>
    <th:block th:include="addscripts"></th:block>
+   <link rel = "stylesheet" href = "/App/css/modules/admin/admin-page.css">
 </head>
 
 <body>
@@ -13,9 +14,12 @@
    <div id="divAlphaUser">
       <button id="createAlphaUser" class="btn btn-info">Create Alpha User</button>
    </div>
-   <div id="adminContainer"></div>
-   <div id = "alphaUserInfo">
+   <div id="adminContainer">
+      <div class="row">
 
+      </div>
+   </div>
+   <div id="alphaUserInfo">
    </div>
 
 
@@ -24,14 +28,29 @@
       var modulesInformation = /*[[${moduleInformation}]]*/ null;
       var logingUsers = /*[[${logingUsers}]]*/ null;
       var helpBoxText = /*[[${helpBox}]]*/ null;
-      var tempTestData = /*[[${tempTestData}]]*/null; 
+      var tempTestData = /*[[${tempTestData}]]*/null;
 
       modules.sort(function (a, b) {
          return a.id - b.id;
       })
 
-      $('#adminContainer').empty();
-      var str = "<table style = 'width:100%'>";
+      $('#adminContainer .row').empty();
+
+      var str = "";
+
+      for (var i in modules) {
+         var checked = modules[i].isActive == true ? 'checked' : '';
+
+         str += `<div class = "col-md-3 col-sm-12">`
+            + `<h2> ` + modules[i].module + `</h2>`
+            + `<input type="checkbox" name="toggle" id="` + modules[i].id + `" class="toggle-button" ` + checked + ` onclick="changeModuleStatus(this)" />`
+            + `</div>`;
+      }
+
+      $('#adminContainer .row').append(str)
+
+      /*var str = "<table style = 'width:100%'>";
+
       for (i in modules) {
 
          var checked = modules[i].isActive == true ? 'checked' : '';
@@ -40,7 +59,7 @@
             + '<td>' + '<input type="checkbox" name="toggle" id="' + modules[i].id + '" class="toggle-button" ' + checked + ' onclick="changeModuleStatus(this)">' + '</td>' + '</tr>';
       }
       str += "</table>";
-      $('#adminContainer').append(str);
+      $('#adminContainer').append(str);*/
 
       function changeModuleStatus(node) {
          $.ajax({
@@ -128,9 +147,7 @@
                }
             }
          })
-      })
-
-      CKEDITOR.replace('helpEditor');
+      });
    </script>
 </body>
 

@@ -95,9 +95,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		pages.add(pgDef);
 		for (Class cls : classes) {
 			for (Method method : cls.getDeclaredMethods()) {
+				Boolean checkOk = false;
 				if (hasAnnotation(method)) {
 					for (GrantedAuthority role : roles) {
-						Boolean checkOk = false;
+
 						for (String val : method.getAnnotation(Secured.class).value()) {
 							try {
 								if (adminService.isActiveModule(method.getAnnotation(PageAnnotation.class).module())) {
@@ -109,21 +110,21 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 								e.printStackTrace();
 							}
 						}
-						if (checkOk) {
-							for (String val : method.getAnnotation(RequestMapping.class).value()) {
-								ProtonPageUrl page = new ProtonPageUrl();
-								page.setUrl(val);
-								page.setUrlName(method.getAnnotation(PageAnnotation.class).value()[0]);
-								pages.add(page);
-							}
 
-						}
 					}
 				}
+				if (checkOk) {
+					for (String val : method.getAnnotation(RequestMapping.class).value()) {
+						ProtonPageUrl page = new ProtonPageUrl();
+						page.setUrl(val);
+						page.setUrlName(method.getAnnotation(PageAnnotation.class).value()[0]);
+						pages.add(page);
+					}
 
+				}
 			}
 		}
-		
+
 		Collections.sort(pages);
 		return pages;
 	}

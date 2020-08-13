@@ -1,15 +1,16 @@
 package com.foxety0f.proton;
 
-import java.io.File;
-
 import javax.servlet.MultipartConfigElement;
 import javax.sql.DataSource;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartResolver;
@@ -30,14 +31,28 @@ import com.foxety0f.proton.modules.help.dao.HelpDao;
 import com.foxety0f.proton.modules.help.dao.IHelpDao;
 import com.foxety0f.proton.modules.help.service.HelpService;
 import com.foxety0f.proton.modules.help.service.IHelpService;
+import com.foxety0f.proton.modules.hire.dao.HiredDAO;
+import com.foxety0f.proton.modules.hire.dao.IHiredDAO;
+import com.foxety0f.proton.modules.hire.service.HiredService;
+import com.foxety0f.proton.modules.hire.service.IHiredService;
+import com.foxety0f.proton.modules.reports.dao.IReportsDao;
+import com.foxety0f.proton.modules.reports.dao.ReportsDao;
+import com.foxety0f.proton.modules.reports.service.IReportsService;
+import com.foxety0f.proton.modules.reports.service.ReportsService;
 import com.foxety0f.proton.modules.roles.dao.IRoleDAO;
 import com.foxety0f.proton.modules.roles.dao.RoleDAO;
 import com.foxety0f.proton.modules.roles.service.IRoleService;
 import com.foxety0f.proton.modules.roles.service.RoleService;
 
-@SpringBootApplication
-@ComponentScan
-public class ProtonProjectApplication {
+
+/**
+ * Core main-class of Proton Application. There generate all beans whos using into Application.
+ * */
+@SpringBootApplication(scanBasePackages = "com.foxety0f.proton")
+@ComponentScan(basePackages = "com.foxety0f.proton")
+@Configuration
+@EnableAutoConfiguration
+public class ProtonProjectApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ProtonProjectApplication.class, args);
@@ -45,8 +60,6 @@ public class ProtonProjectApplication {
 
 	@Bean
 	public static PropertySourcesPlaceholderConfigurer propertySources() {
-		File fl = new File("classpath:/static/App/css/bootstrap.css");
-		System.err.println(fl.getName());
 		return new PropertySourcesPlaceholderConfigurer();
 	}
 
@@ -114,5 +127,25 @@ public class ProtonProjectApplication {
 	@Bean
 	public IHelpService helpService() {
 		return new HelpService(helpDao());
+	}
+	
+	@Bean
+	public IHiredDAO hiredDao() {
+		return new HiredDAO(createDataSource());
+	}
+	
+	@Bean
+	public IHiredService hiredService() {
+		return new HiredService(hiredDao());
+	}
+	
+	@Bean
+	public IReportsDao reportsDao() {
+		return new ReportsDao(createDataSource());
+	}
+	
+	@Bean
+	public IReportsService reportsService() {
+		return new ReportsService(reportsDao());
 	}
 }

@@ -1,0 +1,21 @@
+.row{
+	margin: 0;
+}
+
+#reportsTables{
+	width: 100%;
+}
+
+.reports-save{
+	border : 0px;
+	border-radius: 50%;
+	background: #4eca4e;
+	color: white;
+}
+
+.reports-cancel{
+	border : 0px;
+	border-radius: 50%;
+	background: #d9534f;
+	color: white;
+}

@@ -1,0 +1,97 @@
+@media (min-width:768px) {
+  #menuCore #coreLinks a{
+    text-decoration: none;
+    color : black;
+    padding: 15px;
+  }
+
+  #menuCore{
+    text-align: center;
+    display: block !important;
+	width: 100%;
+	font-size: 18px;
+  }
+
+  #coreLinks{
+    width: 92%;
+    position: relative;
+    float: left;
+    text-align: center;
+  }
+
+  #menuCore #logout a{
+    float: right;
+    text-decoration: none;
+    color: black;
+  }
+
+  .mobile_menu{
+	display: none !important;
+	font-size: 18px;
+  }
+
+}
+
+#menuCore #coreLinks a{
+  text-decoration: none;
+  color : black;
+}
+
+#menuCore a:hover{
+  color : lightgreen;
+}
+
+#menuCore{
+  text-align: center;
+  display: none;
+}
+
+#menuCore #logout a{
+  position: absolute;
+  top : 0%;
+  right: 0%;
+}
+
+.menuburger{
+  display: none;
+}
+
+.checkBoxLabel{
+  cursor: pointer;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
+  color: white;
+  background: innerhit;
+}
+
+.mobile_menu{
+  background: green;
+  text-align: right;
+  font-size: 18px;
+  transition: all 0.5s;
+}
+
+.menuburger:checked ~ .hiddenBurgerLinks{
+  display: block !important;
+  transition: 0.5s;
+  background : green;
+  margin-top: -8px;
+}
+
+.menuburger:checked ~ .hiddenBurgerLinks li {
+  text-align: center;
+  list-style-type: none;
+  transition: .5s;
+  padding: 10px;
+}
+
+.menuburger:checked ~ .hiddenBurgerLinks li a {
+  text-decoration: none;
+  color: white;
+}
+
+.menuburger:not(:checked) ~ .hiddenBurgerLinks{
+  display: none;
+}

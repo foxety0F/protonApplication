@@ -3,77 +3,21 @@
    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
-
 <head>
+   <meta charset="utf-8">
    <title>Login</title>
-   <th:block th:include="addscripts"></th:block>
-   <style>
-      input::placeholder {
-         text-align: center;
-         color: white;
-      }
-   </style>
+   <link rel="stylesheet" href="/App/css/loginpage.css">
 </head>
 
-<body style="background: url(/App/images/tv-series-rick-and-morty-1538.jpg) no-repeat center center fixed;
-    background-size: cover;">
-   <!-- Include _menu.html -->
-   <th:block th:include="_menu"></th:block>
-   <div class="container">
-      <div class="col-md-8"> &nbsp; </div>
-      <div class="col-md-4" style="margin-top : 10%">
-         <h1 th:text="#{loginPage.login.name}"></h1>
+<body>
+   <form name="f" th:action="@{/j_spring_security_check}" method="POST" class="form-control">
+      <h1> Login Page </h1>
+      <input type="text" name="username" placeholder="Username" />
+      <input type="password" name="password" placeholder="Password" />
+      <a href="#">Forgot password</a><br />
+      <a href="#">Create account</a>
+      <input type="submit" name="submit" value="Login">
+   </form>
+</body>
 
-         <!-- /login?error=true -->
-         <div th:if="${#request.getParameter('error') == 'true'}"
-            style="color:red;margin:10px 0px;">
-         Login Failed!!!<br />
-         Reason :
-         <span th:if="${#session!= null and #session.getAttribute('SPRING_SECURITY_LAST_EXCEPTION') != null}"
-            th:utext="${#session.getAttribute('SPRING_SECURITY_LAST_EXCEPTION').message}">
-                Static summary
-         </span>
-            
-      </div>
-      
-      <h3>Enter user name and password:</h3>
-      <form name="f" th:action="@{/j_spring_security_check}" method="POST">
-         <table>
-            <tr>
-               <td><input style = "background: #81bdc6;
-    border: 1px solid #7baab1;
-    border-radius: 5px;
-    padding: 15px;" type="text" name="username" value="" th:placeholder="#{loginPage.login.userNamePlaceholder}"></td>
-            </tr>
-            <tr>
-               <td><input style = "background: #81bdc6;
-    border: 1px solid #7baab1;
-    border-radius: 5px;
-    padding: 15px;" type="password" name="password" th:placeholder="#{loginPage.login.userPasswordPlaceholder}" /></td>
-            </tr>
-            <tr>
-               <td>Remember Me?</td>
-               <td><input type="checkbox" name="remember-me" /></td>
-            </tr>            
-            <tr>
-               <td><input name="submit" type="submit" th:value="#{loginPage.login.button}" style = "background: white;
-    color: #75c3c3;
-    font-weight: 500;
-    width: 110px;" class = "btn" /></td>
-            </tr>
-         </table>
-      </form>
-      <br>
-      Username/pass:
-      <ul>
-        <li>dbuser1/123</li>
-        <li>dbadmin1/123</li>
-      </ul>  
-</div> 
-</div>     
-   </body>
-   <script th:inline="javascript">
-      $('#menuCore').css('color', 'white');
-   </script>
-    
 </html>

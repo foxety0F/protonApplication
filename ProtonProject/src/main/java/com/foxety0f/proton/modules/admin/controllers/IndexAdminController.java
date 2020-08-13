@@ -3,7 +3,6 @@ package com.foxety0f.proton.modules.admin.controllers;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,6 +26,7 @@ import com.foxety0f.proton.modules.ProtonModules;
 import com.foxety0f.proton.modules.admin.service.IAdminService;
 import com.foxety0f.proton.modules.help.service.IHelpService;
 import com.foxety0f.proton.modules.modules_config.Module;
+import com.foxety0f.proton.modules.reports.dao.IReportsDao;
 
 @Controller
 public class IndexAdminController extends AbstractController {
@@ -36,6 +36,9 @@ public class IndexAdminController extends AbstractController {
 
 	@Autowired
 	private IHelpService helpService;
+	
+	@Autowired
+	private IReportsDao reportsDao;
 
 	@RequestMapping("/admin")
 	@PageAnnotation(value = "Admin", module = ProtonModules.ADMIN)

@@ -12,19 +12,23 @@ import javax.sql.DataSource;
 import org.apache.commons.collections4.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.foxety0f.proton.common.user.UserDetailsProton;
 import com.foxety0f.proton.modules.ProtonEssences;
 import com.foxety0f.proton.modules.ProtonModules;
 
 @Component
+@Repository
 public abstract class AbstractDAO {
 	
-	private Boolean showLog = true;
+	@Value("${admin.log.show}")
+	private Boolean showLog;
 
 	protected final static Map<String, Object> EMPTY_PARAMS = Collections
 			.unmodifiableMap(new HashedMap<String, Object>());
@@ -101,7 +105,16 @@ public abstract class AbstractDAO {
 		
 	}
 	
-	public void logException(ProtonModules module, ProtonEssences essence, String exceptionName, String value) {
+	public void logException(ProtonModules module, ProtonEssences essence, String exceptionName, String value, UserDetailsProton user) {
+		Integer seqNum = logException(module, essence, exceptionName, value);
+		Map<String, Object> map1 = new HashedMap<String, Object>();
+		map1.put("seq", seqNum);
+		map1.put("username", user.getUsername());
+		querySource.update("insert into z_logger_user (id, username) "
+				+ " values(:seq, :username)", map1);
+	}
+	
+	public Integer logException(ProtonModules module, ProtonEssences essence, String exceptionName, String value) {
 		String logTable = loggerMapper().get(module);
 		Integer seqNum = querySource.queryForObject("select nextval('public.\"LoggerNumSequence\"')", EMPTY_PARAMS, Integer.class);
 		Map<String, Object> map = new HashedMap<String, Object>();
@@ -128,6 +141,8 @@ public abstract class AbstractDAO {
 		if(showLog) {
 			LOGGER.error(sql2);
 		}
+		
+		return seqNum;
 	}
 	
 	public void loggerWithUser(ProtonModules thisModule, Map<String, ?> map, ProtonEssences essence, UserDetailsProton user) {
@@ -153,6 +168,13 @@ public abstract class AbstractDAO {
 		mapper.put(ProtonModules.HELP, "z_proton_help_logger");
 		
 		return mapper;
+	}
+	
+	public Boolean sqlExistInTableByKey(NamedParameterJdbcTemplate src, String tableName, String key, Object value) {
+		Map<String, Object> map = new HashedMap<String, Object>();
+		map.put("key", key);
+		map.put("value", value);
+		return src.queryForObject("select count(*) from " + tableName + " where :key = :value", map, Integer.class) == 0 ? false : true;
 	}
 
 }

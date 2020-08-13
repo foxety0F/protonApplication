@@ -1,0 +1,28 @@
+
+#menuRole{
+	margin : 15px;
+}
+
+#contentCreateNewRole{
+	margin : 15px;
+}
+
+#createRole{
+	margin-bottom: 15px;
+}
+
+#contentAddRoleToUser{
+	margin: 15px;
+}
+
+.btn-info{
+	background: white;
+	color: #333;
+	font-weight: 600;
+	transition: .3s linear;
+}
+
+.btn-info:hover{
+	background: #0fbcf9;
+	color: white;
+}
