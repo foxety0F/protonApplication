@@ -21,10 +21,15 @@ import com.foxety0f.proton.modules.ProtonModules;
 import com.foxety0f.proton.modules.reports.domain.MetaColumns;
 import com.foxety0f.proton.modules.reports.domain.MetaDatabases;
 import com.foxety0f.proton.modules.reports.domain.MetaTables;
+import com.foxety0f.proton.modules.reports.domain.MetaThreads;
 import com.foxety0f.proton.modules.reports.exceptions.ColumnIdUpdateException;
 import com.foxety0f.proton.modules.reports.exceptions.ColumnMissingException;
+import com.foxety0f.proton.modules.reports.exceptions.DatabaseConnectionAlreadyExistException;
 import com.foxety0f.proton.modules.reports.exceptions.DatabaseIdUpdateException;
 import com.foxety0f.proton.modules.reports.exceptions.DatabaseNotFoundException;
+import com.foxety0f.proton.modules.reports.exceptions.DatabasePasswordMissingException;
+import com.foxety0f.proton.modules.reports.exceptions.DatabaseTypeExistException;
+import com.foxety0f.proton.modules.reports.exceptions.DatabaseUserMissingException;
 import com.foxety0f.proton.modules.reports.exceptions.SchemaAndTableMissingException;
 import com.foxety0f.proton.modules.reports.exceptions.TableIdUpdateException;
 import com.foxety0f.proton.modules.reports.service.IReportsService;
@@ -160,10 +165,83 @@ public class IndexReportsController extends AbstractController {
 					return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 				}
 				
-				return new ResponseEntity<String>("Column " + value + " is updated!", HttpStatus.OK);
+				return new ResponseEntity<String>("Column " + field + " is updated!", HttpStatus.OK);
 			}
 		}
 		
 		return new ResponseEntity<String>("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
 	}
+	
+	@RequestMapping("/reports/control/createNewDatabase")
+	public ResponseEntity<String> createNewDatabase(@RequestParam(value = "dataType", required = true) Integer dataType,
+			@RequestParam(value = "url", required = true) String url,
+			@RequestParam(value = "username", required = true) String userName,
+			@RequestParam(value = "password", required = true) String password,
+			@RequestParam(value = "driverName", required = true) String driverName,
+			@RequestParam(value = "testSql", required = true) String testSql,
+			@RequestParam(value = "databaseName", required = true) String databaseName,
+			Principal principal){
+		
+		if(principal != null) {
+			UserDetailsProton user = (UserDetailsProton) SecurityContextHolder.getContext().getAuthentication()
+					.getPrincipal();
+			
+			if(user.hasRole("ROLE_ADMIN") | user.hasRole("ROLE_REPORTS_ADMIN")) {
+				try {
+					reportService.createNewDatabaseConnection(dataType, url, userName, password, driverName, testSql, databaseName, user);
+				} catch (DatabaseConnectionAlreadyExistException | DatabasePasswordMissingException
+						| DatabaseUserMissingException e) {
+					return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+				}
+				
+				return new ResponseEntity<String>("Database " + databaseName + " is created!", HttpStatus.OK);
+			}
+		}
+		
+		return new ResponseEntity<String>("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
+	}
+	
+	@RequestMapping("/reports/control/createNewDatabaseType")
+	public ResponseEntity<String> createNewDatabaseType(
+			@RequestParam(value = "name", required = true) String name,
+
+			Principal principal){
+		
+		if(principal != null) {
+			UserDetailsProton user = (UserDetailsProton) SecurityContextHolder.getContext().getAuthentication()
+					.getPrincipal();
+			
+			if(user.hasRole("ROLE_ADMIN") | user.hasRole("ROLE_REPORTS_ADMIN")) {
+				try {
+					reportService.createNewDatabaseType(name, user);
+				} catch (DatabaseTypeExistException e) {
+					e.printStackTrace();
+				}
+				
+				return new ResponseEntity<String>("Database type " + name + " is created!", HttpStatus.OK);
+			}
+		}
+		
+		return new ResponseEntity<String>("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
+	}
+	
+	@RequestMapping("/reports/control/threadsFromDatabase")
+	public ResponseEntity<List<MetaThreads>> getThreadsFromDatabase(
+			@RequestParam(value = "name", required = true) Integer database,
+			Principal principal){
+		
+		if(principal != null) {
+			UserDetailsProton user = (UserDetailsProton) SecurityContextHolder.getContext().getAuthentication()
+					.getPrincipal();
+			
+			if(user.hasRole("ROLE_ADMIN") | user.hasRole("ROLE_REPORTS_ADMIN")) {
+				
+				return new ResponseEntity<List<MetaThreads>>(reportService.getThreads(database), HttpStatus.OK);
+			}
+		}
+		
+		return null;
+	}
+	
+	
 }

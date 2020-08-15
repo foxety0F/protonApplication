@@ -349,21 +349,13 @@ public class ReportsDao extends AbstractDAO implements IReportsDao {
 	}
 
 	public List<MetaThreads> getThreads() {
-		return querySource.query("select * from proton_meta_threads", new RowMapper<MetaThreads>() {
-
-			@Override
-			public MetaThreads mapRow(ResultSet rs, int rowNum) throws SQLException {
-				MetaThreads item = new MetaThreads();
-				item.setId(rs.getInt("id"));
-				item.setDatabaseId(rs.getInt("database_id"));
-				item.setName(rs.getString("name"));
-				item.setDescription(rs.getString("description"));
-				item.setIsActive(rs.getInt("isActive") == 0 ? false : true);
-				item.setcDate(rs.getDate("c_date"));
-				item.setuDate(rs.getDate("u_date"));
-				return item;
-			}
-		});
+		return querySource.query("select * from proton_meta_threads", new MetaThreadsRowMapper());
+	}
+	
+	public List<MetaThreads> getThreads(Integer database) {
+		Map<String, Integer> map = new HashedMap<String, Integer>();
+		map.put("idDatabase", database);
+		return querySource.query("select * from proton_meta_threads where id_database = :idDatabase", new MetaThreadsRowMapper());
 	}
 
 	public List<MetaThreadTablesMap> getThreadsTablesMap() {
@@ -382,23 +374,7 @@ public class ReportsDao extends AbstractDAO implements IReportsDao {
 	}
 
 	public List<MetaTables> getTables() {
-		return querySource.query("select * from proton_meta_tables", new RowMapper<MetaTables>() {
-
-			@Override
-			public MetaTables mapRow(ResultSet rs, int rowNum) throws SQLException {
-				MetaTables item = new MetaTables();
-				item.setId(rs.getInt("id"));
-				item.setIdDatabase(rs.getInt("id_database"));
-				item.setSchemaName(rs.getString("schema_name"));
-				item.setTableName(rs.getString("table_name"));
-				item.setcDate(rs.getDate("c_date"));
-				item.setuDate(rs.getDate("u_date"));
-				item.setIsActive(rs.getInt("isActive") == 0 ? false : true);
-				item.setDescription(rs.getString("description"));
-				item.setAltName(rs.getString("alt_name"));
-				return item;
-			}
-		});
+		return querySource.query("select * from proton_meta_tables", new MetaTablesRowMapper());
 	}
 
 	public List<MetaTables> getTablesDatabase(Integer idDatabase) {
@@ -406,21 +382,7 @@ public class ReportsDao extends AbstractDAO implements IReportsDao {
 		map.put("param", idDatabase);
 
 		return querySource.query("select * from proton_meta_tables " + " where id_database = :param", map,
-				new RowMapper<MetaTables>() {
-
-					@Override
-					public MetaTables mapRow(ResultSet rs, int rowNum) throws SQLException {
-						MetaTables item = new MetaTables();
-						item.setId(rs.getInt("id"));
-						item.setIdDatabase(rs.getInt("id_database"));
-						item.setSchemaName(rs.getString("schema_name"));
-						item.setTableName(rs.getString("table_name"));
-						item.setcDate(rs.getDate("c_date"));
-						item.setuDate(rs.getDate("u_date"));
-						item.setIsActive(rs.getInt("isActive") == 0 ? false : true);
-						return item;
-					}
-				});
+				new MetaTablesRowMapper());
 	}
 
 	public List<MetaTables> getTablesTable(Integer idTable) {
@@ -428,21 +390,7 @@ public class ReportsDao extends AbstractDAO implements IReportsDao {
 		map.put("param", idTable);
 
 		return querySource.query("select * from proton_meta_tables " + " where id = :param",
-				new RowMapper<MetaTables>() {
-
-					@Override
-					public MetaTables mapRow(ResultSet rs, int rowNum) throws SQLException {
-						MetaTables item = new MetaTables();
-						item.setId(rs.getInt("id"));
-						item.setIdDatabase(rs.getInt("id_database"));
-						item.setSchemaName(rs.getString("schema_name"));
-						item.setTableName(rs.getString("table_name"));
-						item.setcDate(rs.getDate("c_date"));
-						item.setuDate(rs.getDate("u_date"));
-						item.setIsActive(rs.getInt("isActive") == 0 ? false : true);
-						return item;
-					}
-				});
+				new MetaTablesRowMapper());
 	}
 
 	public List<MetaColumns> getColumns() {
@@ -840,8 +788,62 @@ public class ReportsDao extends AbstractDAO implements IReportsDao {
 			throw new DatabaseIdUpdateException();
 		}
 
-		querySource.update("update proton_meta_tables" + " set \"" + field + "\" = :value, " + " u_date = CURRENT_DATE "
-				+ " where id = :tableId and id_database = :databaseId", map);
+		
+		try {
+			querySource.update("update proton_meta_tables" + " set \"" + field + "\" = :value, " + " u_date = CURRENT_DATE "
+					+ " where id = :tableId and id_database = :databaseId", map);
+	
+			loggerWithUser(thisModule, map, essence, user);
+		}catch(Exception e) {
+			try {
+				map.put("intVal", Integer.parseInt(value.toString()));
+				querySource.update("update proton_meta_tables" + " set \"" + field + "\" = :intVal, " + " u_date = CURRENT_DATE "
+						+ " where id = :tableId and id_database = :databaseId", map);
+		
+				loggerWithUser(thisModule, map, essence, user);
+			}catch(Exception e1) {
+				map.put("dateVal", new Date(value.toString()));
+				querySource.update("update proton_meta_tables" + " set \"" + field + "\" = :dateVal, " + " u_date = CURRENT_DATE "
+						+ " where id = :tableId and id_database = :databaseId", map);
+		
+				loggerWithUser(thisModule, map, essence, user);
+			}
+		}
+		
+	}
+	
+	private static class MetaThreadsRowMapper implements RowMapper<MetaThreads> {
+
+		@Override
+		public MetaThreads mapRow(ResultSet rs, int rowNum) throws SQLException {
+			MetaThreads item = new MetaThreads();
+			item.setId(rs.getInt("id"));
+			item.setDatabaseId(rs.getInt("database_id"));
+			item.setName(rs.getString("name"));
+			item.setDescription(rs.getString("description"));
+			item.setIsActive(rs.getInt("isActive") == 0 ? false : true);
+			item.setcDate(rs.getDate("c_date"));
+			item.setuDate(rs.getDate("u_date"));
+			return item;
+		}
+	}
+	
+	private static class MetaTablesRowMapper implements RowMapper<MetaTables> {
+
+		@Override
+		public MetaTables mapRow(ResultSet rs, int rowNum) throws SQLException {
+			MetaTables item = new MetaTables();
+			item.setId(rs.getInt("id"));
+			item.setIdDatabase(rs.getInt("id_database"));
+			item.setSchemaName(rs.getString("schema_name"));
+			item.setTableName(rs.getString("table_name"));
+			item.setcDate(rs.getDate("c_date"));
+			item.setuDate(rs.getDate("u_date"));
+			item.setIsActive(rs.getInt("isActive") == 0 ? false : true);
+			item.setDescription(rs.getString("description"));
+			item.setAltName(rs.getString("alt_name"));
+			return item;
+		}
 	}
 
 }

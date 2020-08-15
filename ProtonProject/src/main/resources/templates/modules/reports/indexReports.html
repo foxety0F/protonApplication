@@ -5,6 +5,7 @@
    <title>Admin Page</title>
    <th:block th:include="addscripts"></th:block>
    <link rel = "stylesheet" href = "/App/css/modules/reports/reports-page.css">
+   <link href="https://fonts.googleapis.com/css2?family=Pathway+Gothic+One&family=Rancho&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -211,6 +212,10 @@
 					}
 				}
 
+				function cancelSave(node){
+					$(node.offsetParent).empty().append(node.dataset.val);
+				}
+
 				function saveTableToDb(node, type){
 					$.ajax({
 						url : "/reports/control/updateTable",
@@ -224,7 +229,26 @@
 						$.growl.notice({
 							title : 'Update succesful!',
 							message : data
-						})
+						});
+
+						var stringAfter = "";
+
+						if(type == 'boolean'){
+							switch (node.offsetParent.children[0].value) {
+								case 0:
+									stringAfter = "false";
+									break;
+								case 1 :
+									stringAfter = 'true';
+									break;
+								default:
+									break;
+							}
+						}else{
+							stringAfter = node.offsetParent.children[0].value;
+						}
+
+						$(node.offsetParent).empty().append(stringAfter);
 					}).fail(function(e){
 						$.growl.error({
 							title : 'Error',
@@ -246,7 +270,26 @@
 						$.growl.notice({
 							title : 'Update succesful!',
 							message : data
-						})
+						});
+						
+						var stringAfter = "";
+
+						if(type == 'boolean'){
+							switch (node.offsetParent.children[0].value) {
+								case 0:
+									stringAfter = "false";
+									break;
+								case 1 :
+									stringAfter = 'true';
+									break;
+								default:
+									break;
+							}
+						}else{
+							stringAfter = node.offsetParent.children[0].value;
+						}
+
+						$(node.offsetParent).empty().append(stringAfter);
 					}).fail(function(e){
 						$.growl.error({
 							title : 'Error',

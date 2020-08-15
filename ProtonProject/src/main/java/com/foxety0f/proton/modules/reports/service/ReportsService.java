@@ -203,4 +203,9 @@ public class ReportsService implements IReportsService{
 		return reportsDao.getTablesCount();
 	}
 
+	@Override
+	public List<MetaThreads> getThreads(Integer database) {
+		return reportsDao.getThreads(database);
+	}
+
 }

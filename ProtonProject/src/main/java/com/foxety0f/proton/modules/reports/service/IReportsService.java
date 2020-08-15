@@ -93,4 +93,6 @@ public interface IReportsService {
 	Integer getColumnsCount();
 
 	Integer getTablesCount();
+	
+	List<MetaThreads> getThreads(Integer database);
 }

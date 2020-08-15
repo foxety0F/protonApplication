@@ -58,6 +58,8 @@ public interface IReportsDao {
 	List<MetaTables> getTables();
 
 	List<MetaTables> getTablesDatabase(Integer idDatabase);
+	
+	List<MetaThreads> getThreads(Integer database);
 
 	List<MetaTables> getTablesTable(Integer idTable);
 
