@@ -60,12 +60,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			}
 		}
 
-		if (!adminService.getAuthUsers().isEmpty()) {
-			for (AuthenticatedUserLog au : adminService.getAuthUsers()) {
-				if (au.getUserName().equals(appUser.getUserName())) {
-					adminService.getAuthUsers().remove(au);
+		try {
+			if (!adminService.getAuthUsers().isEmpty()) {
+				for (AuthenticatedUserLog au : adminService.getAuthUsers()) {
+					if (au.getUserName().equals(appUser.getUserName())) {
+						adminService.getAuthUsers().remove(au);
+					}
 				}
 			}
+		}catch(Exception e) {
+			
 		}
 
 		AuthenticatedUserLog ul = new AuthenticatedUserLog();
