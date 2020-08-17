@@ -16,9 +16,12 @@ import java.util.Set;
 import javax.sql.DataSource;
 
 import org.apache.commons.collections4.map.HashedMap;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.jdbc.core.RowMapper;
 
+import com.foxety0f.proton.ansible.AnsibleInformation;
+import com.foxety0f.proton.ansible.IAnsibleControl;
 import com.foxety0f.proton.common.abstracts.AbstractDAO;
 import com.foxety0f.proton.common.user.UserDetailsProton;
 import com.foxety0f.proton.modules.ProtonEssences;
@@ -49,6 +52,9 @@ import com.foxety0f.proton.modules.reports.exceptions.ThreadNameMissingException
 import com.foxety0f.proton.utils.AESCryptography;
 
 public class ReportsDao extends AbstractDAO implements IReportsDao {
+	
+	@Autowired
+	private IAnsibleControl ansible;
 
 	private static final ProtonModules thisModule = ProtonModules.REPORTS;
 
@@ -487,6 +493,12 @@ public class ReportsDao extends AbstractDAO implements IReportsDao {
 		map.put("idDatabase", idDatabase);
 		MetaDatabases database = getDatabases(idDatabase).get(0);
 		Connection con = null;
+		
+		ProtonEssences essence = ProtonEssences.META_FILL_TABLES;
+		
+		String guid = ansible.geenrateGuid(thisModule);
+		
+		ansible.setInfo(thisModule, guid, null, "updateTableList", essence, new Date(), "Update table list from database", user.getUsername());
 
 		try {
 			con = DriverManager.getConnection(database.getUrl(), database.getUserName(),
@@ -522,40 +534,49 @@ public class ReportsDao extends AbstractDAO implements IReportsDao {
 				
 				for (int i = 0; i < lmp.size(); i++) {
 					
+					ansible.setValue(guid, "Loaded " + (i + 1) + " of " + lmp.size());
+					
 					setTablesNow(i + 1);
 					
 					Map<String, Object> mapU = new HashedMap<String, Object>();
 					mapU.put("idDatabase", idDatabase);
-					mapU.put("table_name", lmp.get(i).get("table_name"));
+					mapU.put("tableName", lmp.get(i).get("table_name"));
 					mapU.put("schema_name", lmp.get(i).get("table_schema"));
 					mapU.put("c_date", new Date());
 					mapU.put("u_date", new Date());
 					mapU.put("isActive", 1);
 
 					Boolean exist = querySource.queryForObject(
-							"select count(*) from proton_meta_tables where table_name = :table_name",
-							map, Integer.class) >= 1 ? true : false;
+							"select count(*) from proton_meta_tables where table_name = :tableName",
+							mapU, Integer.class) >= 1 ? true : false;
 					
 					if(!exist) {
 						querySource.update(""
 								+ " insert into proton_meta_tables (id_database, schema_name, table_name, c_date, u_date, \"isActive\")"
 								+ " select vl.id_database, vl.schema_name, vl.table_name, vl.c_date, vl.u_date, vl.isActive "
 								+ " from(select :idDatabase id_database " + ", :schema_name schema_name "
-								+ ", :table_name table_name " + ", CURRENT_DATE c_date " + ", CURRENT_DATE u_date "
+								+ ", :tableName table_name " + ", CURRENT_DATE c_date " + ", CURRENT_DATE u_date "
 								+ ", :isActive isActive) vl "
 								+ " left join proton_meta_tables sup on vl.id_database = sup.id_database and sup.schema_name = vl.schema_name and vl.table_name = sup.table_name"
 								+ " where sup.id is null " + "", mapU);
-						loggerWithUser(thisModule, mapU, ProtonEssences.META_FILL_TABLES, user);
+						loggerWithUser(thisModule, mapU, essence, user);
 					}
 
 				}
 
 				con.close();
+				
+
+				if(isFillColumns) {
+					fillTablesByDatabase(idDatabase, true, user);
+				}
 
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
+		
+		ansible.kill(guid);
 
 	}
 
@@ -592,6 +613,13 @@ public class ReportsDao extends AbstractDAO implements IReportsDao {
 
 	public void updateColumnList(List<MetaTables> tables, MetaDatabases dt, Boolean setActive, UserDetailsProton user) {
 		Connection con = null;
+		
+		ProtonEssences essence = ProtonEssences.META_FILL_COLUMNS;
+		
+		String guid = ansible.geenrateGuid(thisModule);
+		
+		ansible.setInfo(thisModule, guid, null, "updateColumnList", essence, new Date(), "Update column list from tables for database", user.getUsername());
+
 
 		try {
 			con = DriverManager.getConnection(dt.getUrl(), dt.getUserName(), AESCryptography.decrypt(dt.getPassword()));
@@ -624,6 +652,8 @@ public class ReportsDao extends AbstractDAO implements IReportsDao {
 				setColumnsCount(lmp.size());
 
 				for (int i = 0; i < lmp.size(); i++) {
+					
+					ansible.setValue(guid, "Fill " + (i + 1) + " column of " + lmp.size() + " for " + (tableI + 1) + " table of " + tables.size() );
 					
 					setColumnsNow(i + 1);
 					
@@ -680,18 +710,21 @@ public class ReportsDao extends AbstractDAO implements IReportsDao {
 								+ " left join proton_meta_columns col on base.table_id = col.table_id and base.column_name = col.column_name "
 								+ " where col.id is null ";
 						querySource.update(sqlIns, map);
-						loggerWithUser(thisModule, map, ProtonEssences.META_FILL_COLUMNS, user);
+						loggerWithUser(thisModule, map, essence,  user);
 					}
 				}
 
 			}
 
 			con.close();
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		ansible.kill(guid);
 	}
 
 	public void updateColumnInfo(final Integer id, final Integer columnId, final String param, final Object columnValue,

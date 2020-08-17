@@ -4,7 +4,7 @@
 <head>
    <title>Admin Page</title>
    <th:block th:include="addscripts"></th:block>
-   <link rel = "stylesheet" href = "/App/css/modules/admin/admin-page.css">
+   <link rel="stylesheet" href="/App/css/modules/admin/admin-page.css">
 </head>
 
 <body>
@@ -22,6 +22,42 @@
    <div id="alphaUserInfo">
    </div>
 
+   <div id="ansible">
+      <table id="ansibleTable" class = "table table-bordered">
+         <thead>
+            <tr>
+               <th>
+                  GUID
+               </th>
+               <th>
+                  Method
+               </th>
+               <th>
+                  Essence
+               </th>
+               <th>
+                  Description
+               </th>
+               <th>
+                  GUID Value
+               </th>
+               <th>
+                  Datetime
+               </th>
+               <th>
+                  Module
+               </th>
+               <th>
+                  User
+               </th>
+            </tr>
+         </thead>
+         <tbody>
+
+         </tbody>
+      </table>
+   </div>
+
 
    <script th:inline="javascript">
       var modules = /*[[${modules}]]*/ null;
@@ -36,7 +72,7 @@
 
       $('#adminContainer .row').empty();
 
-      var str = "";
+      var str = ""; 
 
       for (var i in modules) {
          var checked = modules[i].isActive == true ? 'checked' : '';
@@ -148,6 +184,37 @@
             }
          })
       });
+
+      function ansibleUpdate() {
+         $.get("/admin/ansible", {
+
+         }).done(function (data) {
+            $('#ansibleTable tbody').empty();
+            var str = "";
+            for (var i in data) {
+               str += "<tr><td> " + i + "</td><td>" 
+                  + data[i].method + "</td><td>" 
+                     + data[i].essence 
+                     + "</td><td>" 
+                     + data[i].description 
+                     + "</td><td><b>" 
+                     + data[i].value 
+                     + "</b></td><td>" 
+                     + data[i].datetime 
+                     + "</td><td>" 
+                     + data[i].module 
+                     + "</td><td>" 
+                     + data[i].username 
+                     + "</td></tr>";
+            }
+
+            $('#ansibleTable tbody').append(str);
+         })
+      }
+
+      ansibleUpdate();
+
+      setInterval(ansibleUpdate, 1000);
    </script>
 </body>
 
