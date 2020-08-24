@@ -74,7 +74,22 @@ public enum ProtonEssences {
 	/**
 	 * Using for log modify table-information
 	 * */
-	META_UPDATE_TABLE(204, "META_UPDATE_TABLE");
+	META_UPDATE_TABLE(204, "META_UPDATE_TABLE"),
+	
+	/**
+	 * 
+	 * */
+	META_INSERT_RELATION(205, "META_INSERT_RELATION"),
+	
+	/**
+	 * 
+	 * */
+	META_UPDATE_RELATION(205, "META_UPDATE_RELATION"),
+	
+	/**
+	 * 
+	 * */
+	LOGIN_ACTION(999, "LOGIN_ACTION");
 
 	private Integer value;
 	private String string;

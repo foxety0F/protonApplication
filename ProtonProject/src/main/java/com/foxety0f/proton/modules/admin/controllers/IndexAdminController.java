@@ -29,7 +29,6 @@ import com.foxety0f.proton.modules.ProtonModules;
 import com.foxety0f.proton.modules.admin.service.IAdminService;
 import com.foxety0f.proton.modules.help.service.IHelpService;
 import com.foxety0f.proton.modules.modules_config.Module;
-import com.foxety0f.proton.modules.reports.dao.IReportsDao;
 
 @Controller
 public class IndexAdminController extends AbstractController {
@@ -42,6 +41,7 @@ public class IndexAdminController extends AbstractController {
 	
 	@Autowired
 	private IAnsibleControl ansible;
+	 
 	
 	@RequestMapping("/admin")
 	@PageAnnotation(value = "Admin", module = ProtonModules.ADMIN)
@@ -72,7 +72,7 @@ public class IndexAdminController extends AbstractController {
 			return "modules/admin/indexAdmin";
 
 		} else {
-			return "403Page";
+			return "loginPage";
 		}
 	}
 

@@ -16,8 +16,6 @@ import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 
-import com.foxety0f.proton.ansible.AnsibleControl;
-import com.foxety0f.proton.ansible.IAnsibleControl;
 import com.foxety0f.proton.common.user.UserDetailsServiceImpl;
 import com.foxety0f.proton.database.DatabaseBeanFactory;
 import com.foxety0f.proton.database.DatabaseNames;

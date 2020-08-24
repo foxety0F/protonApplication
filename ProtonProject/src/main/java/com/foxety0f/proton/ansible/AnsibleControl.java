@@ -3,6 +3,7 @@ package com.foxety0f.proton.ansible;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import org.apache.commons.collections4.map.HashedMap;
@@ -104,6 +105,20 @@ public class AnsibleControl implements IAnsibleControl{
 	@Override
 	public void kill(String guid) {
 		ansible.remove(guid);
+	}
+	
+	public void addInfo(String guid, AnsibleInformation info) {
+		ansible.put(guid, info);
+	}
+	
+	public void killByUserAndEssence(String username, ProtonEssences essence) {
+		Set<String> keys = getAnsible().keySet();
+		
+		for(String key : keys) {
+			if(getAnsible().get(key).getUsername().equals(username) && getAnsible().get(key).getEssence() == essence) {
+				kill(key);
+			}
+		}
 	}
 
 }

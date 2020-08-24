@@ -32,6 +32,7 @@ import com.foxety0f.proton.modules.reports.domain.MetaColumns;
 import com.foxety0f.proton.modules.reports.domain.MetaDatabases;
 import com.foxety0f.proton.modules.reports.domain.MetaDatabasesNames;
 import com.foxety0f.proton.modules.reports.domain.MetaTables;
+import com.foxety0f.proton.modules.reports.domain.MetaTablesRelations;
 import com.foxety0f.proton.modules.reports.domain.MetaThreadTablesMap;
 import com.foxety0f.proton.modules.reports.domain.MetaThreads;
 import com.foxety0f.proton.modules.reports.exceptions.ColumnIdUpdateException;
@@ -43,6 +44,7 @@ import com.foxety0f.proton.modules.reports.exceptions.DatabasePasswordMissingExc
 import com.foxety0f.proton.modules.reports.exceptions.DatabaseTypeExistException;
 import com.foxety0f.proton.modules.reports.exceptions.DatabaseUpdateNullIDException;
 import com.foxety0f.proton.modules.reports.exceptions.DatabaseUserMissingException;
+import com.foxety0f.proton.modules.reports.exceptions.RelationMissingException;
 import com.foxety0f.proton.modules.reports.exceptions.SchemaAndTableMissingException;
 import com.foxety0f.proton.modules.reports.exceptions.TableIdUpdateException;
 import com.foxety0f.proton.modules.reports.exceptions.ThreadAlreadyExistException;
@@ -387,7 +389,7 @@ public class ReportsDao extends AbstractDAO implements IReportsDao {
 		Map<String, Integer> map = new HashedMap<String, Integer>();
 		map.put("param", idDatabase);
 
-		return querySource.query("select * from proton_meta_tables " + " where id_database = :param", map,
+		return querySource.query("select * from proton_meta_tables " + " where id_database = :param order by id asc", map,
 				new MetaTablesRowMapper());
 	}
 
@@ -395,7 +397,7 @@ public class ReportsDao extends AbstractDAO implements IReportsDao {
 		Map<String, Integer> map = new HashedMap<String, Integer>();
 		map.put("param", idTable);
 
-		return querySource.query("select * from proton_meta_tables " + " where id = :param",
+		return querySource.query("select * from proton_meta_tables " + " where id = :param order by id asc",
 				new MetaTablesRowMapper());
 	}
 
@@ -473,19 +475,6 @@ public class ReportsDao extends AbstractDAO implements IReportsDao {
 						return item;
 					}
 				});
-	}
-
-	public List<MetaDatabases> getFake() {
-		List<MetaDatabases> result = new ArrayList<MetaDatabases>();
-		MetaDatabases md = new MetaDatabases();
-
-		md.setUserName("postgres");
-		md.setPassword("123642sA");
-		md.setUrl("jdbc:postgresql://63.250.60.119:5432/proton");
-
-		result.add(md);
-
-		return result;
 	}
 
 	public void updateTableList(Integer idDatabase, UserDetailsProton user, Boolean isFillColumns) {
@@ -876,6 +865,128 @@ public class ReportsDao extends AbstractDAO implements IReportsDao {
 			item.setDescription(rs.getString("description"));
 			item.setAltName(rs.getString("alt_name"));
 			return item;
+		}
+	}
+	
+	public List<MetaTablesRelations>  getTablesRelations(Integer tableId){
+		Map<String, Integer> map = new HashedMap<String, Integer>();
+		map.put("tableId", tableId);
+		
+		String sql = "		SELECT tr.id" + 
+				"			 , tr.id_column_core" + 
+				"			 , col1.column_name" + 
+				"			 , t1.id id_table" + 
+				"			 , t1.table_name" + 
+				"			 , tr.id_column_sup" + 
+				"			 , col2.column_name column_name_sup" + 
+				"			 , t2.id id_table_sup" + 
+				"			 , t2.table_name table_name_sup" + 
+				"			 , tr.name" + 
+				"			 , tr.description" + 
+				"			 , tr.is_active" + 
+				"			 , tr.c_date" + 
+				"		  FROM proton_meta_tables_relations tr" + 
+				"	 LEFT JOIN proton_meta_columns col1 on col1.id = tr.id_column_core" + 
+				"	 LEFT JOIN proton_meta_tables t1 on t1.id = col1.table_id" + 
+				"	 LEFT JOIN proton_meta_columns col2 on col2.id = tr.id_column_sup" + 
+				"	 LEFT JOIN proton_meta_tables t2 on t2.id = col2.table_id"
+				+ "      WHERE tr.id_column_core in(select id from proton_meta_columns where table_id = :tableId) " + 
+				"	  ORDER BY tr.id ASC, id_column_core ASC, id_column_sup ASC ";
+		
+		return querySource.query(sql, map, new MetaTablesRelationsRowMapper());
+		
+	}
+	
+	private static class MetaTablesRelationsRowMapper implements RowMapper<MetaTablesRelations>{
+
+		@Override
+		public MetaTablesRelations mapRow(ResultSet rs, int rowNum) throws SQLException {
+			MetaTablesRelations item = new MetaTablesRelations();
+			
+			item.setId(rs.getInt(1));
+			item.setIdColumnCore(rs.getInt(2));
+			item.setColumnName(rs.getString(3));
+			item.setIdTable(rs.getInt(4));
+			item.setTableName(rs.getString(5));
+			item.setIdColumnSup(rs.getInt(6));
+			item.setColumnNameSup(rs.getString(7));
+			item.setIdTableSup(rs.getInt(8));
+			item.setTableNameSup(rs.getString(9));
+			item.setName(rs.getString(10));
+			item.setDescription(rs.getString(11));
+			item.setIsActive(rs.getInt(12) == 0 ? false : true);
+			item.setCreateDate(rs.getDate(13));
+			
+			return item;
+		}
+		
+	}
+	
+	public void setNewRelation(Integer idColumn, Integer idColumnSup, String name, String description, Boolean isActive, UserDetailsProton user) throws Exception {
+		Map<String, Object> map = new HashedMap<String, Object>();
+		map.put("idColumn", idColumn);
+		map.put("idColumnSup", idColumnSup);
+		map.put("name", name);
+		map.put("description", description);
+		map.put("isActive", isActive == true ? 1 : 0);
+		
+		Boolean exist = querySource.queryForObject("select count(*) from proton_meta_tables_relations "
+				+ " where id_column_core = :idColumn"
+				+ " and id_column_sup = :idColumnSup", map, Integer.class) == 0 ? false : true;
+		
+		if(exist) {
+			throw new Exception("Relation from @idCore " + idColumn + " to @idRel " + idColumnSup + " already exist!");
+		}
+		
+		String sql = " insert into proton_meta_tables_relations (id_column_core, id_column_sup, name, description, is_active, c_date, u_date) "
+				+ " values(:idColumn, :idColumnSup, :name, :description, :isActive, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
+		
+		querySource.update(sql, map);
+	}
+	
+	public void updateRelation(final Integer id, final String columnName, final Object value, UserDetailsProton user) throws Exception {
+		Map<String, Object> map = new HashedMap<String, Object>();
+		map.put("id", id);
+		map.put("value", value);
+		
+		ProtonEssences essence = ProtonEssences.META_UPDATE_RELATION;
+		
+		Integer ex = querySource.queryForObject("select count(*) from proton_meta_tables_relations where id = :id", map, Integer.class);
+		
+		System.err.println(ex);
+		
+		if(ex != 0 ? false : true) {
+			logException(thisModule, essence, "RelationMissingException", id.toString(), user);
+			throw new RelationMissingException(id);
+		}
+		
+		if(columnName.toLowerCase().equals("u_date")) {
+			throw new Exception("You cant update @u_date column!");
+		}
+		
+		if(columnName.toLowerCase().equals("id")) {
+			throw new Exception("You cant update @id column!");
+		}
+		
+		try {
+			querySource.update("update proton_meta_tables_relations" + " set \"" + columnName + "\" = :value, " + " u_date = CURRENT_TIMESTAMP "
+					+ " where id = :id ", map);
+	
+			loggerWithUser(thisModule, map, essence, user);
+		}catch(Exception e) {
+			try {
+				map.put("intVal", Integer.parseInt(value.toString()));
+				querySource.update("update proton_meta_tables_relations" + " set \"" + columnName + "\" = :intVal, " + " u_date = CURRENT_TIMESTAMP "
+						+ " where id = :id ", map);
+		
+				loggerWithUser(thisModule, map, essence, user);
+			}catch(Exception e1) {
+				map.put("dateVal", new Date(value.toString()));
+				querySource.update("update proton_meta_tables_relations" + " set \"" + columnName + "\" = :dateVal, " + " u_date = CURRENT_TIMESTAMP "
+						+ " where id = :id ", map);
+		
+				loggerWithUser(thisModule, map, essence, user);
+			}
 		}
 	}
 

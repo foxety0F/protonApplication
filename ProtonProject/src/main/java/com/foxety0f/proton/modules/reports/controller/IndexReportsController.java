@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.foxety0f.proton.common.abstracts.AbstractController;
@@ -21,6 +22,7 @@ import com.foxety0f.proton.modules.ProtonModules;
 import com.foxety0f.proton.modules.reports.domain.MetaColumns;
 import com.foxety0f.proton.modules.reports.domain.MetaDatabases;
 import com.foxety0f.proton.modules.reports.domain.MetaTables;
+import com.foxety0f.proton.modules.reports.domain.MetaTablesRelations;
 import com.foxety0f.proton.modules.reports.domain.MetaThreads;
 import com.foxety0f.proton.modules.reports.exceptions.ColumnIdUpdateException;
 import com.foxety0f.proton.modules.reports.exceptions.ColumnMissingException;
@@ -30,6 +32,7 @@ import com.foxety0f.proton.modules.reports.exceptions.DatabaseNotFoundException;
 import com.foxety0f.proton.modules.reports.exceptions.DatabasePasswordMissingException;
 import com.foxety0f.proton.modules.reports.exceptions.DatabaseTypeExistException;
 import com.foxety0f.proton.modules.reports.exceptions.DatabaseUserMissingException;
+import com.foxety0f.proton.modules.reports.exceptions.RelationMissingException;
 import com.foxety0f.proton.modules.reports.exceptions.SchemaAndTableMissingException;
 import com.foxety0f.proton.modules.reports.exceptions.TableIdUpdateException;
 import com.foxety0f.proton.modules.reports.service.IReportsService;
@@ -116,7 +119,7 @@ public class IndexReportsController extends AbstractController {
 		return new ResponseEntity<List<MetaColumns>>(HttpStatus.FORBIDDEN);
 	}
 	
-	@RequestMapping("/reports/control/updateColumn")
+	@RequestMapping(value = "/reports/control/updateColumn" , method = RequestMethod.POST)
 	public ResponseEntity<String> updateColumn(@RequestParam(value = "tableId", required = true) Integer tableId,
 			@RequestParam(value = "columnId", required = true) Integer columnId,
 			@RequestParam(value = "param", required = true) String param,
@@ -147,7 +150,7 @@ public class IndexReportsController extends AbstractController {
 		return new ResponseEntity<String>("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
 	}
 	
-	@RequestMapping("/reports/control/updateTable")
+	@RequestMapping(value = "/reports/control/updateTable", method = RequestMethod.POST)
 	public ResponseEntity<String> updateTable(@RequestParam(value = "tableId", required = true) Integer id,
 			@RequestParam(value = "databaseId", required = true) Integer idDatabase,
 			@RequestParam(value = "field", required = true) String field,
@@ -172,7 +175,7 @@ public class IndexReportsController extends AbstractController {
 		return new ResponseEntity<String>("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
 	}
 	
-	@RequestMapping("/reports/control/createNewDatabase")
+	@RequestMapping(value = "/reports/control/createNewDatabase", method = RequestMethod.POST)
 	public ResponseEntity<String> createNewDatabase(@RequestParam(value = "dataType", required = true) Integer dataType,
 			@RequestParam(value = "url", required = true) String url,
 			@RequestParam(value = "username", required = true) String userName,
@@ -201,7 +204,7 @@ public class IndexReportsController extends AbstractController {
 		return new ResponseEntity<String>("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
 	}
 	
-	@RequestMapping("/reports/control/createNewDatabaseType")
+	@RequestMapping(value = "/reports/control/createNewDatabaseType", method = RequestMethod.POST)
 	public ResponseEntity<String> createNewDatabaseType(
 			@RequestParam(value = "name", required = true) String name,
 
@@ -242,6 +245,97 @@ public class IndexReportsController extends AbstractController {
 		
 		return null;
 	}
+	
+	@RequestMapping("/reports/control/getDatabaseInfo")
+	public ResponseEntity<?> getDatabaseInfo(@RequestParam(value = "idDatabase", required = true) Integer idDatabase,
+			Principal principal){
+		
+		if(principal != null) {
+			UserDetailsProton user = (UserDetailsProton) SecurityContextHolder.getContext().getAuthentication()
+					.getPrincipal();
+			
+			if(user.hasRole("ROLE_ADMIN") | user.hasRole("ROLE_REPORTS_ADMIN")) {
+				
+				return new ResponseEntity<MetaDatabases>(reportService.getDatabases(idDatabase).get(0), HttpStatus.OK);
+			}
+			
+			return new ResponseEntity<String>("FORBIDDEN", HttpStatus.FORBIDDEN);
+		}
+		
+		return new ResponseEntity<String>("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
+		
+	}
+	
+	@RequestMapping("/reports/control/getRelations")
+	public ResponseEntity<?> getRelations(@RequestParam(value = "tableId", required = true) Integer tableId,
+			Principal principal){
+		if(principal != null) {
+			UserDetailsProton user = (UserDetailsProton) SecurityContextHolder.getContext().getAuthentication()
+					.getPrincipal();
+			
+			if(user.hasRole("ROLE_ADMIN") | user.hasRole("ROLE_REPORTS_ADMIN")) {
+				
+				return new ResponseEntity<List<MetaTablesRelations>>(reportService.getTablesRelations(tableId), HttpStatus.OK);
+			}
+			
+			return new ResponseEntity<String>("FORBIDDEN", HttpStatus.FORBIDDEN);
+		}
+		
+		return new ResponseEntity<String>("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
+	}
+	
+	@RequestMapping(value = "/reports/control/createRelation", method = RequestMethod.POST)
+	public ResponseEntity<?> createRelation(Principal principal,
+			@RequestParam(value = "idColumn", required = true) Integer idColumn,
+			@RequestParam(value = "idColumnSup", required = true) Integer idColumnSup,
+			@RequestParam(value = "name", required = false) String name,
+			@RequestParam(value = "description", required = false) String description,
+			@RequestParam(value = "isActive", required = false) Boolean isActive){
+		if(principal != null) {
+			UserDetailsProton user = (UserDetailsProton) SecurityContextHolder.getContext().getAuthentication()
+					.getPrincipal();
+			
+			if(user.hasRole("ROLE_ADMIN") | user.hasRole("ROLE_REPORTS_ADMIN")) {
+				try {
+					reportService.setNewRelation(idColumn, idColumnSup, name, description, isActive, user);
+				} catch (Exception e) {
+					return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+				}
+				return new ResponseEntity<String>("OK", HttpStatus.OK);
+			}
+			
+			return new ResponseEntity<String>("FORBIDDEN", HttpStatus.FORBIDDEN);
+		}
+		
+		return new ResponseEntity<String>("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
+	}
+	
+	@RequestMapping(value = "/reports/control/updateRelation", method = RequestMethod.POST)
+	public ResponseEntity<?> updateRelation(Principal principal,
+			@RequestParam(value = "id", required = true) Integer id,
+			@RequestParam(value = "columnName", required = true) String columnName,
+			@RequestParam(value = "value", required = true) Object value){
+		if(principal != null) {
+			UserDetailsProton user = (UserDetailsProton) SecurityContextHolder.getContext().getAuthentication()
+					.getPrincipal();
+			
+			if(user.hasRole("ROLE_ADMIN") | user.hasRole("ROLE_REPORTS_ADMIN")) {
+				try {
+					reportService.updateRelation(id, columnName, value, user);
+					return ResponseEntity.ok("OK");
+				} catch (RelationMissingException e) {
+					return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+				} catch (Exception e) {
+					return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+				}
+			}
+			
+			return new ResponseEntity<String>("FORBIDDEN", HttpStatus.FORBIDDEN);
+		}
+		
+		return new ResponseEntity<String>("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
+	}
+	
 	
 	
 }

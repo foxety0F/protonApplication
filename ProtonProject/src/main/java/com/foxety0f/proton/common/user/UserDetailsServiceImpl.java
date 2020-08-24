@@ -72,14 +72,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			
 		}
 
-		AuthenticatedUserLog ul = new AuthenticatedUserLog();
-		ul.setGrantList(grantList);
-		ul.setUserId(appUser.getUserId());
-		ul.setTsAuth(new Date().getTime());
-		ul.setTsLastAction(new Date().getTime());
-		ul.setUserName(appUser.getUserName());
-
-		adminService.addAuth(ul);
+		
 
 		UserDetails userDetails = new UserDetailsProton(appUser.getUserName(), appUser.getEncryptedPassword(),
 				grantList, appUser.getFirstName(), appUser.getSurname(), appUser.getIsFirstTime(),

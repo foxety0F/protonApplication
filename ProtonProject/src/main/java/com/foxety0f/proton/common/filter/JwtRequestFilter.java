@@ -7,6 +7,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,6 +17,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.foxety0f.proton.common.abstracts.AbstractDAO;
 import com.foxety0f.proton.common.user.UserDetailsProton;
 import com.foxety0f.proton.common.user.UserDetailsServiceImpl;
 import com.foxety0f.proton.utils.JwtTokenUtils;
@@ -28,6 +31,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 	private UserDetailsServiceImpl udsi;
 	@Autowired
 	private JwtTokenUtils jwtUtil;
+	
+	protected final static Logger LOGGER = LoggerFactory.getLogger(JwtRequestFilter.class);
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -54,6 +59,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 			
 			if(jwtUtil.validateToken(jwtToken, user)) {
 				UsernamePasswordAuthenticationToken upat = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+				
+				request.setAttribute("userType", "user");
 				
 				upat.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 				

@@ -1,5 +1,7 @@
 package com.foxety0f.proton.web;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -38,12 +40,12 @@ public class JwtAuthenticationController {
 		
 		final String token = jtu.generateToken(user);
 		
-		return ResponseEntity.ok(new JwtResponse(token));
+		return ResponseEntity.ok(new JwtInfo(new Date(), token, jtu.getExpirationDateFromToken(token)));
 	}
 
-	public void authenticate(String username, String password) throws Exception {
+	public void authenticate(String username, String password) throws Exception{
 		try {
-		am.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+			am.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 		}catch(DisabledException e) {
 			throw new Exception("DISABLED", e);
 		}catch(BadCredentialsException e) {

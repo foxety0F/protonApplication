@@ -19,6 +19,8 @@ import com.foxety0f.proton.modules.modules_config.Module;
 public interface IAdminService {
 
 	Module getModule(ProtonModules module) throws ModuleNotUndefinedException;
+	
+	void removeAuth(String username);
 
 	Module getModule(int id) throws ModuleNotUndefinedException;
 

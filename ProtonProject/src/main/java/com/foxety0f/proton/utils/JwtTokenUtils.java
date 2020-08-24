@@ -23,7 +23,10 @@ public class JwtTokenUtils implements Serializable {
 	 */
 	private static final long serialVersionUID = 8353625869965067141L;
 
-	public static final long JWT_TOKEN_VALIDITY = 365 * 60 * 60;
+	/**
+	 * 9 * 60 * 60 mean 9 hours
+	 * */
+	public static final long JWT_TOKEN_VALIDITY = 9 * 60 * 60;
 
 	@Value("${jwt.secret}")
 	private String secret;
@@ -61,7 +64,7 @@ public class JwtTokenUtils implements Serializable {
 				.signWith(SignatureAlgorithm.HS512, secret).compact();
 	}
 
-	public Boolean validateToken(String token, UserDetails userDetails) {
+	public Boolean validateToken(String token, UserDetailsProton userDetails) {
 		final String username = getUsernameFromToken(token);
 		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
 	}

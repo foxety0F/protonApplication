@@ -2,23 +2,31 @@ package com.foxety0f.proton.modules.admin.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.foxety0f.proton.ansible.AnsibleControl;
+import com.foxety0f.proton.ansible.AnsibleInformation;
 import com.foxety0f.proton.common.domain.LoadedFiles;
 import com.foxety0f.proton.common.exceptions.ModuleNotUndefinedException;
 import com.foxety0f.proton.common.exceptions.UserAlreadyExistException;
 import com.foxety0f.proton.common.user.AppUser;
 import com.foxety0f.proton.common.user.AuthenticatedUserLog;
 import com.foxety0f.proton.common.user.UserDetailsProton;
+import com.foxety0f.proton.modules.ProtonEssences;
 import com.foxety0f.proton.modules.ProtonModules;
 import com.foxety0f.proton.modules.admin.dao.IAdminDAO;
 import com.foxety0f.proton.modules.admin.domain.AdminModuleInformation;
 import com.foxety0f.proton.modules.modules_config.Module;
 
 public class AdminService implements IAdminService {
+	
+	@Autowired
+	private AnsibleControl ansibleControl;
 
 	private ProtonModules thisModule = ProtonModules.ADMIN;
 	private List<Module> allModules = new ArrayList<Module>();
@@ -34,7 +42,30 @@ public class AdminService implements IAdminService {
 	}
 	
 	public void addAuth(AuthenticatedUserLog authLog) {
+		String guid = ansibleControl.geenrateGuid(thisModule);
+		AnsibleInformation info = new AnsibleInformation();
+		info.setDatetime(new Date());
+		info.setDescription("User " + authLog.getUserName() + " authenticated");
+		info.setEssence(ProtonEssences.LOGIN_ACTION);
+		info.setIsActive(true);
+		info.setMethod("Authenticate");
+		info.setUsername(authLog.getUserName());
+		info.setModule(thisModule);
+		info.setValue(authLog.getUserName() + " is authenticated. <br> Granted List : " + authLog.getGrantList());
+		
+		ansibleControl.addInfo(guid, info);
+		
 		this.authUsers.add(authLog);
+	}
+	
+	public void removeAuth(String username) {
+		for(int i = 0; i < authUsers.size(); i++) {
+			if(authUsers.get(i).getUserName().equals(username)) {
+				authUsers.remove(i);
+			}
+		}
+		
+		ansibleControl.killByUserAndEssence(username, ProtonEssences.LOGIN_ACTION);
 	}
 
 	private IAdminDAO adminDao;

@@ -11,6 +11,7 @@ import com.foxety0f.proton.modules.reports.domain.MetaColumns;
 import com.foxety0f.proton.modules.reports.domain.MetaDatabases;
 import com.foxety0f.proton.modules.reports.domain.MetaDatabasesNames;
 import com.foxety0f.proton.modules.reports.domain.MetaTables;
+import com.foxety0f.proton.modules.reports.domain.MetaTablesRelations;
 import com.foxety0f.proton.modules.reports.domain.MetaThreadTablesMap;
 import com.foxety0f.proton.modules.reports.domain.MetaThreads;
 import com.foxety0f.proton.modules.reports.exceptions.ColumnIdUpdateException;
@@ -22,6 +23,7 @@ import com.foxety0f.proton.modules.reports.exceptions.DatabasePasswordMissingExc
 import com.foxety0f.proton.modules.reports.exceptions.DatabaseTypeExistException;
 import com.foxety0f.proton.modules.reports.exceptions.DatabaseUpdateNullIDException;
 import com.foxety0f.proton.modules.reports.exceptions.DatabaseUserMissingException;
+import com.foxety0f.proton.modules.reports.exceptions.RelationMissingException;
 import com.foxety0f.proton.modules.reports.exceptions.SchemaAndTableMissingException;
 import com.foxety0f.proton.modules.reports.exceptions.TableIdUpdateException;
 import com.foxety0f.proton.modules.reports.exceptions.ThreadAlreadyExistException;
@@ -29,16 +31,16 @@ import com.foxety0f.proton.modules.reports.exceptions.ThreadDatabaseIdMissingExc
 import com.foxety0f.proton.modules.reports.exceptions.ThreadIdMissingException;
 import com.foxety0f.proton.modules.reports.exceptions.ThreadNameMissingException;
 
-public class ReportsService implements IReportsService{
+public class ReportsService implements IReportsService {
 
 	private ProtonModules thisModule = ProtonModules.REPORTS;
 
 	public ProtonModules getThisModule() {
 		return thisModule;
 	}
-	
+
 	private IReportsDao reportsDao;
-	
+
 	public ReportsService(IReportsDao reportsDao) {
 		this.reportsDao = reportsDao;
 	}
@@ -46,22 +48,24 @@ public class ReportsService implements IReportsService{
 	@Override
 	public void createNewDatabaseType(String name, UserDetailsProton user) throws DatabaseTypeExistException {
 		reportsDao.createNewDatabaseType(name, user);
-		
-	} 
+
+	}
 
 	@Override
 	public void createNewDatabaseConnection(Integer dataType, String url, String userName, String password,
-			String driverName, String testSql,String databaseName, UserDetailsProton user) throws DatabaseConnectionAlreadyExistException,
-			DatabasePasswordMissingException, DatabaseUserMissingException {
-		reportsDao.createNewDatabaseConnection(dataType, url, userName, password, driverName, testSql, databaseName, user);
-		
+			String driverName, String testSql, String databaseName, UserDetailsProton user)
+			throws DatabaseConnectionAlreadyExistException, DatabasePasswordMissingException,
+			DatabaseUserMissingException {
+		reportsDao.createNewDatabaseConnection(dataType, url, userName, password, driverName, testSql, databaseName,
+				user);
+
 	}
 
 	@Override
 	public void createNewThread(Integer databaseId, String name, String description, UserDetailsProton user)
 			throws ThreadAlreadyExistException, ThreadDatabaseIdMissingException, ThreadNameMissingException {
 		reportsDao.createNewThread(databaseId, name, description, user);
-		
+
 	}
 
 	@Override
@@ -69,7 +73,7 @@ public class ReportsService implements IReportsService{
 			String driverName, String testSql, UserDetailsProton user) throws DatabaseUpdateNullIDException,
 			DatabaseUserMissingException, DatabasePasswordMissingException, DatabaseNotFoundException {
 		reportsDao.updateDatabaseConnection(id, dataType, url, userName, password, driverName, testSql, user);
-		
+
 	}
 
 	@Override
@@ -77,7 +81,7 @@ public class ReportsService implements IReportsService{
 			throws ThreadAlreadyExistException, ThreadDatabaseIdMissingException, ThreadNameMissingException,
 			ThreadIdMissingException {
 		reportsDao.updateThread(id, databaseId, name, description, user);
-		
+
 	}
 
 	@Override
@@ -138,7 +142,7 @@ public class ReportsService implements IReportsService{
 	@Override
 	public void updateTableList(Integer idDatabase, UserDetailsProton user, Boolean isFillColumns) {
 		reportsDao.updateTableList(idDatabase, user, isFillColumns);
-		
+
 	}
 
 	@Override
@@ -149,19 +153,19 @@ public class ReportsService implements IReportsService{
 	@Override
 	public void fillTablesByDatabase(Integer idDatabase, Boolean setActive, UserDetailsProton user) {
 		reportsDao.fillTablesByDatabase(idDatabase, setActive, user);
-		
+
 	}
 
 	@Override
 	public void fillTablesByTable(Integer idTable, Boolean setActive, UserDetailsProton user) {
 		reportsDao.fillTablesByTable(idTable, setActive, user);
-		
+
 	}
 
 	@Override
 	public void updateColumnList(List<MetaTables> tables, MetaDatabases dt, Boolean setActive, UserDetailsProton user) {
 		reportsDao.updateColumnList(tables, dt, setActive, user);
-		
+
 	}
 
 	@Override
@@ -169,17 +173,17 @@ public class ReportsService implements IReportsService{
 			throws SchemaAndTableMissingException, ColumnMissingException, ColumnIdUpdateException,
 			TableIdUpdateException {
 		reportsDao.updateColumnInfo(id, columnId, param, columnValue, user);
-		
+
 	}
 
 	@Override
 	public void updateTableInfo(Integer id, Integer idDatabase, String field, Object value, UserDetailsProton user)
 			throws DatabaseNotFoundException, TableIdUpdateException, DatabaseIdUpdateException {
 		reportsDao.updateTableInfo(id, idDatabase, field, value, user);
-		
+
 	}
-	
-	public List<MetaColumns> getColumns(Integer tableId){
+
+	public List<MetaColumns> getColumns(Integer tableId) {
 		return reportsDao.getColumns(tableId);
 	}
 
@@ -208,4 +212,20 @@ public class ReportsService implements IReportsService{
 		return reportsDao.getThreads(database);
 	}
 
+	@Override
+	public List<MetaTablesRelations> getTablesRelations(Integer tableId) {
+		return reportsDao.getTablesRelations(tableId);
+	}
+
+	@Override
+	public void setNewRelation(Integer idColumn, Integer idColumnSup, String name, String description, Boolean isActive,
+			UserDetailsProton user) throws Exception{
+		reportsDao.setNewRelation(idColumn, idColumnSup, name, description, isActive, user);
+	}
+
+	@Override
+	public void updateRelation(final Integer id, final String columnName, final Object value, UserDetailsProton user)
+			throws Exception {
+		reportsDao.updateRelation(id, columnName, value, user);
+	}
 }

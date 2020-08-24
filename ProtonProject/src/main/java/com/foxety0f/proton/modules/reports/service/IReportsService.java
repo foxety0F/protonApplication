@@ -9,6 +9,7 @@ import com.foxety0f.proton.modules.reports.domain.MetaColumns;
 import com.foxety0f.proton.modules.reports.domain.MetaDatabases;
 import com.foxety0f.proton.modules.reports.domain.MetaDatabasesNames;
 import com.foxety0f.proton.modules.reports.domain.MetaTables;
+import com.foxety0f.proton.modules.reports.domain.MetaTablesRelations;
 import com.foxety0f.proton.modules.reports.domain.MetaThreadTablesMap;
 import com.foxety0f.proton.modules.reports.domain.MetaThreads;
 import com.foxety0f.proton.modules.reports.exceptions.ColumnIdUpdateException;
@@ -20,6 +21,7 @@ import com.foxety0f.proton.modules.reports.exceptions.DatabasePasswordMissingExc
 import com.foxety0f.proton.modules.reports.exceptions.DatabaseTypeExistException;
 import com.foxety0f.proton.modules.reports.exceptions.DatabaseUpdateNullIDException;
 import com.foxety0f.proton.modules.reports.exceptions.DatabaseUserMissingException;
+import com.foxety0f.proton.modules.reports.exceptions.RelationMissingException;
 import com.foxety0f.proton.modules.reports.exceptions.SchemaAndTableMissingException;
 import com.foxety0f.proton.modules.reports.exceptions.TableIdUpdateException;
 import com.foxety0f.proton.modules.reports.exceptions.ThreadAlreadyExistException;
@@ -93,6 +95,14 @@ public interface IReportsService {
 	Integer getColumnsCount();
 
 	Integer getTablesCount();
-	
+
 	List<MetaThreads> getThreads(Integer database);
+
+	List<MetaTablesRelations> getTablesRelations(Integer tableId);
+
+	void setNewRelation(Integer idColumn, Integer idColumnSup, String name, String description, Boolean isActive,
+			UserDetailsProton user) throws Exception;
+
+	void updateRelation(Integer id, String columnName, Object value, UserDetailsProton user)
+			throws RelationMissingException, Exception;
 }
