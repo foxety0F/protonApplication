@@ -363,7 +363,7 @@ public class ReportsDao extends AbstractDAO implements IReportsDao {
 	public List<MetaThreads> getThreads(Integer database) {
 		Map<String, Integer> map = new HashedMap<String, Integer>();
 		map.put("idDatabase", database);
-		return querySource.query("select * from proton_meta_threads where id_database = :idDatabase", new MetaThreadsRowMapper());
+		return querySource.query("select * from proton_meta_threads where database_id = :idDatabase", map, new MetaThreadsRowMapper());
 	}
 
 	public List<MetaThreadTablesMap> getThreadsTablesMap() {
@@ -989,5 +989,8 @@ public class ReportsDao extends AbstractDAO implements IReportsDao {
 			}
 		}
 	}
+	
+	
+	
 
 }

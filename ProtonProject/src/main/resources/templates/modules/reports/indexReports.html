@@ -63,11 +63,63 @@
 					}).done(function (data) {
 						databases = data;
 						for (var i in databases) {
-							liDatabases += "<li  ><span onclick='getTables(this)' data-id = '" + databases[i].id + "'>" + databases[i].databaseName + "</span><button data-id = '" + databases[i].id + "' class = 'btn' onclick='dbConfig(this)'>info</button></li>";
+							liDatabases += "<li  ><span onclick='getTables(this)' data-id = '" + databases[i].id + "'>" + databases[i].databaseName + "</span><button data-id = '" + databases[i].id + "' class = 'btn' onclick='dbConfig(this)'>info</button><button data-id = '" + databases[i].id + "' class = 'btn' onclick='threadsDb(this)'>threads</button></li>";
 						}
 
 						$("#databases").append(liDatabases);
 					})
+
+				}
+
+				function threadsDb(node){
+					$.ajax({
+						url : '/reports/control/threadsFromDatabase',
+						data : {
+							database : parseInt(node.dataset.id)
+						},
+						method : 'GET'
+					}).done(function(data){
+						var message = "";
+
+						message += '<button id = "threadCreate" data-databaseid = "' + node.dataset.id + '"> Add new thread </button><br>';
+
+						if(data.length > 0){
+							message += '<table> <thead> <tr> <th> ID </th>'
+									+ '<th> Database Id </th>'
+									+ '<th> Name </th>'
+									+ '<th> Description </th>'
+									+ '<th> Is Active </th>'
+									+ '<th> Created Date </th>'
+									+ '<th> Updated Date </th>'
+									+ '</tr> </thead> <tbody>';
+							
+							for(var i = 0; i < data.length; i++){
+								message += '<tr>'
+											+ '<td> ' + data[i].id + '</td>'
+											+ '<td> ' + data[i].databaseId + '</td>'
+											+ '<td> ' + data[i].name + '</td>'
+											+ '<td> ' + data[i].description + '</td>'
+											+ '<td> ' + data[i].isActive + '</td>' 
+											+ '<td> ' + data[i].cDate + '</td>'
+											+ '<td> ' + data[i].uDate + '</td>'
+										+ '</tr>';
+							}
+
+							message += '</tbody> </table>';
+										
+						}else {
+							message += 'No applicable data. Please add some thread for this database';
+						}
+
+						bootbox.dialog({
+							title : 'Threads',
+							message : message,
+							size : 'medium'
+						})
+					})
+				}
+
+				function createNewThread(node){
 
 				}
 

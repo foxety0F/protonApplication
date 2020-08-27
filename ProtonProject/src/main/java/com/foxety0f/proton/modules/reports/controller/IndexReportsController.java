@@ -229,8 +229,8 @@ public class IndexReportsController extends AbstractController {
 	}
 	
 	@RequestMapping("/reports/control/threadsFromDatabase")
-	public ResponseEntity<List<MetaThreads>> getThreadsFromDatabase(
-			@RequestParam(value = "name", required = true) Integer database,
+	public ResponseEntity<?> getThreadsFromDatabase(
+			@RequestParam(value = "database", required = true) Integer database,
 			Principal principal){
 		
 		if(principal != null) {
@@ -241,9 +241,11 @@ public class IndexReportsController extends AbstractController {
 				
 				return new ResponseEntity<List<MetaThreads>>(reportService.getThreads(database), HttpStatus.OK);
 			}
+			
+			return new ResponseEntity<String>("FORBIDDEN", HttpStatus.FORBIDDEN);
 		}
 		
-		return null;
+		return new ResponseEntity<String>("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
 	}
 	
 	@RequestMapping("/reports/control/getDatabaseInfo")
