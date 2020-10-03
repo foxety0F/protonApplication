@@ -1,10 +1,16 @@
 package com.foxety0f.proton.modules.reports.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class MetaColumnDict {
 
+	@JsonProperty("id")
 	private Integer id;
+	@JsonProperty("columnId")
 	private Integer columnId;
+	@JsonProperty("dictValue")
 	private String dictValue;
+	@JsonProperty("altName")
 	private String altName;
 
 	public Integer getId() {

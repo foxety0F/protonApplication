@@ -13,6 +13,7 @@ public class Condition {
 	private Date cDate;
 	private Date uDate;
 	private Integer path;
+	private Boolean isActive;
 
 	public Integer getId() {
 		return id;
@@ -86,6 +87,14 @@ public class Condition {
 		this.path = path;
 	}
 
+	public Boolean getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -95,6 +104,7 @@ public class Condition {
 		result = prime * result + ((conditionType == null) ? 0 : conditionType.hashCode());
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((isActive == null) ? 0 : isActive.hashCode());
 		result = prime * result + ((path == null) ? 0 : path.hashCode());
 		result = prime * result + ((reportId == null) ? 0 : reportId.hashCode());
 		result = prime * result + ((uDate == null) ? 0 : uDate.hashCode());
@@ -136,6 +146,11 @@ public class Condition {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
+		if (isActive == null) {
+			if (other.isActive != null)
+				return false;
+		} else if (!isActive.equals(other.isActive))
+			return false;
 		if (path == null) {
 			if (other.path != null)
 				return false;
@@ -163,7 +178,7 @@ public class Condition {
 	public String toString() {
 		return "Condition [id=" + id + ", columnId=" + columnId + ", description=" + description + ", conditionType="
 				+ conditionType + ", reportId=" + reportId + ", values=" + values + ", cDate=" + cDate + ", uDate="
-				+ uDate + ", path=" + path + "]";
+				+ uDate + ", path=" + path + ", isActive=" + isActive + "]";
 	}
 
 }

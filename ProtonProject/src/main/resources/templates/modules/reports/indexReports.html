@@ -659,9 +659,40 @@
 			</script>
 		</th:block>
 	</div>
+	<div>
+		<textarea name="Metadata change" id="metaChange">Hello, World!</textarea>
+	</div>
 
 	<script th:inline="javascript">
 		var testCols;
+		var resultMetaData = {
+			timeSpend : 0.4,
+			recordName : 'employees_information',
+			columns : [{
+				columnName : 'Identificator',
+				code : 'id',
+				type : 'integer'
+			},{
+				columnName : 'Group Name',
+				code : 'group_name',
+				type : 'String'
+			},{
+				columnName : 'Head',
+				code : 'head_name',
+				type : 'integer'
+			},{
+				columnName : 'Create date',
+				code : 'created_date',
+				type : 'integer'
+			},{
+				columnName : 'Employees count',
+				code : 'emp_count',
+				type : 'integer'
+			}]
+		};
+
+		var text = "record " + resultMetaData.recordName + "\n";
+			
 	</script>
 </body>
 

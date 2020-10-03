@@ -13,6 +13,7 @@ public class Column {
 	private String description;
 	private Date cDate;
 	private Date uDate;
+	private Boolean isActive;
 
 	public Integer getId() {
 		return id;
@@ -86,6 +87,14 @@ public class Column {
 		this.uDate = uDate;
 	}
 
+	public Boolean getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -95,6 +104,7 @@ public class Column {
 		result = prime * result + ((columnId == null) ? 0 : columnId.hashCode());
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((isActive == null) ? 0 : isActive.hashCode());
 		result = prime * result + ((reportId == null) ? 0 : reportId.hashCode());
 		result = prime * result + ((typeId == null) ? 0 : typeId.hashCode());
 		result = prime * result + ((uDate == null) ? 0 : uDate.hashCode());
@@ -136,6 +146,11 @@ public class Column {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
+		if (isActive == null) {
+			if (other.isActive != null)
+				return false;
+		} else if (!isActive.equals(other.isActive))
+			return false;
 		if (reportId == null) {
 			if (other.reportId != null)
 				return false;
@@ -163,7 +178,7 @@ public class Column {
 	public String toString() {
 		return "Column [id=" + id + ", reportId=" + reportId + ", columnId=" + columnId + ", typeId=" + typeId
 				+ ", altName=" + altName + ", values=" + values + ", description=" + description + ", cDate=" + cDate
-				+ ", uDate=" + uDate + "]";
+				+ ", uDate=" + uDate + ", isActive=" + isActive + "]";
 	}
 
 }

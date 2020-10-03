@@ -2,7 +2,7 @@ package com.foxety0f.proton.modules.reports.domain.configuration;
 
 import java.util.Date;
 
-public class ShareLinks {
+public class ShareLink {
 
 	private Integer id;
 	private String name;
@@ -13,6 +13,7 @@ public class ShareLinks {
 	private String link;
 	private Integer provideId;
 	private Integer roleId;
+	private String additionalInformation;
 
 	public Integer getId() {
 		return id;
@@ -86,10 +87,19 @@ public class ShareLinks {
 		this.roleId = roleId;
 	}
 
+	public String getAdditionalInformation() {
+		return additionalInformation;
+	}
+
+	public void setAdditionalInformation(String additionalInformation) {
+		this.additionalInformation = additionalInformation;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((additionalInformation == null) ? 0 : additionalInformation.hashCode());
 		result = prime * result + ((createDate == null) ? 0 : createDate.hashCode());
 		result = prime * result + ((expiredDate == null) ? 0 : expiredDate.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
@@ -110,7 +120,12 @@ public class ShareLinks {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ShareLinks other = (ShareLinks) obj;
+		ShareLink other = (ShareLink) obj;
+		if (additionalInformation == null) {
+			if (other.additionalInformation != null)
+				return false;
+		} else if (!additionalInformation.equals(other.additionalInformation))
+			return false;
 		if (createDate == null) {
 			if (other.createDate != null)
 				return false;
@@ -161,9 +176,10 @@ public class ShareLinks {
 
 	@Override
 	public String toString() {
-		return "ShareLinks [id=" + id + ", name=" + name + ", provideTitle=" + provideTitle + ", provideDescription="
+		return "ShareLink [id=" + id + ", name=" + name + ", provideTitle=" + provideTitle + ", provideDescription="
 				+ provideDescription + ", createDate=" + createDate + ", expiredDate=" + expiredDate + ", link=" + link
-				+ ", provideId=" + provideId + ", roleId=" + roleId + "]";
+				+ ", provideId=" + provideId + ", roleId=" + roleId + ", additionalInformation=" + additionalInformation
+				+ "]";
 	}
 
 }

@@ -2,7 +2,7 @@ package com.foxety0f.proton.modules.reports.domain.configuration;
 
 import java.util.Date;
 
-public class ConditionSeparatorHist {
+public class ConditionSeparationHist {
 
 	private Integer id;
 	private Integer reportId;
@@ -11,6 +11,9 @@ public class ConditionSeparatorHist {
 	private Date cDate;
 	private Date uDate;
 	private Boolean isActive;
+	private Integer originalId;
+	private Integer version;
+	private Long userId;
 
 	public Integer getId() {
 		return id;
@@ -68,6 +71,30 @@ public class ConditionSeparatorHist {
 		this.isActive = isActive;
 	}
 
+	public Integer getOriginalId() {
+		return originalId;
+	}
+
+	public void setOriginalId(Integer originalId) {
+		this.originalId = originalId;
+	}
+
+	public Integer getVersion() {
+		return version;
+	}
+
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -75,10 +102,13 @@ public class ConditionSeparatorHist {
 		result = prime * result + ((cDate == null) ? 0 : cDate.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((isActive == null) ? 0 : isActive.hashCode());
+		result = prime * result + ((originalId == null) ? 0 : originalId.hashCode());
 		result = prime * result + ((path == null) ? 0 : path.hashCode());
 		result = prime * result + ((reportId == null) ? 0 : reportId.hashCode());
 		result = prime * result + ((separationType == null) ? 0 : separationType.hashCode());
 		result = prime * result + ((uDate == null) ? 0 : uDate.hashCode());
+		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
+		result = prime * result + ((version == null) ? 0 : version.hashCode());
 		return result;
 	}
 
@@ -90,7 +120,7 @@ public class ConditionSeparatorHist {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ConditionSeparatorHist other = (ConditionSeparatorHist) obj;
+		ConditionSeparationHist other = (ConditionSeparationHist) obj;
 		if (cDate == null) {
 			if (other.cDate != null)
 				return false;
@@ -105,6 +135,11 @@ public class ConditionSeparatorHist {
 			if (other.isActive != null)
 				return false;
 		} else if (!isActive.equals(other.isActive))
+			return false;
+		if (originalId == null) {
+			if (other.originalId != null)
+				return false;
+		} else if (!originalId.equals(other.originalId))
 			return false;
 		if (path == null) {
 			if (other.path != null)
@@ -126,13 +161,24 @@ public class ConditionSeparatorHist {
 				return false;
 		} else if (!uDate.equals(other.uDate))
 			return false;
+		if (userId == null) {
+			if (other.userId != null)
+				return false;
+		} else if (!userId.equals(other.userId))
+			return false;
+		if (version == null) {
+			if (other.version != null)
+				return false;
+		} else if (!version.equals(other.version))
+			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
 		return "ConditionSeparation [id=" + id + ", reportId=" + reportId + ", separationType=" + separationType
-				+ ", path=" + path + ", cDate=" + cDate + ", uDate=" + uDate + ", isActive=" + isActive + "]";
+				+ ", path=" + path + ", cDate=" + cDate + ", uDate=" + uDate + ", isActive=" + isActive
+				+ ", originalId=" + originalId + ", version=" + version + ", userId=" + userId + "]";
 	}
 
 }

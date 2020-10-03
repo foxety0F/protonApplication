@@ -12,6 +12,7 @@ public class ReportConfiguration {
 	private Date uDate;
 	private Boolean isActive;
 	private Integer threadId;
+	private String link;
 
 	public Integer getId() {
 		return id;
@@ -77,6 +78,14 @@ public class ReportConfiguration {
 		this.threadId = threadId;
 	}
 
+	public String getLink() {
+		return link;
+	}
+
+	public void setLink(String link) {
+		this.link = link;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -85,6 +94,7 @@ public class ReportConfiguration {
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((isActive == null) ? 0 : isActive.hashCode());
+		result = prime * result + ((link == null) ? 0 : link.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((owner == null) ? 0 : owner.hashCode());
 		result = prime * result + ((threadId == null) ? 0 : threadId.hashCode());
@@ -121,6 +131,11 @@ public class ReportConfiguration {
 				return false;
 		} else if (!isActive.equals(other.isActive))
 			return false;
+		if (link == null) {
+			if (other.link != null)
+				return false;
+		} else if (!link.equals(other.link))
+			return false;
 		if (name == null) {
 			if (other.name != null)
 				return false;
@@ -147,7 +162,8 @@ public class ReportConfiguration {
 	@Override
 	public String toString() {
 		return "ReportConfiguration [id=" + id + ", name=" + name + ", description=" + description + ", owner=" + owner
-				+ ", cDate=" + cDate + ", uDate=" + uDate + ", isActive=" + isActive + ", threadId=" + threadId + "]";
+				+ ", cDate=" + cDate + ", uDate=" + uDate + ", isActive=" + isActive + ", threadId=" + threadId
+				+ ", link=" + link + "]";
 	}
 
 }

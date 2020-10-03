@@ -1,5 +1,10 @@
 package com.foxety0f.proton;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import javax.servlet.MultipartConfigElement;
 import javax.sql.DataSource;
 
@@ -44,10 +49,14 @@ import com.foxety0f.proton.modules.roles.dao.RoleDAO;
 import com.foxety0f.proton.modules.roles.service.IRoleService;
 import com.foxety0f.proton.modules.roles.service.RoleService;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 /**
- * Core main-class of Proton Application. There generate all beans whos using into Application.
- * */
+ * Core main-class of Proton Application. There generate all beans whos using
+ * into Application.
+ */
 @SpringBootApplication(scanBasePackages = "com.foxety0f.proton")
 @ComponentScan(basePackages = "com.foxety0f.proton")
 @Configuration
@@ -55,6 +64,7 @@ import com.foxety0f.proton.modules.roles.service.RoleService;
 public class ProtonProjectApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
+
 		SpringApplication.run(ProtonProjectApplication.class, args);
 	}
 
@@ -67,7 +77,7 @@ public class ProtonProjectApplication extends SpringBootServletInitializer {
 	public DataSource createDataSource() {
 		return new DatabaseBeanFactory().createDataSource(DatabaseNames.CORE.name());
 	}
-	
+
 	@Bean
 	public IAdminDAO adminDao() {
 		return new AdminDAO(createDataSource());
@@ -105,45 +115,44 @@ public class ProtonProjectApplication extends SpringBootServletInitializer {
 
 	@Bean(name = "commonsMultipartResolver")
 	public MultipartResolver multipartResolver() {
-	    return new StandardServletMultipartResolver();
+		return new StandardServletMultipartResolver();
 	}
-
 
 	@Bean
 	public MultipartConfigElement multipartConfigElement() {
-	    MultipartConfigFactory factory = new MultipartConfigFactory();
+		MultipartConfigFactory factory = new MultipartConfigFactory();
 
-	    factory.setMaxFileSize(DataSize.ofMegabytes(10));
-	    factory.setMaxRequestSize(DataSize.ofMegabytes(10));
+		factory.setMaxFileSize(DataSize.ofMegabytes(10));
+		factory.setMaxRequestSize(DataSize.ofMegabytes(10));
 
-	    return factory.createMultipartConfig();
+		return factory.createMultipartConfig();
 	}
 
 	@Bean
 	public IHelpDao helpDao() {
 		return new HelpDao(createDataSource());
 	}
-	
+
 	@Bean
 	public IHelpService helpService() {
 		return new HelpService(helpDao());
 	}
-	
+
 	@Bean
 	public IHiredDAO hiredDao() {
 		return new HiredDAO(createDataSource());
 	}
-	
+
 	@Bean
 	public IHiredService hiredService() {
 		return new HiredService(hiredDao());
 	}
-	
+
 	@Bean
 	public IReportsDao reportsDao() {
 		return new ReportsDao(createDataSource());
 	}
-	
+
 	@Bean
 	public IReportsService reportsService() {
 		return new ReportsService(reportsDao());

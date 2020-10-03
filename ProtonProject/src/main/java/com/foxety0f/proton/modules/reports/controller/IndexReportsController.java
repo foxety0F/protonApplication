@@ -2,7 +2,9 @@ package com.foxety0f.proton.modules.reports.controller;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.collections4.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +12,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -338,6 +341,13 @@ public class IndexReportsController extends AbstractController {
 		return new ResponseEntity<String>("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
 	}
 	
-	
+	@RequestMapping(value = "/reports/report/{group}/{id}")
+	public ResponseEntity<?> getReport(@PathVariable("group") String group, @PathVariable("id") String id){
+		
+		System.err.println(group);
+		System.err.println(id);
+		
+		return null;
+	}
 	
 }
