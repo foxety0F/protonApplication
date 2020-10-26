@@ -1,10 +1,5 @@
 package com.foxety0f.proton;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import javax.servlet.MultipartConfigElement;
 import javax.sql.DataSource;
 
@@ -28,6 +23,10 @@ import com.foxety0f.proton.modules.admin.dao.AdminDAO;
 import com.foxety0f.proton.modules.admin.dao.IAdminDAO;
 import com.foxety0f.proton.modules.admin.service.AdminService;
 import com.foxety0f.proton.modules.admin.service.IAdminService;
+import com.foxety0f.proton.modules.education.dao.EducationDao;
+import com.foxety0f.proton.modules.education.dao.IEducationDao;
+import com.foxety0f.proton.modules.education.service.EducationService;
+import com.foxety0f.proton.modules.education.service.IEducationService;
 import com.foxety0f.proton.modules.employees.dao.EmployeesDAO;
 import com.foxety0f.proton.modules.employees.dao.IEmployeesDAO;
 import com.foxety0f.proton.modules.employees.service.EmployeeService;
@@ -48,10 +47,6 @@ import com.foxety0f.proton.modules.roles.dao.IRoleDAO;
 import com.foxety0f.proton.modules.roles.dao.RoleDAO;
 import com.foxety0f.proton.modules.roles.service.IRoleService;
 import com.foxety0f.proton.modules.roles.service.RoleService;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 
 /**
  * Core main-class of Proton Application. There generate all beans whos using
@@ -156,5 +151,15 @@ public class ProtonProjectApplication extends SpringBootServletInitializer {
 	@Bean
 	public IReportsService reportsService() {
 		return new ReportsService(reportsDao());
+	}
+	
+	@Bean
+	public IEducationDao educationDao() {
+	    return new EducationDao(createDataSource());
+	}
+	
+	@Bean
+	public IEducationService educationService() {
+	    return new EducationService(educationDao());
 	}
 }
