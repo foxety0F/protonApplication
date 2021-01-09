@@ -71,9 +71,9 @@ public class IndexAdminController extends AbstractController {
 
 			return "modules/admin/indexAdmin";
 
-		} else {
-			return "loginPage";
 		}
+		
+		return "redirect:/login";
 	}
 
 	@RequestMapping("/admin/modules")

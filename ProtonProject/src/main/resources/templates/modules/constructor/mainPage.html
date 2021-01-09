@@ -1,0 +1,202 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Create Report Page</title>
+	<th:block th:include="addscripts"></th:block>
+	<link rel="stylesheet" href="/App/css/modules/constructor/createPage.css">
+	<script src="/App/js/common/modules/constructor/constructor-reports.js"></script>
+	<link href="https://fonts.googleapis.com/css2?family=Pathway+Gothic+One&family=Rancho&display=swap"
+		rel="stylesheet">
+</head>
+
+<body>
+	<!-- Include _menu.html -->
+	<th:block th:include="_menu"></th:block>
+
+	<div id="steps" class="col-md-12">
+		<div class="step col-md-3 active-step" id="step-head-one">
+			<p class="step-head">
+				Step One
+			</p>
+			<p class="step-description">
+				Thread
+			</p>
+		</div>
+		<div class="step col-md-3" id="step-head-two">
+			<p class="step-head">
+				Step Two
+			</p>
+			<p class="step-description">
+				Columns
+			</p>
+		</div>
+		<div class="step col-md-3" id="step-head-three">
+			<p class="step-head">
+				Step Three
+			</p>
+			<p class="step-description">
+				Conditions
+			</p>
+		</div>
+		<div class="step col-md-3" id="step-head-four">
+			<p class="step-head">
+				Step Four
+			</p>
+			<p class="step-description">
+				Result
+			</p>
+		</div>
+	</div>
+	<div id="step-one" class="col-md-12">
+		<div id="step-one-selectors" class="col-md-3">
+			<div class="alert alert-danger">You can't back to this step!</div>
+			<span>Select system :</span>
+			<span id="divForSystem"></span>
+			<br />
+			<br />
+			<br />
+			<br />
+			<span>Select thread :</span>
+			<span id="divForThread"></span>
+		</div>
+		<div id="step-one-help" class="col-md-9">
+			<div id="systemDescription">
+				<p class="description-name">
+					System Description
+				</p>
+				<hr>
+				<div id="system-description-text"></div>
+			</div>
+			<div id="threadDescription">
+				<p class="description-name">
+					Thread Description
+				</p>
+				<hr>
+				<div id="system-thread-text"></div>
+			</div>
+			<button id="next-step-from-one" class="btn btn-primary"
+				onclick="reportConstructor.makeReportColumnStepInit()">Next step</button><br /><br />
+			<button class="btn btn-info">Where system?</button>
+			<button class="btn btn-info">Where thread?</button>
+		</div>
+	</div>
+
+	<div id="step-two" class="col-md-12" style="display: none;">
+		<div id="step-two-data" class="col-md-2">
+			<div id="step-two-columns-head">Tables and columns</div>
+			<hr>
+			<div id="step-two-columns"></div>
+		</div>
+		<div id="step-two-working-area" class="col-md-10">
+			<div id="step-two-working-area-add-column-config" class="col-md-10">
+				<div class="step-two-working-area-column-configuration">Column configuration</div>
+				<hr>
+				<div id="step-two-working-area-add-column" class="col-md-12">
+
+				</div>
+			</div>
+			<div id="step-two-working-area-list-config" class="col-md-2">
+				<div class="step-two-working-area-list-configuration">List</div>
+				<hr>
+				<ul id="step-two-working-area-list"></ul>
+			</div>
+		</div>
+	</div>
+
+	<div id="step-three" class="col-md-12" style="display: none;">
+		<div id="step-three-data" class="col-md-2">
+			<div id="step-three-columns-head">Tables and columns</div>
+			<hr>
+			<div id="step-three-columns"></div>
+		</div>
+		<div id="step-three-working-area" class="col-md-10">
+			<div id="step-three-working-area-add-column-config" class="col-md-10">
+				<div class="step-three-working-area-column-configuration">Condition configuration</div>
+				<hr>
+				<div id="step-three-working-area-add-column" class="col-md-12">
+
+				</div>
+			</div>
+			<div id="step-three-working-area-list-config" class="col-md-2">
+				<div class="step-three-working-area-list-configuration">List</div>
+				<hr>
+				<ul id="step-three-working-area-list"></ul>
+			</div>
+		</div>
+	</div>
+
+	<div id="step-four" class="col-md-12" style="display: none;">
+		<button id="run-query" class="btn btn-primary">Run query</button>
+	</div>
+
+	<script th:inline="javascript">
+		var systems = /*[[${systems}]]*/[];
+		var tables = [];
+		var relations = [];
+		var thread = "";
+		var columnConfigurationEdit = false;
+		var columnList = [];
+
+		function drawSelectors() {
+			if (systems.length != 0) {
+				var systemSelector = '<select id = "systemSelector" onchange = "drawThreads()">';
+				systemSelector += '<option value = "' + systems[0].id + '" selected> ' + systems[0].systemName + '</option>';
+				for (var i = 1; i < systems.length; i++) {
+					systemSelector += '<option value = "' + systems[i].id + '" selected> ' + systems[i].systemName + '</option>';
+				}
+				systemSelector += '</select>';
+				$('#divForSystem').append(systemSelector);
+				$('#systemSelector').selectpicker();
+			}
+
+		}
+
+		drawSelectors();
+
+		function drawThreads() {
+			$('#divForThread').empty();
+			var selectedSystem = $('#systemSelector option:selected').val();
+			var threadSelector = '<select id = "threadSelector">';
+			for (var i = 0; i < systems.length; i++) {
+				if (systems[i].id == selectedSystem) {
+					$('#system-description-text').empty().append(systems[i].description)
+					for (var ii = 0; ii < systems[i].threads.length; ii++) {
+						threadSelector += '<option value = "' + systems[i].threads[ii].id + '" ' + (ii == 0 ? 'selected' : '') + '>' + systems[i].threads[ii].title + '</option>'
+						if (ii == 0) {
+							$('#system-thread-text').empty().append(systems[i].threads[ii].description)
+						}
+					}
+				}
+			}
+			threadSelector += '</select>';
+			$('#divForThread').append(threadSelector);
+			$('#threadSelector').selectpicker();
+		}
+
+		drawThreads();
+
+		$('#run-query').on('click', function () {
+			reportConstructor.runQuery();
+		})
+		$('#step-two-working-area-list').sortable({
+			placeholder: "ui-state-highlight"
+		}).disableSelection().on('sortstop', function(){
+			var newArray = [];
+
+			for(var i = 0; i < $('#step-two-working-area-list').children().length; i++){
+				for(var j = 0; j < columnList.length; j++){
+					if($('#step-two-working-area-list').children()[i].dataset.guid == columnList[j].guid){
+						newArray.push(columnList[j]);
+					}
+				}
+			}
+
+			columnList = newArray;
+			console.log(columnList);
+			
+		});
+	</script>
+</body>
+
+</html>

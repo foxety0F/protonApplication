@@ -1,0 +1,182 @@
+.step-head {
+	font-size: 30px;
+	text-align: center;
+	color: black;
+	font-weight: bold;
+	font-family: 'Pathway Gothic One', sans-serif;
+}
+
+#steps {
+	margin-top: 15px;
+}
+
+.active-step {
+	border-bottom: 2px solid #0fbcf9;
+}
+
+.step-description {
+	text-align: center;
+	font-family: 'Pathway Gothic One', sans-serif;
+	font-size: 20px;
+}
+
+.step {
+	background: #fff;
+}
+
+#step-one-selectors {
+	margin-top: 20px;
+}
+
+#step-one-help {
+	margin-top: 20px;
+}
+
+hr {
+	margin-bottom: 3px;
+	margin-top: 5px;
+}
+
+#systemDescription p.description-name {
+	color: black;
+	font-size: 18px;
+	font-weight: bold;
+}
+
+#systemDescription {
+	margin-bottom: 15px;
+}
+
+#threadDescription p.description-name {
+	color: black;
+	font-size: 18px;
+	font-weight: bold;
+}
+
+#threadDescription {
+	margin-bottom: 15px;
+}
+
+.available-step {
+	border-bottom: 2px dotted #0fbcf9;
+}
+
+#step-two-columns-head {
+	text-align: center;
+	font-family: 'Pathway Gothic One', sans-serif;
+	font-size: 20px;
+}
+
+#step-two-columns {
+	overflow: auto;
+	height: calc(100vh - 190px);
+}
+
+.steps-head-table-name {
+	font-family: 'Pathway Gothic One', sans-serif;
+	font-size: 20px;
+	margin-left: 5px;
+}
+
+#step-two-columns div i {
+	cursor: pointer;
+}
+
+.steps-head-column {
+	color: black;
+	background: white;
+	padding: 0px;
+	margin: 0px;
+	font-size: 16px;
+	padding: 5px;
+}
+
+.steps-head-column:hover {
+	background: #0fbcf9;
+	cursor: pointer;
+	color: white;
+	transition: all 0.1s;
+}
+
+#step-two-working-area-add-column {
+	height: calc(100vh - 190px);
+	background: white;
+}
+
+.step-two-working-area-column-configuration {
+	font-family: 'Pathway Gothic One', sans-serif;
+	font-size: 20px;
+	text-align: center;
+}
+
+.step-two-working-area-list-configuration {
+	font-family: 'Pathway Gothic One', sans-serif;
+	font-size: 20px;
+	text-align: center;
+}
+
+.text-input-group {
+	margin-top: 10px;
+}
+
+.column-information-head {
+	font-family: 'Pathway Gothic One', sans-serif;
+	font-size: 20px;
+}
+
+#step-three-columns-head {
+	text-align: center;
+	font-family: 'Pathway Gothic One', sans-serif;
+	font-size: 20px;
+}
+
+#step-three-columns {
+	overflow: auto;
+	height: calc(100vh - 190px);
+}
+
+#step-three-columns div i {
+	cursor: pointer;
+}
+
+#step-three-working-area-add-column {
+	height: calc(100vh - 190px);
+	background: white;
+}
+
+.step-three-working-area-column-configuration {
+	font-family: 'Pathway Gothic One', sans-serif;
+	font-size: 20px;
+	text-align: center;
+}
+
+.step-three-working-area-list-configuration {
+	font-family: 'Pathway Gothic One', sans-serif;
+	font-size: 20px;
+	text-align: center;
+}
+
+.result-step {
+	border-bottom: 2px dashed #7CFC00;
+}
+
+.steps-head-column-list {
+	color: black;
+	background: white;
+	padding: 0px;
+	margin: 0px;
+	font-size: 16px;
+	padding: 5px;
+	display: block;
+	cursor: pointer;
+}
+
+.ui-state-highlight {
+	height: 1.5em;
+	line-height: 1.2em;
+}
+
+#step-two-working-area-list{
+	list-style: none;
+	padding: 0px;
+}

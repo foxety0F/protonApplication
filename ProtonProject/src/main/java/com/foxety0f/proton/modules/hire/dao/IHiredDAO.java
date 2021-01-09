@@ -46,4 +46,8 @@ public interface IHiredDAO {
 
 	void updateExperienceDateFrom(Integer briefId, Integer expId, Date dateFrom);
 
+	void updateSocialInfo(Integer socialId, String value, Integer briefId);
+
+	void updateSocialInfo(Integer contactId, String value);
+
 }

@@ -27,4 +27,11 @@ public class EducationService implements IEducationService{
 	return educationDao.getTempTestData();
     }
     
+    public void setCnt(Integer cnt) {
+	educationDao.setCnt(cnt);
+    }
+
+    public Integer getCnt() {
+	return educationDao.getCnt();
+    }
 }

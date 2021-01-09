@@ -19,10 +19,15 @@ import org.springframework.web.multipart.support.StandardServletMultipartResolve
 import com.foxety0f.proton.common.user.UserDetailsServiceImpl;
 import com.foxety0f.proton.database.DatabaseBeanFactory;
 import com.foxety0f.proton.database.DatabaseNames;
+import com.foxety0f.proton.h2database.InitializeH2Database;
 import com.foxety0f.proton.modules.admin.dao.AdminDAO;
 import com.foxety0f.proton.modules.admin.dao.IAdminDAO;
 import com.foxety0f.proton.modules.admin.service.AdminService;
 import com.foxety0f.proton.modules.admin.service.IAdminService;
+import com.foxety0f.proton.modules.constructor.dao.IReportWebDao;
+import com.foxety0f.proton.modules.constructor.dao.ReportWebDao;
+import com.foxety0f.proton.modules.constructor.service.IReportWebService;
+import com.foxety0f.proton.modules.constructor.service.ReportWebService;
 import com.foxety0f.proton.modules.education.dao.EducationDao;
 import com.foxety0f.proton.modules.education.dao.IEducationDao;
 import com.foxety0f.proton.modules.education.service.EducationService;
@@ -39,17 +44,17 @@ import com.foxety0f.proton.modules.hire.dao.HiredDAO;
 import com.foxety0f.proton.modules.hire.dao.IHiredDAO;
 import com.foxety0f.proton.modules.hire.service.HiredService;
 import com.foxety0f.proton.modules.hire.service.IHiredService;
-import com.foxety0f.proton.modules.reports.dao.IReportsDao;
-import com.foxety0f.proton.modules.reports.dao.ReportsDao;
-import com.foxety0f.proton.modules.reports.service.IReportsService;
-import com.foxety0f.proton.modules.reports.service.ReportsService;
+import com.foxety0f.proton.modules.reporting.dao.IReportingAdminDAO;
+import com.foxety0f.proton.modules.reporting.dao.ReportingAdminDAO;
+import com.foxety0f.proton.modules.reporting.service.IReportingConfigurationService;
+import com.foxety0f.proton.modules.reporting.service.ReportingConfigurationService;
 import com.foxety0f.proton.modules.roles.dao.IRoleDAO;
 import com.foxety0f.proton.modules.roles.dao.RoleDAO;
 import com.foxety0f.proton.modules.roles.service.IRoleService;
 import com.foxety0f.proton.modules.roles.service.RoleService;
 
 /**
- * Core main-class of Proton Application. There generate all beans whos using
+ * Core main-class of Proton Application. There generate all beans whose using
  * into Application.
  */
 @SpringBootApplication(scanBasePackages = "com.foxety0f.proton")
@@ -58,108 +63,123 @@ import com.foxety0f.proton.modules.roles.service.RoleService;
 @EnableAutoConfiguration
 public class ProtonProjectApplication extends SpringBootServletInitializer {
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 
-		SpringApplication.run(ProtonProjectApplication.class, args);
-	}
+	SpringApplication.run(ProtonProjectApplication.class, args);
+    }
 
-	@Bean
-	public static PropertySourcesPlaceholderConfigurer propertySources() {
-		return new PropertySourcesPlaceholderConfigurer();
-	}
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertySources() {
+	return new PropertySourcesPlaceholderConfigurer();
+    }
 
-	@Bean
-	public DataSource createDataSource() {
-		return new DatabaseBeanFactory().createDataSource(DatabaseNames.CORE.name());
-	}
+    @Bean
+    public DataSource createDataSource() {
+	return new DatabaseBeanFactory().createDataSource(DatabaseNames.CORE.name());
+    }
 
-	@Bean
-	public IAdminDAO adminDao() {
-		return new AdminDAO(createDataSource());
-	}
+    @Bean
+    public IAdminDAO adminDao() {
+	return new AdminDAO(createDataSource());
+    }
 
-	@Bean
-	public IAdminService adminService() {
-		return new AdminService(adminDao());
-	}
+    @Bean
+    public IAdminService adminService() {
+	return new AdminService(adminDao());
+    }
 
-	@Bean
-	public UserDetailsServiceImpl userDetailsServiceImpl() {
-		return new UserDetailsServiceImpl();
-	}
+    @Bean
+    public UserDetailsServiceImpl userDetailsServiceImpl() {
+	return new UserDetailsServiceImpl();
+    }
 
-	@Bean
-	public IEmployeesDAO employeeDao() {
-		return new EmployeesDAO(createDataSource());
-	}
+    @Bean
+    public IEmployeesDAO employeeDao() {
+	return new EmployeesDAO(createDataSource());
+    }
 
-	@Bean
-	public IEmployeeService employeeService() {
-		return new EmployeeService(employeeDao());
-	}
+    @Bean
+    public IEmployeeService employeeService() {
+	return new EmployeeService(employeeDao());
+    }
 
-	@Bean
-	public IRoleDAO roleDao() {
-		return new RoleDAO(createDataSource());
-	}
+    @Bean
+    public IRoleDAO roleDao() {
+	return new RoleDAO(createDataSource());
+    }
 
-	@Bean
-	public IRoleService roleService() {
-		return new RoleService(roleDao());
-	}
+    @Bean
+    public IRoleService roleService() {
+	return new RoleService(roleDao());
+    }
 
-	@Bean(name = "commonsMultipartResolver")
-	public MultipartResolver multipartResolver() {
-		return new StandardServletMultipartResolver();
-	}
+    @Bean(name = "commonsMultipartResolver")
+    public MultipartResolver multipartResolver() {
+	return new StandardServletMultipartResolver();
+    }
 
-	@Bean
-	public MultipartConfigElement multipartConfigElement() {
-		MultipartConfigFactory factory = new MultipartConfigFactory();
+    @Bean
+    public MultipartConfigElement multipartConfigElement() {
+	MultipartConfigFactory factory = new MultipartConfigFactory();
 
-		factory.setMaxFileSize(DataSize.ofMegabytes(10));
-		factory.setMaxRequestSize(DataSize.ofMegabytes(10));
+	factory.setMaxFileSize(DataSize.ofMegabytes(10));
+	factory.setMaxRequestSize(DataSize.ofMegabytes(10));
 
-		return factory.createMultipartConfig();
-	}
+	return factory.createMultipartConfig();
+    }
 
-	@Bean
-	public IHelpDao helpDao() {
-		return new HelpDao(createDataSource());
-	}
+    @Bean
+    public IHelpDao helpDao() {
+	return new HelpDao(createDataSource());
+    }
 
-	@Bean
-	public IHelpService helpService() {
-		return new HelpService(helpDao());
-	}
+    @Bean
+    public IHelpService helpService() {
+	return new HelpService(helpDao());
+    }
 
-	@Bean
-	public IHiredDAO hiredDao() {
-		return new HiredDAO(createDataSource());
-	}
+    @Bean
+    public IHiredDAO hiredDao() {
+	return new HiredDAO(createDataSource());
+    }
 
-	@Bean
-	public IHiredService hiredService() {
-		return new HiredService(hiredDao());
-	}
+    @Bean
+    public IHiredService hiredService() {
+	return new HiredService(hiredDao());
+    }
 
-	@Bean
-	public IReportsDao reportsDao() {
-		return new ReportsDao(createDataSource());
-	}
+    @Bean
+    public IEducationDao educationDao() {
+	return new EducationDao(createDataSource());
+    }
 
-	@Bean
-	public IReportsService reportsService() {
-		return new ReportsService(reportsDao());
-	}
-	
-	@Bean
-	public IEducationDao educationDao() {
-	    return new EducationDao(createDataSource());
-	}
-	
-	@Bean
-	public IEducationService educationService() {
-	    return new EducationService(educationDao());
-	}
+    @Bean
+    public IEducationService educationService() {
+	return new EducationService(educationDao());
+    }
+    
+    @Bean
+    public IReportingAdminDAO reportingAdminDao() {
+	return new ReportingAdminDAO(createDataSource());
+    }
+    
+    @Bean
+    public IReportingConfigurationService reportingConfigurationService() {
+	return new ReportingConfigurationService(reportingAdminDao());
+    }
+    
+    @Bean
+    public IReportWebDao reportWebDao() {
+	return new ReportWebDao(createDataSource(), reportingAdminDao());
+    }
+    
+    @Bean
+    public IReportWebService reportWebService() {
+	return new ReportWebService(reportWebDao());
+    }
+
+    @Bean
+    public InitializeH2Database in() {
+	return new InitializeH2Database();
+    }
 }

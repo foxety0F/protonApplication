@@ -5,6 +5,7 @@
 	<title>Education</title>
 	<th:block th:include="addscripts"></th:block>
 	<script src="/App/js/common/059_education.js"></script>
+	<link rel="stylesheet" href="/App/css/education.css"/>
 </head>
 
 <body>
@@ -14,12 +15,12 @@
 	<input id="date" placeholder="Press your date" type="date"><br><br>
 	<input id="isActual" placeholder="Press your is Actual" type="checkbox"><br><br>
 
-	<button class="btn btn-danger" id="save">Save to DB</button><br><br>
+	<button class="" id="save">Save to DB</button><br><br>
 
 	<div id="regroup">
-		<button id="groupByGroupOne" data-filed-group="groupOne" onclick="Education.drawGroupedTable('groupOne')">Group
+		<button id="groupByGroupOne" class = "markRed" data-filed-group="groupOne" onclick="Education.drawGroupedTable('groupOne')">Group
 			by Group One</button>
-		<button id="groupByGroupTwo" data-filed-group="groupTwo" onclick="Education.drawGroupedTable('groupTwo')">Group
+		<button id="groupByGroupTwo" class = "markRed" data-filed-group="groupTwo" onclick="Education.drawGroupedTable('groupTwo')">Group
 			by Group Two</button>
 		<button id="groupByDateAdd" data-filed-group="dateAdd" onclick="Education.drawGroupedTable('dateAdd')">Group by
 			Date Add</button>
@@ -45,157 +46,9 @@
 
 	</div>
 
-	<!-- <div id = "testApiDiv">
-		<table id = "testApiTable">
-			<thead>
-				<tr>
-					<th>ID</th>
-					<th>Name</th>
-					<th>Date</th>
-					<th>Is Active</th>
-				</tr>
-			</thead>
-			<tbody>
-
-			</tbody>
-		</table>
-	</div> -->
-
 	<script th:inline="javascript">
-		var sendTableForOwner = /*[[${testApi}]]*/ null;
-		console.log(sendTableForOwner);
-		var tempTestData = /*[[${tempTestData}]]*/ null;
-
-
-		$('#regroup').on('click', function () {
-			var that = this;
-			console.log(that);
-
-		})
-
-		var minDate;
-		var maxDate;
-
-		for (var i = 0; i < tempTestData.length; i++) {
-			if (minDate == null)
-				minDate = new Date(tempTestData[i].dateAdd);
-
-			if (minDate > new Date(tempTestData[i].dateAdd))
-				minDate = new Date(tempTestData[i].dateAdd);
-
-
-			if (maxDate == null)
-				maxDate = new Date(tempTestData[i].dateAdd);
-
-
-			if (maxDate < new Date(tempTestData[i].dateAdd))
-				maxDate = new Date(tempTestData[i].dateAdd);
-		}
-
-		console.log(minDate)
-
-		var dateArray = [];
-
-		var len = (maxDate - minDate) / 86400000;
-
-		for (var i = 0; i <= len; i++) {
-			var dt = new Date(minDate);
-			dt.setDate(dt.getDate() + i);
-			dateArray.push(dt);
-		}
-
-		var result = [];
-
-		var distinctFilteredColumn = [];
-		var distinctFilteredColumn2 = [];
-
-		for (var i = 0; i < tempTestData.length; i++) {
-			var exist = false;
-			for (var j in distinctFilteredColumn) {
-				if (j == tempTestData[i]['dateAdd']) {
-					exist = true;
-					distinctFilteredColumn[j] = distinctFilteredColumn[j] + 1;
-				}
-			}
-
-			if (!exist) {
-				distinctFilteredColumn[tempTestData[i]['dateAdd']] = 1;
-			}
-		}
-
-		var data = [{ date: '2020-10-13', cnt: 5, name: 'INC' },
-		{ date: '2020-10-13', cnt: 0, name: 'PRB' },
-		{ date: '2020-10-14', cnt: 4, name: 'INC' },
-		{ date: '2020-10-14', cnt: 2, name: 'PRB' },
-		{ date: '2020-10-15', cnt: 1, name: 'INC' },
-		{ date: '2020-10-15', cnt: 14, name: 'PRB' },
-		{ date: '2020-10-16', cnt: 17, name: 'INC' },
-		{ date: '2020-10-16', cnt: 8, name: 'PRB' },
-		{ date: '2020-10-17', cnt: 9, name: 'INC' },
-		{ date: '2020-10-17', cnt: 6, name: 'PRB' }]
-
-		var datesdis = [];
-
-		for (var i = 0; i < data.length; i++) {
-			var exist = false;
-			for (var j = 0; j < datesdis.length; j++) {
-				if (datesdis[j] == data[i].date)
-					exist = true;
-			}
-			if (!exist) {
-				datesdis.push(data[i].date)
-			}
-		}
-
-		var cntsdis = [];
-
-
-		var distinctName = [];
-
-		for (var i = 0; i < data.length; i++) {
-			var exist = false;
-			for (var j = 0; j < distinctName.length; j++) {
-				if (distinctName[j] == data[i].name)
-					exist = true;
-			}
-			if (!exist) {
-				distinctName.push(data[i].name)
-			}
-		}
-
-		var result = [];
-
-		for (var i = 0; i < distinctName.length; i++) {
-			var seriesdata = [];
-			for (var j = 0; j < data.length; j++) {
-				if (data[j].name == distinctName[i]) {
-					seriesdata.push(data[j].cnt)
-				}
-			}
-
-			result.push({
-				name: distinctName[i],
-				data: seriesdata
-			})
-		}
-
-		Highcharts.chart('container', {
-			chart: {
-				type: 'area'
-			},
-			title: {
-				text: 'Num inc by day'
-			},
-			xAxis: {
-				categories: datesdis
-			}, plotOptions: {
-				area: {
-					stacking: 'normal',
-				}
-			},
-			series: result
-		})
-
+		var empCnt = /*[[${empCnt}]]*/ null;
+		console.log(empCnt);
 	</script>
 </body>
 

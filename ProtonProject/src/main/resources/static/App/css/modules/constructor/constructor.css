@@ -1,0 +1,36 @@
+.create-report-header{
+	text-align: center;
+	margin: 20px;
+	background: white;
+	border : 1px solid #efecec;
+	border-radius: 8px;
+}
+
+.create-report-header-step{
+	width: 20%;
+	display: inline-grid;
+	font-size: 20px;
+	padding-bottom: 10px;
+	padding-top: 10px;
+	cursor: pointer;
+}
+
+.create-report-header-step span{
+	font-weight: bold;
+}
+
+.create-report-header-step p{
+	font-size: 14px;
+}
+
+.create-report-header-step-current{
+	background: #0fbcf9;
+}
+
+.create-report-header-step-current span{
+	color : white;
+}
+
+.create-report-header-step-current p{
+	color : white;
+}

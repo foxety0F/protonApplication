@@ -26,6 +26,9 @@ public class EducationController extends AbstractController {
 	if (principal != null) {
 	    model.addAttribute("testApi", educationService.getTestApi());
 	    model.addAttribute("tempTestData", educationService.getTempTestData());
+	    educationService.setCnt(educationService.getCnt() + 1);
+	    model.addAttribute("empCnt", educationService.getCnt());
+	    
 	}
 
 	return "education.html";

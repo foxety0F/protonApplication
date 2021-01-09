@@ -1,4 +1,4 @@
-h4{
+h4 {
   font-family: 'Pathway Gothic One', sans-serif;
   font-size: 28px;
 }
@@ -9,11 +9,11 @@ body .row {
   margin-bottom: 10px;
 }
 
-.user-name{
+.user-name {
   padding-left: 15px;
 }
 
-.about-header{
+.about-header {
   width: 100%;
   height: 100%;
   border-bottom: 1px solid #333;
@@ -21,12 +21,12 @@ body .row {
   margin-bottom: 10px;
 }
 
-.about-title{
+.about-title {
   float: left;
   vertical-align: middle;
 }
 
-.about-edit{
+.about-edit {
   float: right;
   vertical-align: middle;
   background: transparent;
@@ -38,75 +38,75 @@ body .row {
   margin-top: 5px;
 }
 
-.about-edit:hover{
+.about-edit:hover {
   background: #6ab04c;
-  color : #fff;
+  color: #fff;
 }
 
-.about-edit-textarea{
-    width: 100%;
-    min-height: 250px;
-    outline: none;
-    min-width : 200px;
+.about-edit-textarea {
+  width: 100%;
+  min-height: 250px;
+  outline: none;
+  min-width: 200px;
 }
 
-#about-text{
-    min-width: 100%;
-    border : none;
-    outline: none;
-    background: transparent;
+#about-text {
+  min-width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
 }
 
-#about-text:focus{
-    border : 1px solid gray;
+#about-text:focus {
+  border: 1px solid gray;
 }
 
-.contact-social-icon{
+.contact-social-icon {
   font-size: 18px;
   background: #0fbcf9;
   border: none;
   border-radius: 4px;
-  color : white;
+  color: white;
   transition: .3s;
   margin-right: 5px;
 }
 
-.contact-social-icon:focus{
+.contact-social-icon:focus {
   color: white;
 }
 
-.contact-social-icon:hover{
+.contact-social-icon:hover {
   background: white;
-  color : #0fbcf9;
+  color: #0fbcf9;
 }
 
-.contact-header{
+.contact-header {
   border-bottom: 1px solid black;
 }
 
 
-.skill-points-header{
+.skill-points-header {
   border-bottom: 1px solid black;
 }
 
-.skill-container{
-  margin : 20px;
+.skill-container {
+  margin: 20px;
   position: relative;
   display: inline-block;
   vertical-align: middle;
 }
 
-.skill-point{
-  border : 2px solid black;
+.skill-point {
+  border: 2px solid black;
   border-top-right-radius: 16px;
   border-bottom-right-radius: 16px;
 }
 
-.skill-point span{
-  font-size : 10px;
+.skill-point span {
+  font-size: 10px;
 }
 
-.skill-container-content{
+.skill-container-content {
   display: inline-block;
   padding: 6px 12px;
   margin-bottom: 0;
@@ -126,72 +126,72 @@ body .row {
   user-select: all;
 }
 
-.skill-container>.skill-container-content:first-child{
+.skill-container>.skill-container-content:first-child {
   margin-left: 0;
 }
 
-.skill-container>.skill-container-content:first-child:not(:last-child){
+.skill-container>.skill-container-content:first-child:not(:last-child) {
   border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
-.skill-name{
+.skill-name {
   background: white;
   border-color: black;
-  color : #333;
+  color: #333;
   font-weight: bold;
   border-right: none;
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
 }
 
-.skill-0{
+.skill-0 {
   background: red;
   color: white;
   font-weight: bold;
 }
 
-.skill-25{
+.skill-25 {
   background: #ff6800;
   color: white;
   font-weight: bold;
 }
 
-.skill-50{
+.skill-50 {
   background: #ffc700;
   color: #333;
   font-weight: bold;
 }
 
-.skill-75{
+.skill-75 {
   background: #9eff00;
   color: #333;
   font-weight: bold;
 }
 
-.skill-90{
+.skill-90 {
   background: #64ff00;
   color: #333;
   font-weight: bold;
 }
 
-.skill-100{
+.skill-100 {
   background: #00ff2a;
   color: #333;
   font-weight: bold;
 }
 
-.qualities-title{
+.qualities-title {
   border-bottom: 1px solid black;
   margin-bottom: 10px;
   display: flow-root;
 }
 
-.qualities-title h4{
+.qualities-title h4 {
   float: left;
 }
 
-.qualities-item{
+.qualities-item {
   background: #0fbcf9;
   border: none;
   border-radius: 8px;
@@ -200,39 +200,38 @@ body .row {
   margin-right: 5px;
 }
 
-.qualities-name{
+.qualities-name {
   font-weight: 600;
   color: white;
   padding-right: 5px;
 }
 
-.qualities-item i{
-  color : white;
-  font-size : 16px;
+.qualities-item i {
+  color: white;
+  font-size: 16px;
 }
 
-.qualities-content{
+.qualities-content {
   margin-bottom: 20px;
 }
 
-.experience-content-date{
+.experience-content-date {
   font-weight: bold;
 }
 
-.experience-content-time-work{
+.experience-content-time-work {
   font-size: 0.8em;
-  color : gray;
+  color: gray;
 }
 
-.experience-datepicker{
+.experience-datepicker {
   outline: none;
   font-weight: bold;
-  border : none;
+  border: none;
   background: none;
-  max-width: 115px;
 }
 
-.experience-content-about{
+.experience-content-about {
   min-width: 100%;
   height: 100%;
   border: ridge 2px;
@@ -242,26 +241,26 @@ body .row {
   background: inherit;
 }
 
-.experience-content-about:focus{
+.experience-content-about:focus {
   border: 1px solid black;
   outline: none;
 }
 
-.experience-description{
+.experience-description {
   font-weight: bold;
 }
 
-.experience-header{
+.experience-header {
   border-bottom: 1px solid black;
   display: flow-root;
   margin-bottom: 20px;
 }
 
-.experience-title{
-  float : left;
+.experience-title {
+  float: left;
 }
 
-.experience-add{
+.experience-add {
   float: right;
   vertical-align: middle;
   background: transparent;
@@ -273,32 +272,55 @@ body .row {
   margin-top: 5px;
 }
 
-.experience-add:hover{
+.experience-add:hover {
   background: #6ab04c;
-  color : #fff;
+  color: #fff;
 }
 
-.experience-content-title-name{
+.experience-content-title-name {
   font-size: 24px;
   margin-bottom: 0;
 }
 
-.experience-content-workplace{
-  font-size : 0.9em;
-  color : gray;
+.experience-content-workplace {
+  font-size: 0.9em;
+  color: gray;
 }
 
-.experience-text-input{
+.experience-text-input {
   outline: none;
-  border : none;
+  border: none;
   background: inherit;
 }
 
-.experience-text-input:focus{
+.experience-text-input:focus {
   outline: none;
-  border : 1px solid black;
+  border: 1px solid black;
 }
 
-.contact-social{
+.contact-social {
   margin-top: 10px;
+}
+
+.contact-header {
+  width: 100%;
+  height: 100%;
+  border-bottom: 1px solid #333;
+  display: flow-root;
+  margin-bottom: 10px;
+}
+
+.contactSocialInput {
+  margin-right: 5px;
+  margin-left: 5px;
+  padding: 5px;
+  border: 1px solid;
+  border-radius: 4px;
+  padding-top: 5px;
+}
+
+#socialNewEditTable {
+  border-spacing: 0px 8px;
+  border-collapse: separate;
+  border: none;
 }

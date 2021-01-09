@@ -1,0 +1,44 @@
+.no-elements{
+	margin-top: 50px;
+	margin-bottom: 50px;
+	font-size: 35px;
+	text-align: center;
+	color : gray;
+	font-family: 'Pathway Gothic One', sans-serif;
+
+}
+
+.system-element{
+	border : 1px solid gray;
+	padding : 10px;
+	box-shadow: 0 0px 5px rgba(0,0,0,0.5);
+}
+
+#systemActions{
+	margin-top: 10px;
+}
+
+.system-name{
+	color : black;
+}
+
+.system-db-name{
+	color : black;
+}
+
+.system-description{
+	color : black;
+}
+
+.adminBlock{
+	margin-top: 20px;
+}
+
+.block-el-name{
+	cursor: pointer;
+}
+
+.column-type-name{
+	font-size: 16px;
+	text-align: center;
+}

@@ -1,6 +1,9 @@
 package com.foxety0f.proton.database;
 
 import java.beans.PropertyVetoException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
@@ -37,5 +40,19 @@ public class DatabaseBeanFactory {
 		dataSource.setPreferredTestQuery(placeHolder.getTestQuery());
 
 		return dataSource;
+	}
+	
+	public Connection createConnection(String username, String password, String connection) {
+	    Connection con = null;
+	    
+	    try {
+		con = DriverManager.getConnection(connection, username, password);
+		con.setAutoCommit(false);
+		con.setReadOnly(true);
+	    } catch (SQLException e) {
+		e.printStackTrace();
+	    }
+	    
+	    return con;
 	}
 }

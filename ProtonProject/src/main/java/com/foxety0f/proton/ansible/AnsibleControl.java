@@ -7,7 +7,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.apache.commons.collections4.map.HashedMap;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Repository;
 
 import com.foxety0f.proton.modules.ProtonEssences;

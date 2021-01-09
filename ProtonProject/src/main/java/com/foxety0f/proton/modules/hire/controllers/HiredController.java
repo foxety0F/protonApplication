@@ -21,10 +21,10 @@ import com.foxety0f.proton.common.exceptions.ModuleNotUndefinedException;
 import com.foxety0f.proton.common.user.UserDetailsProton;
 import com.foxety0f.proton.modules.ProtonModules;
 import com.foxety0f.proton.modules.help.service.IHelpService;
-import com.foxety0f.proton.modules.hire.domain.EmployeeHiredAttributes;
 import com.foxety0f.proton.modules.hire.domain.EmployeeHiredConfig;
 import com.foxety0f.proton.modules.hire.domain.EmployeeHiredExperience;
 import com.foxety0f.proton.modules.hire.domain.EmployeeHiredSkills;
+import com.foxety0f.proton.modules.hire.exceptions.UpdateAboutAccessDenied;
 import com.foxety0f.proton.modules.hire.service.IHiredService;
 
 @Controller
@@ -90,7 +90,7 @@ public class HiredController extends AbstractController {
 	}
     }
 
-    @RequestMapping(value = "/hiring/brief", method = RequestMethod.POST)
+    @RequestMapping(value = "/hiring/newExperience", method = RequestMethod.POST)
     public ResponseEntity<String> postNewBrief(Principal principal,
 	    @RequestParam(value = "briefId", required = true) Integer briefId,
 	    @RequestParam(value = "companyName", required = false) String companyName,
@@ -107,6 +107,149 @@ public class HiredController extends AbstractController {
 	}
 
 	return new ResponseEntity<String>("Auth failed", HttpStatus.FORBIDDEN);
+    }
+
+    @RequestMapping(value = "/hiring/setAbout", method = RequestMethod.POST)
+    public ResponseEntity<?> setAbout(@RequestParam(value = "briefId", required = true) Integer briefId,
+	    @RequestParam(value = "about", required = true) String about, Principal principal) {
+
+	if (principal != null) {
+	    UserDetailsProton user = (UserDetailsProton) SecurityContextHolder.getContext().getAuthentication()
+		    .getPrincipal();
+	    if(user.hasRole("ROLE_ADMIN")) {
+		hiredService.updateAboutAdmin(briefId, about, user.getUserId());
+		return new ResponseEntity<String>("@briefId " + briefId + " was updated", HttpStatus.OK);
+	    }
+	    
+	    try {
+		return new ResponseEntity<String>(hiredService.updateAbout(briefId, about, user.getUserId()), HttpStatus.OK);
+	    } catch (UpdateAboutAccessDenied e) {
+		return new ResponseEntity<String>("You have not permission for update this parameter!", HttpStatus.FORBIDDEN);
+	    }
+	}
+
+	return new ResponseEntity<String>("Not authorize!", HttpStatus.UNAUTHORIZED);
+    }
+    
+    
+    @RequestMapping(value = "/hiring/setSocialInfo", method = RequestMethod.POST)
+    public ResponseEntity<?> setContactInfo(@RequestParam(value = "socialId", required = true) Integer socialId,
+	    @RequestParam(value = "value", required = true) String value,
+	    @RequestParam(value = "briefId", required = true) Integer briefId,
+	    @RequestParam(value = "contactId", required = false) Integer contactId, Principal principal) {
+
+	if (principal != null) {
+	    UserDetailsProton user = (UserDetailsProton) SecurityContextHolder.getContext().getAuthentication()
+		    .getPrincipal();
+	    
+	    if(user.hasRole("ROLE_ADMIN")) {
+		hiredService.updateSocialInfoAdmin(socialId, value, briefId, user.getUserId(), contactId);
+		return new ResponseEntity<String>("@socialId updated for " + briefId, HttpStatus.OK);
+	    }
+	    
+	    try {
+		return new ResponseEntity<String>(hiredService.updateSocialInfo(socialId, value, briefId, user.getUserId(), contactId), HttpStatus.OK);
+	    } catch (UpdateAboutAccessDenied e) {
+		return new ResponseEntity<String>("You have not permission for update this parameter!", HttpStatus.FORBIDDEN);
+	    }
+	}
+
+	return new ResponseEntity<String>("Not authorize!", HttpStatus.UNAUTHORIZED);
+    }
+    
+    @RequestMapping(value = "/hiring/updateExperienceTitle", method = RequestMethod.POST)
+    public ResponseEntity<?> updateExperienceTitle(@RequestParam(value = "briefId", required = true) Integer briefId,
+	    @RequestParam(value = "expId", required = true) Integer expId,
+	    @RequestParam(value = "titleName", required = true) String titleName,
+	    Principal principal){
+	if (principal != null) {
+	    UserDetailsProton user = (UserDetailsProton) SecurityContextHolder.getContext().getAuthentication()
+		    .getPrincipal();
+	    try {
+		hiredService.updateExperienceTitleName(briefId, expId, titleName, user.getUserId(), user.hasRole("ROLE_ADMIN"));
+		return new ResponseEntity<String>("Title updated!", HttpStatus.OK);
+	    } catch (UpdateAboutAccessDenied e) {
+		return new ResponseEntity<String>("You have not permission for update this parameter!", HttpStatus.FORBIDDEN);
+	    }
+	}
+
+	return new ResponseEntity<String>("Not authorize!", HttpStatus.UNAUTHORIZED);
+    }
+    
+    @RequestMapping(value = "/hiring/updateExperienceCompany", method = RequestMethod.POST)
+    public ResponseEntity<?> updateExperienceCompany(@RequestParam(value = "briefId", required = true) Integer briefId,
+	    @RequestParam(value = "expId", required = true) Integer expId,
+	    @RequestParam(value = "companyName", required = true) String companyName,
+	    Principal principal){
+	if (principal != null) {
+	    UserDetailsProton user = (UserDetailsProton) SecurityContextHolder.getContext().getAuthentication()
+		    .getPrincipal();
+	    try {
+		hiredService.updateExperienceCompanyName(briefId, expId, companyName, user.getUserId(), user.hasRole("ROLE_ADMIN"));
+		return new ResponseEntity<String>("Company name updated!", HttpStatus.OK);
+	    } catch (UpdateAboutAccessDenied e) {
+		return new ResponseEntity<String>("You have not permission for update this parameter!", HttpStatus.FORBIDDEN);
+	    }
+	}
+
+	return new ResponseEntity<String>("Not authorize!", HttpStatus.UNAUTHORIZED);
+    }
+    
+    @RequestMapping(value = "/hiring/updateExperienceDescription", method = RequestMethod.POST)
+    public ResponseEntity<?> updateExperienceDescription(@RequestParam(value = "briefId", required = true) Integer briefId,
+	    @RequestParam(value = "expId", required = true) Integer expId,
+	    @RequestParam(value = "description", required = true) String description,
+	    Principal principal){
+	if (principal != null) {
+	    UserDetailsProton user = (UserDetailsProton) SecurityContextHolder.getContext().getAuthentication()
+		    .getPrincipal();
+	    try {
+		hiredService.updateExperienceDescription(briefId, expId, description, user.getUserId(), user.hasRole("ROLE_ADMIN"));
+		return new ResponseEntity<String>("Description updated!", HttpStatus.OK);
+	    } catch (UpdateAboutAccessDenied e) {
+		return new ResponseEntity<String>("You have not permission for update this parameter!", HttpStatus.FORBIDDEN);
+	    }
+	}
+
+	return new ResponseEntity<String>("Not authorize!", HttpStatus.UNAUTHORIZED);
+    }
+    
+    @RequestMapping(value = "/hiring/updateExperienceDateFrom", method = RequestMethod.POST)
+    public ResponseEntity<?> updateExperienceDateFrom(@RequestParam(value = "briefId", required = true) Integer briefId,
+	    @RequestParam(value = "expId", required = true) Integer expId,
+	    @RequestParam(value = "dateFrom", required = true) Date dateFrom,
+	    Principal principal){
+	if (principal != null) {
+	    UserDetailsProton user = (UserDetailsProton) SecurityContextHolder.getContext().getAuthentication()
+		    .getPrincipal();
+	    try {
+		hiredService.updateExperienceDateFrom(briefId, expId, dateFrom, user.getUserId(), user.hasRole("ROLE_ADMIN"));
+		return new ResponseEntity<String>("Date from updated!", HttpStatus.OK);
+	    } catch (UpdateAboutAccessDenied e) {
+		return new ResponseEntity<String>("You have not permission for update this parameter!", HttpStatus.FORBIDDEN);
+	    }
+	}
+
+	return new ResponseEntity<String>("Not authorize!", HttpStatus.UNAUTHORIZED);
+    }
+    
+    @RequestMapping(value = "/hiring/updateExperienceDateTo", method = RequestMethod.POST)
+    public ResponseEntity<?> updateExperienceDateTo(@RequestParam(value = "briefId", required = true) Integer briefId,
+	    @RequestParam(value = "expId", required = true) Integer expId,
+	    @RequestParam(value = "dateTo", required = true) Date dateTo,
+	    Principal principal){
+	if (principal != null) {
+	    UserDetailsProton user = (UserDetailsProton) SecurityContextHolder.getContext().getAuthentication()
+		    .getPrincipal();
+	    try {
+		hiredService.updateExperienceDateTo(briefId, expId, dateTo, user.getUserId(), user.hasRole("ROLE_ADMIN"));
+		return new ResponseEntity<String>("Date to updated!", HttpStatus.OK);
+	    } catch (UpdateAboutAccessDenied e) {
+		return new ResponseEntity<String>("You have not permission for update this parameter!", HttpStatus.FORBIDDEN);
+	    }
+	}
+
+	return new ResponseEntity<String>("Not authorize!", HttpStatus.UNAUTHORIZED);
     }
 
 }

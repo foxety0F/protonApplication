@@ -14,4 +14,8 @@ public interface IEducationDao {
     
     List<TempTestData> getTempTestData();
 
+    void setCnt(Integer cnt);
+
+    Integer getCnt();
+
 }

@@ -34,3 +34,14 @@
 .databaseInfo, .databaseInfo tr, .databaseInfo tr input {
 	width: 100%;
 }
+
+.reports-header{
+	margin: 20px 20px 10px 10px;
+	border : 1px solid black;
+	padding: 15px;
+	border-radius: 8px;
+}
+
+.createNewDashboard{
+	width : 10%;
+}
