@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Education</title>
+	<th:block th:include="addscripts"></th:block>
+	<script src="/App/js/common/059_education.js"></script>
+	<link rel="stylesheet" href="/App/css/education.css"/>
+</head>
+
+<body>
+
+	<input id="id" placeholder="Press your ID" type="number"><br><br>
+	<input id="name" placeholder="Press your name"><br><br>
+	<input id="date" placeholder="Press your date" type="date"><br><br>
+	<input id="isActual" placeholder="Press your is Actual" type="checkbox"><br><br>
+
+	<button class="" id="save">Save to DB</button><br><br>
+
+	<div id="regroup">
+		<button id="groupByGroupOne" class = "markRed" data-filed-group="groupOne" onclick="Education.drawGroupedTable('groupOne')">Group
+			by Group One</button>
+		<button id="groupByGroupTwo" class = "markRed" data-filed-group="groupTwo" onclick="Education.drawGroupedTable('groupTwo')">Group
+			by Group Two</button>
+		<button id="groupByDateAdd" data-filed-group="dateAdd" onclick="Education.drawGroupedTable('dateAdd')">Group by
+			Date Add</button>
+	</div>
+
+	<div>
+
+		<table id="fltTable">
+			<thead>
+				<tr>
+					<th>FILTERED COLUMN</th>
+					<th>Count</th>
+				</tr>
+			</thead>
+			<tbody>
+
+			</tbody>
+		</table>
+
+	</div>
+
+	<div id="container">
+
+	</div>
+
+	<script th:inline="javascript">
+		var empCnt = /*[[${empCnt}]]*/ null;
+		console.log(empCnt);
+	</script>
+</body>
+
+</html>

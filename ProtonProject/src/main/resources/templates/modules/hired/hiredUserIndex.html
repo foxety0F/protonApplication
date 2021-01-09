@@ -2,92 +2,90 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-   <title>Hiring Page</title>
-   <th:block th:include="addscripts"></th:block>
-   <link rel = "stylesheet" href = "/App/css/modules/hiring/hiring-page.css">
-   <link href="https://fonts.googleapis.com/css2?family=Pathway+Gothic+One&family=Rancho&display=swap" rel="stylesheet">
-   <script src = "/App/js/common/modules/hiring-page.js"></script>
+	<title>Hiring Page</title>
+	<th:block th:include="addscripts"></th:block>
+	<link rel="stylesheet" href="/App/css/modules/hiring/hiring-page.css">
+	<link href="https://fonts.googleapis.com/css2?family=Pathway+Gothic+One&family=Rancho&display=swap"
+		rel="stylesheet">
+	<script src="/App/js/common/modules/hiring-page.js"></script>
 </head>
 
 <body>
-   <!-- Include _menu.html -->
-   
-   <th:block th:include="_menu"></th:block>
-    <div>
+	<!-- Include _menu.html -->
+
+	<th:block th:include="_menu"></th:block>
+	<div>
 		<th:block th:if='${userProtonDetails.hasRole("ROLE_ADMIN") == true}'>
-			<button id="admin-edit" class = "btn btn-pimary">Edit config</button>
+			<button id="admin-edit" class="btn btn-pimary">Edit config</button>
 			<script>
-			
+
 			</script>
-	    </th:block>
-        <th:block th:if='${userProtonDetails.hasRole("ROLE_SUPERVISOR") == true}'>
-			<button id = "supervisor-edit" class = "btn btn-primary">Edit skills </button>
+		</th:block>
+		<th:block th:if='${userProtonDetails.hasRole("ROLE_SUPERVISOR") == true}'>
+			<button id="supervisor-edit" class="btn btn-primary">Edit skills </button>
 		</th:block>
 		<th:block th:if='${userProtonDetails.hasRole("ROLE_HUNTER") == true}'>
-			<button id = "hunter-show">Show employee list</button>
+			<button id="hunter-show">Show employee list</button>
 		</th:block>
-    </div>
+	</div>
 
-	<div id = "content">
+	<div id="content">
 		<!-- Add first name and surname -->
-		<h2 class = "user-name" th:utext = "${userProtonDetails.getFirstName()} + ' ' + ${userProtonDetails.getSurname()}"> </h2>
-		<div class = "row">
-			<div id = "about" class = "col-md-5 col-sm-12">
-				<div class = "about-header">
-					<h4 class = "about-title"> About me </h4>
-					<button class = "about-edit" type = "button" onclick = "hiredModule.editAbout()"> <i class = "fas fa-pencil-alt"></i> </button>
+		<h2 class="user-name" th:utext="${userProtonDetails.getFirstName()} + ' ' + ${userProtonDetails.getSurname()}">
+		</h2>
+		<div class="row">
+			<div id="about" class="col-md-5 col-sm-12">
+				<div class="about-header">
+					<h4 class="about-title"> About me </h4>
+					<button class="about-edit" type="button" onclick="hiredModule.editAbout()"> <i
+							class="fas fa-pencil-alt"></i> </button>
 				</div>
-				<div class = "about-content">
-					<textarea id = "about-text" disabled>
+				<div class="about-content">
+					<textarea id="about-text" disabled>
 					</textarea>
 				</div>
-				
-				<div class = "skill-points-content">
-					<div class = "skill-points-header">
+
+				<div class="skill-points-content">
+					<div class="skill-points-header">
 						<h4> Skills </h4>
 					</div>
 				</div>
-				
-				<div class = "contact">
-					<div class = "contact-header">
-						<h4> Contacts </h4>
-					</div>
-					<div class = "contact-social">
 
-          			</div>
+				<div class="contact">
+					<div class="contact-header">
+						<h4 class="about-title"> Contacts </h4>
+						<button class="about-edit" type="button" onclick="hiredModule.addContacts()"> <i
+								class="fas fa-pencil-alt"></i> </button>
+					</div>
+
+				</div>
+				<div class="contact-social">
+
 				</div>
 			</div>
-			<div class = "experience col-md-7 col-sm-12">
-				<div class = "experience-header">
-					<h4 class = "experience-title"> Working experience</h4>
-					<button class = "experience-add" type="button"><i class = "fas fa-plus"></i></button>
+			<div class="experience col-md-7 col-sm-12">
+				<div class="experience-header">
+					<h4 class="experience-title"> Working experience</h4>
+					<button class="experience-add" type="button" id = "experience-add-button"><i class="fas fa-plus"></i></button>
 				</div>
-
-				<div class = "experience-content">
-					<p class = "experience-content-title-name"> <input id = "title-name" value ="Analytic" class = "experience-text-input" /> </p>
-					<p class = "experience-content-workplace"> <input id = "workplace" value = "UniCredit Bank" class = "experience-text-input"> </p>
-					<p class = "experience-content-from-to">
-					From
-					<input class="datepicker experience-datepicker" id = "date-from" size="10"  maxlength="50" onkeydown="size=value.length-1||5" onkeyup="onkeydown()" onkeypress="onkeydown()" onchange="onkeydown()" data-date-format = "MM yyyy" value = "December 2017">
-					to
-					<input class="datepicker experience-datepicker" id = "date-to" size = "10" onkeydown="size=value.length-1||5" onkeyup="onkeydown()" onkeypress="onkeydown()" onchange="onkeydown()" data-date-format = "MM yyyy" value = "June 2019">
-					<span class = "experience-content-time-work">(1 year and 6 month)</span>
-					</p>
-					<h5 class = "experience-description"> Description experience :</h5>
-					<textarea class = "experience-content-about"> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</textarea>
-
+				<div id="experience-content-div">
+					
 				</div>
-				
-    		</div>
+			</div>
 		</div>
 	</div>
-   <script th:inline="javascript">
+	<script th:inline="javascript">
 
-	   var about = /*[[${about}]]*/ null;
-	   var userPhone = /*[[${userPhone}]]*/ null;
-	   var experience = /*[[${experience}]]*/ null;
-	   var skills = /*[[${skills}]]*/ null;
-	   var contactSocial = /*[[${contactsSocial}]]*/ null;
+		const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+		var about = /*[[${about}]]*/ null;
+		var userPhone = /*[[${userPhone}]]*/ null;
+		var experience = /*[[${experience}]]*/ null;
+		var skills = /*[[${skills}]]*/ null;
+		var contactSocial = /*[[${contactsSocial}]]*/ null;
+		var briefId = /*[[${briefId}]]*/ null;
+
+		var contactConfig = /*[[${contactConfig}]]*/ null;
+		contactConfig.sort(function (a, b) { return a.id - b.id })
 
 		/*var contactSocial = [{
 		        socialName : "Facebook",
@@ -106,70 +104,107 @@
 		        socialIcon : "fab fa-linkedin",
 		        socialHref : "#"
 		      }];*/
-		
-		hiredModule.drawPage();	   
 
+		hiredModule.drawPage();
+
+		
+
+		var inputs = $('.experience-datepicker');
+		for (var i = 0; i < inputs.length; i++) {
+			inputs[i].size = inputs[i].value.length - 3;
+		}
+		$('#about-text')[0].style.height = $('#about-text')[0].scrollHeight + 10 + "px"
+
+
+		$('#date-from, #date-to').on('change', function () {
+			var _that = this;
+			var par = _that.parentElement;
+			var dtFrom = new Date(par.children.item(0).value);
+			var dtTo = new Date(par.children.item(1).value);
+
+			if (dtFrom <= dtTo) {
+				var diff = dtTo - dtFrom;
+				diff = new Date(diff);
+				var years = diff.getFullYear() - 1970;
+				var month = diff.getMonth();
+
+				var text = "";
+
+				switch (years) {
+					case 0:
+						break;
+					case 1:
+						text += "(1 year";
+						break;
+					default:
+						text += "(" + years + " years ";
+						break;
+				}
+
+				if (text != "") {
+					switch (month) {
+						case 0:
+							text += ")";
+							break;
+						default:
+							text += " and " + month + " months)";
+					}
+				} else {
+					text += "(" + month + " months)"
+				}
+
+				par.children.item(2).innerText = text;
+			} else {
+				$.growl.error({
+					title: "Incorrect interval",
+					message: "Date from can not be more than date to"
+				});
+
+			}
+		});
+
+		hiredModule.drawExperience();
+		$('.experience-content-about').css('height', $('.experience-content-about')[0].scrollHeight + 10 + "px");
 		$('.experience-datepicker').datepicker({
 			format: "MM yyyy",
 			startView: 1,
 			minViewMode: 1
 		});
 
-		var inputs = $('.experience-datepicker');
-        for(var i = 0; i < inputs.length; i++){
-          inputs[i].size = inputs[i].value.length - 3;
-        }
-        $('.experience-content-about').css('height',$('.experience-content-about')[0].scrollHeight + 10 + "px");
-        $('#about-text')[0].style.height = $('#about-text')[0].scrollHeight + 10 + "px"
+		$('#experience-add-button').on('click', function(data){
+			var message = "";
+			message = '<table style = "border : none">'
+					+ '<tr>'
+						+ '<td>Title </td>'
+						+ '<td><input id = "new-experience-title" value = ""/>'
+					+ '</tr>'
+					+ '<tr>'
+						+ '<td>Company Name : </td>'
+						+ '<td><input class = "datepicker experience-datepicker" id = "new-experience-company" value = ""/>'
+					+ '</tr>'
+					+ '<tr>'
+						+ '<td>Date From : </td>'
+						+ '<td><input class = "datepicker experience-datepicker" id = "new-experience-dateFrom" value = ""/>'
+					+ '</tr>'
+					+ '<tr>'
+						+ '<td>Date To : </td>'
+						+ '<td><input id = "new-experience-dateTo" value = ""/>'
+					+ '</tr>'
+					+ '</table>'
+					+ '<p>Description : </p>'
+					+ '<textarea id = "new-experience-description" value = ""> </textarea>'
+			bootbox.dialog({
+				title : "Add new experience",
+				message : message
+			})
 
-
-		$('#date-from, #date-to').on('change', function(){
-			var _that = this;
-			var par = _that.parentElement;
-			var dtFrom = new Date(par.children.item(0).value);
-			var dtTo = new Date(par.children.item(1).value);
-
-			if(dtFrom <= dtTo){
-			var diff = dtTo - dtFrom;
-			diff = new Date(diff);
-			var years = diff.getFullYear() - 1970;
-			var month = diff.getMonth();
-
-			var text = "";
-
-			switch (years) {
-				case 0:
-				break;
-				case 1:
-				text += "(1 year";
-				break;
-				default:
-				text += "(" + years + " years ";
-				break;
-			}
-
-			if(text != ""){
-				switch (month) {
-				case 0:
-					text += ")";
-					break;
-				default:
-					text += " and " + month + " months)";
-				}
-			}else{
-				text += "("+ month +" months)"
-			}
-
-			par.children.item(2).innerText = text;
-			}else{
-			$.growl.error({
-				title : "Incorrect interval",
-				message : "Date from can not be more than date to"
+			$('.experience-datepicker').datepicker({
+				format: "MM yyyy",
+				startView: 1,
+				minViewMode: 1
 			});
-
-			}
-		});
-   </script>
+		})
+	</script>
 </body>
 
 </html>

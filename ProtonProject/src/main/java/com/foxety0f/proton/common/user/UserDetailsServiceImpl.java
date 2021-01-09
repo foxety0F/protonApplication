@@ -5,7 +5,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -60,22 +59,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			}
 		}
 
-		if (!adminService.getAuthUsers().isEmpty()) {
-			for (AuthenticatedUserLog au : adminService.getAuthUsers()) {
-				if (au.getUserName().equals(appUser.getUserName())) {
-					adminService.getAuthUsers().remove(au);
+		try {
+			if (!adminService.getAuthUsers().isEmpty()) {
+				for (AuthenticatedUserLog au : adminService.getAuthUsers()) {
+					if (au.getUserName().equals(appUser.getUserName())) {
+						adminService.getAuthUsers().remove(au);
+					}
 				}
 			}
+		}catch(Exception e) {
+			
 		}
 
-		AuthenticatedUserLog ul = new AuthenticatedUserLog();
-		ul.setGrantList(grantList);
-		ul.setUserId(appUser.getUserId());
-		ul.setTsAuth(new Date().getTime());
-		ul.setTsLastAction(new Date().getTime());
-		ul.setUserName(appUser.getUserName());
-
-		adminService.addAuth(ul);
+		
 
 		UserDetails userDetails = new UserDetailsProton(appUser.getUserName(), appUser.getEncryptedPassword(),
 				grantList, appUser.getFirstName(), appUser.getSurname(), appUser.getIsFirstTime(),

@@ -35,8 +35,6 @@ public class AdminDAO extends AbstractDAO implements IAdminDAO {
 		System.err.println(getDatabase());
 		System.err.println(initialize());
 		roleStruct();
-		// ImageUtils iu = new ImageUtils();
-		// iu.loadFilesFromDataBase(getFiles());
 	}
 
 	private ProtonModules thisModule = ProtonModules.ADMIN;

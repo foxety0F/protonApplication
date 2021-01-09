@@ -1,0 +1,10 @@
+
+
+body {
+	padding: 10px;
+	margin: 10px;
+}
+
+button#save{
+	border: 2px solid red;
+}

@@ -3,6 +3,7 @@ package com.foxety0f.proton.modules.admin.controllers;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.foxety0f.proton.ansible.AnsibleInformation;
+import com.foxety0f.proton.ansible.IAnsibleControl;
 import com.foxety0f.proton.common.abstracts.AbstractController;
 import com.foxety0f.proton.common.annotations.PageAnnotation;
 import com.foxety0f.proton.common.exceptions.ModuleNotUndefinedException;
@@ -26,7 +29,6 @@ import com.foxety0f.proton.modules.ProtonModules;
 import com.foxety0f.proton.modules.admin.service.IAdminService;
 import com.foxety0f.proton.modules.help.service.IHelpService;
 import com.foxety0f.proton.modules.modules_config.Module;
-import com.foxety0f.proton.modules.reports.dao.IReportsDao;
 
 @Controller
 public class IndexAdminController extends AbstractController {
@@ -38,8 +40,9 @@ public class IndexAdminController extends AbstractController {
 	private IHelpService helpService;
 	
 	@Autowired
-	private IReportsDao reportsDao;
-
+	private IAnsibleControl ansible;
+	 
+	
 	@RequestMapping("/admin")
 	@PageAnnotation(value = "Admin", module = ProtonModules.ADMIN)
 	@Secured("ROLE_ADMIN")
@@ -68,9 +71,9 @@ public class IndexAdminController extends AbstractController {
 
 			return "modules/admin/indexAdmin";
 
-		} else {
-			return "403Page";
 		}
+		
+		return "redirect:/login";
 	}
 
 	@RequestMapping("/admin/modules")
@@ -151,5 +154,16 @@ public class IndexAdminController extends AbstractController {
 			}
 		}
 		return new ResponseEntity<String>("Forbidden. Not auth", HttpStatus.UNAUTHORIZED);
+	}
+	
+	@RequestMapping(value = "/admin/ansible")
+	public ResponseEntity<Map<String, AnsibleInformation>> ansible(Principal principal){
+		if (principal != null) {
+			UserDetailsProton user = (UserDetailsProton) SecurityContextHolder.getContext().getAuthentication()
+					.getPrincipal();
+			return new ResponseEntity<Map<String,AnsibleInformation>>(ansible.getAnsible(), HttpStatus.OK);
+		}
+		
+		return null;
 	}
 }

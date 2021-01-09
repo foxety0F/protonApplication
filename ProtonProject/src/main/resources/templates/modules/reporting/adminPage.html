@@ -1,0 +1,277 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Admin Reports Page</title>
+	<th:block th:include="addscripts"></th:block>
+	<link href="https://fonts.googleapis.com/css2?family=Pathway+Gothic+One&family=Rancho&display=swap"
+		rel="stylesheet">
+	<link rel="stylesheet" href="/App/css/modules/hiring/hiring-page.css">
+	<link rel="stylesheet" href="/App/css/modules/reports/admin-reports.css">
+</head>
+<style>
+	hr {
+		margin-top: 5px;
+	}
+</style>
+
+<body>
+	<!-- Include _menu.html -->
+
+	<th:block th:include="_menu"></th:block>
+	<div>
+	</div>
+
+	<div id="content" style = "min-height: 0px;">
+		<div class="adminBlock" id="systemAdminBlock" >
+			<div class = "block-el-name" data-shows = "true" onclick = "hideShowBlock(this)">
+				<i class="fas fa-angle-down"></i><span style="font-size: 16px; margin: 0px; margin-left: 10px;">System actions</span>
+			</div>
+			<hr>
+			<div class = "block-el">
+				<button class="btn btn-primary" onclick="addNewSystem()">Add new system</button>
+			</div>
+			<div id="systemActions" class = "block-el">
+			</div>
+		</div>
+		<div class="adminBlock" id = "columnSystemBlock" >
+			<div class = "block-el-name" data-shows = "true" onclick = "hideShowBlock(this)">
+				<i class="fas fa-angle-down"></i><span style="font-size: 16px; margin: 0px; margin-left: 10px;">Columns actions</span>
+			</div>
+			<hr>
+			<div class = "block-el">
+				<button class="btn btn-primary" onclick="addNewSystem()">Add new Column Type</button>
+				<button class="btn btn-primary" onclick="addNewSystem()">Add new Column Type Mapper</button>
+			</div>
+			<div id="columnsActions" class = "block-el">
+				<div id = "columnTypes">
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<script th:inline="javascript">
+		var systems = /*[[${systems}]]*/[];
+		var metaSystem = /*[[${metaSystem}]]*/[];
+		var metaSystemSelector = "<select id = 'metaSystemSelect'>";
+		var tables = /*[[${tables}]]*/[];
+		var columns = /*[[${columns}]]*/[];
+		var threads = [];
+		var columnTypes = /*[[${columnTypes}]]*/[];
+		var columnTypesMapper = /*[[${columnTypesMapper}]]*/[];
+
+		function hideShowBlock(node){
+			console.log(node)
+			 if(node.dataset.shows == "true"){
+				node.dataset.shows = "false";
+				$(node).parent().children(".block-el").hide("fast");
+				$(node).parent().children(".block-el-name").children("i").removeClass("fas fa-angle-down").addClass("fas fa-angle-right");
+			}else{
+				node.dataset.shows = "true";
+				$(node).parent().children(".block-el").show("fast");	
+				$(node).parent().children(".block-el-name").children("i").removeClass("fas fa-angle-right").addClass("fas fa-angle-down");
+			} 
+		}
+
+		for (var i = 0; i < metaSystem.length; i++) {
+			metaSystemSelector += '<option id = "' + metaSystem[i].id + '" value = "' + metaSystem[i].id + '">' + metaSystem[i].title + '</option>';
+		}
+
+		metaSystemSelector += '</select>';
+
+		function drawSystems() {
+			$('#systemActions').empty();
+			if (systems.length == 0) {
+				$('#systemActions').addClass("no-elements").append("<span >You haven't any systems yet...</span>");
+			} else {
+				for (var i = 0; i < systems.length; i++) {
+					var systemInfo = 
+						'<div class = "system-element"  id = "system' + systems[i].id + '" data-systemid = "' + systems[i].id + '">'
+						+ '<p class = "system-name"><b style = "color:black;">Title: </b>' + systems[i].connectionName + '</p>'
+						+ '<p class = "system-db-name"><b style = "color:black;">Source: </b>' + systems[i].systemName + '</p>'
+						+ '<p><b style = "color:black">Description</b></p><hr style = "margin : 0px">'
+						+ '<p class = "system-description">' + systems[i].description + '</p>'
+						+ '<div> <button class = "btn btn-success"> Edit </button>'
+						+ '<button class = "btn btn-success" style = "margin-left : 10px" data-tablesshow="false" onclick = "showTables(this)"> Show Tables </button>'
+						+ (systems[i].isActive == false ? ('<button onclick = "markSystemAsActive(this)" class = "btn btn-success pull-right" >Mark active </button>') : ('<button onclick = "markSystemAsInactive(this)" class = "btn btn-danger pull-right">Mark inactive </button>'))
+						+ '</div>';
+					var tabletext =  '<table style = "display:none" class = "table-info dataTable no-footer" data-systemid = "' + systems[i].id + '">'
+								  + '<thead><tr>'
+								  +	'<th>ID <i class="fas fa-lock"></i></th>'
+								  +	'<th>System ID <i class="fas fa-lock"></i></th>'
+								  +	'<th>Table Name</th>'
+								  +	'<th>Business Name</th>'
+								  +	'<th>Description</th>'
+								  +	'<th>Business Description</th>'
+								  +	'<th>Is Active</th>'
+								  +	'<th>CDate <i class="fas fa-lock"></i></th>'
+								  +	'<th>UDate <i class="fas fa-lock"></i></th>'	
+								  + "<tbody>"
+					var tablesExists = false;
+					for(var j = 0; j < tables.length; j++){
+						if(systems[i].id == tables[j].systemId){
+							tablesExists = true;
+							tabletext += '<tr data-tableid="' + tables[j].id + '">'
+										+ '<td class = "table-info-table-id"> '  + tables[j].id + '</td>'
+										+ '<td class = "table-info-table-system-id"> '  + tables[j].systemId + '</td>'
+										+ '<td class = "table-info-table-name" data-editoropen="string"> '  + tables[j].tableName + '</td>'
+										+ '<td class = "table-info-table-business-name" data-editoropen="string"> '  + tables[j].businessName + '</td>'
+										+ '<td class = "table-info-table-description" data-editoropen="text"> '  + tables[j].description + '</td>'
+										+ '<td class = "table-info-table-business-description" data-editoropen="text"> '  + tables[j].businessDescription + '</td>'
+										+ '<td class = "table-info-table-business-name" data-editoropen="boolean"> '  + tables[j].isActive + '</td>'
+										+ '<td class = "table-info-table-business-name"> '  + tables[j].cDate + '</td>'
+										+ '<td class = "table-info-table-business-name"> '  + tables[j].uDate + '</td>'
+										+ "</tr>"
+											
+						}
+					}
+					tabletext += "</tbody></table>";
+
+					systemInfo += tabletext + '</div>';
+					$('#systemActions').append(systemInfo)
+				}
+			}
+		}
+
+		function drawColumnTypes(){
+			$('#columnTypes').empty();
+			var text = '<div class = "column-type-name">Column Types </div>';
+			text += '<table class = "table-info dataTable no-footer">'
+				 + '<thead>'
+				 + '<tr>'
+				 + '<th>Actions</th>'
+				 + '<th>ID</th>'
+				 + '<th>Name</th>'
+				 + '<th>Description</th>'
+				 + '<th>Is Active</th>'
+				 + '<th>CDate</th>'
+				 + '<th>UDate</th>'
+				 + '</thead>'
+				 + '<tbody>'
+			for(var i = 0; i < columnTypes.length; i++){
+				text += '<tr>'
+					 + '<td>' + 'Buttons' + '</td>'
+					 + '<td>' + columnTypes[i].id + '</td>'
+					 + '<td>' + columnTypes[i].name + '</td>'
+					 + '<td>' + columnTypes[i].description + '</td>'
+					 + '<td>' + columnTypes[i].isActive + '</td>'
+					 + '<td>' + columnTypes[i].cDate + '</td>'
+					 + '<td>' + columnTypes[i].uDate + '</td>'
+					 + '</tr>'
+			}
+			text += '</tbody></table>';
+			$('#columnTypes').append(text)
+		}
+
+		drawColumnTypes();
+
+		function drawColumnTypesMapper(){
+			
+		}
+
+		function showTables(node){
+			console.log(node);
+			if(node.dataset.tablesshow == 'false'){
+				$(node).parent().parent().children('.table-info').show('fast');
+				node.dataset.tablesshow = 'true';
+			}else{
+				$(node).parent().parent().children('.table-info').hide('fast');
+				node.dataset.tablesshow = 'false';
+			}
+		}
+
+		function markSystemAsInactive(that) {
+			var systemId = that.parentElement.parentElement.dataset.systemid;
+			$.ajax({
+				method: 'POST',
+				url: 'admin/system/markSystemAsInactive',
+				data: {
+					systemId: systemId
+				}
+			}).done(function (data) {
+				$.growl.notice({ title: 'System mark as Inactive', message: 'System ' + systemId + ' marked as active' });
+				systems = data;
+				drawSystems();
+			}).fail(function (e) {
+				$.growl.error({ title: 'Error', message: e.responseText })
+			})
+		}
+
+		function markSystemAsActive(that) {
+			var systemId = that.parentElement.parentElement.dataset.systemid;
+
+			$.ajax({
+				method: 'POST',
+				url: 'admin/system/markSystemAsActive',
+				data: {
+					systemId: systemId
+				}
+			}).done(function (data) {
+				$.growl.notice({ title: 'System mark as active', message: 'System ' + systemId + ' marked as inactive' });
+				systems = data;
+				drawSystems();
+			}).fail(function (e) {
+				$.growl.error({ title: 'Error', message: e.responseText })
+			})
+		}
+
+		function addNewSystem() {
+			var message = `
+				<table style = "border : none">
+					<tbody>
+						<tr><td>Connection Name : </td> <td> <input id = "connectionName" value = "" > </td></tr>
+						<tr><td>System Type : </td> <td>` + metaSystemSelector + `</td></tr>
+						<tr><td>Description : </td> <td></td></tr>
+						<tr><td colspan = "2"> <textarea id = "description" style = "width : 100%; resize: none;"> </textarea> </td> <td></td></tr>
+						<tr><td> Username : </td> <td> <input id ="username" value = ""> </td></tr>
+						<tr><td> Password : </td> <td> <input id = "password" value = "" > </td></tr>
+						<tr><td> Connection config : </td><td></td></tr>
+						<tr><td colspan = "2"> <textarea id = "connectionConfig" style = "width : 100%; resize: none;"> </textarea> </td> <td></td></tr>
+					</tbody>
+				</table>
+			`;
+
+			bootbox.confirm({
+				message: message,
+				title: "Add new system",
+				onEscape: true,
+				buttons: {
+					confirm: {
+						label: '<i class="fa fa-check"></i> Create',
+						className: 'btn-success'
+					},
+					cancel: {
+						label: '<i class="fa fa-times"></i> Cancel',
+						className: 'btn-danger'
+					}
+				},
+				callback: function (result) {
+					if (result) {
+						$.ajax({
+							url: 'admin/system/addSystem',
+							method: 'POST',
+							data: {
+								systemType: $('#metaSystemSelect option:selected').val(),
+								title: $('#connectionName').val(),
+								description: $('#description').val(),
+								userName: $('#username').val(),
+								password: $('#password').val(),
+								connectionConfig: $('#connectionConfig').val()
+							}
+						}).done(function (data) {
+							$.growl.notice({ title: 'Add new system', message: 'New system was add success' });
+							systems = data;
+							drawSystems();
+						}).fail(function (e) {
+							$.growl.error({ title: 'Error', message: e.responseText })
+						})
+					}
+				}
+			});
+		}
+
+		drawSystems();
+	</script>
+</body>
+
+</html>

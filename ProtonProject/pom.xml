@@ -21,6 +21,12 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.1</version>
+		</dependency>
+
+		<dependency>
 			<groupId>com.squareup.okhttp</groupId>
 			<artifactId>okhttp</artifactId>
 			<version>2.7.5</version>
@@ -60,7 +66,7 @@
 			<version>1.6</version>
 		</dependency>
 
-		
+
 		<!-- http://mvnrepository.com/artifact/org.springframework.security/spring-security-config -->
 
 
@@ -115,7 +121,7 @@
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 		</dependency>
-		
+
 
 
 		<dependency>
@@ -175,20 +181,20 @@
 			<artifactId>reflections</artifactId>
 			<version>0.9.11</version>
 		</dependency>
-		
-		 <dependency>
-            <groupId>net.minidev</groupId>
-            <artifactId>asm</artifactId>
-            <version>1.0.2</version>
-            <scope>test</scope>
-        </dependency>
 
-        <dependency>
-            <groupId>net.minidev</groupId>
-            <artifactId>json-smart</artifactId>
-            <version>2.2.1</version>
-            <scope>test</scope>
-        </dependency>
+		<dependency>
+			<groupId>net.minidev</groupId>
+			<artifactId>asm</artifactId>
+			<version>1.0.2</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>net.minidev</groupId>
+			<artifactId>json-smart</artifactId>
+			<version>2.2.1</version>
+			<scope>test</scope>
+		</dependency>
 
 	</dependencies>
 
